@@ -23,7 +23,7 @@ The Flatfile hook system has been designed to enable fine grained functions to b
 
   The data pipeline orders data transformations sos that functions at each point can be typed as strictly with the most strictly prescribed functionality.
 
-
+![Event Sequence diagram](/assets/Event-Sequence.png)
 
   1. Matching takes place.  At this point we have rows of fields with names mapped to sheet field names.  Currently there is no ability to influence matching from the SDK
   2. field onCast, functions here take a string or undefined and return either the primitive type specified by the field, or undefined.
