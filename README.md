@@ -21,15 +21,19 @@ const TestSchema = new Workbook(
 ## Getting Started
 ### Configure the environment
 1. Create a `.env` file in the project root using the `.env.example` file as a template.
-2. Follow these [instructions](https://support.flatfile.com/hc/en-us/articles/4406299638932-How-can-I-create-API-Keys-) to generate an Access Key ID and Secret Access Key
+2. Follow these [instructions](https://support.flatfile.com/hc/en-us/articles/4406299638932-How-can-I-create-API-Keys-) to generate an **Access Key ID** and **Secret Access Key**
 3. Add the Access Key ID to your `.env` file as the `FLATFILE_ACCESS_KEY_ID` variable
 4. Add the Secret Access Key to your `.env` file as the `FLATFILE_SECRET` variable
+5. Login to Flatfile and [find your team ID](https://support.flatfile.com/hc/en-us/articles/6097149079188-Where-is-my-TeamID-What-other-IDs-do-I-need-to-know-)
+6. Add the Team ID to your `.env` file as the `FLATFILE_TEAM_ID` variable
 
 ### Deploy the Schema
+<<<<<<< HEAD
 1. Login to Flatfile and [find your team ID](https://support.flatfile.com/hc/en-us/articles/6097149079188-Where-is-my-TeamID-What-other-IDs-do-I-need-to-know-)
 2. From the root directory of this project run `npx --yes @flatfile/cli publish ./src/index.ts --team <YOUR_TEAM_ID>`
 
 
+1. From the root directory of this project run `npm run deploy`
 ## Concepts
 The Flatfile hook system has been designed to enable fine grained functions to be used in combination to perform regular data validation and normalization tasks.  Flatfile is building out a comprehensive standard library so that developers can plug in the proper functions without having to write them from scratch.  This standard lib is leveraged by HDDL to describe implementations concisely.
 
@@ -82,4 +86,3 @@ The most common custom written hooks that we expect to see are row onCompute and
   * At first glance this could work as a row `onValue` to add Country code to phone numbers.
   * In a future version of the SDK, this probably requires hooks to influence the matching system.
   
-
