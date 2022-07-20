@@ -1,4 +1,4 @@
-### Flatfile Platform SDK Starter kit
+# Flatfile Platform SDK Starter kit
 Basic starter project for the Flatfile Platform SDK
 
 
