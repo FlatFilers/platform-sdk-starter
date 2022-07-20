@@ -7,7 +7,7 @@ import {
     Workbook,
 } from '@flatfile/configure'
 
-const CategoryAndBoolean = new Sheet(
+export const CategoryAndBoolean = new Sheet(
     'CategoryAndBoolean',
     {
         firstName: TextField({
