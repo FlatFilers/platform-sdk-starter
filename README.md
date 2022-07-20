@@ -31,8 +31,6 @@ const TestSchema = new Workbook(
 ### Deploy the Schema
 1. From the root directory of this project run `npm run deploy`
 
-
-1. From the root directory of this project run `npm run deploy`
 ## Concepts
 The Flatfile hook system has been designed to enable fine grained functions to be used in combination to perform regular data validation and normalization tasks.  Flatfile is building out a comprehensive standard library so that developers can plug in the proper functions without having to write them from scratch.  This standard lib is leveraged by HDDL to describe implementations concisely.
 
