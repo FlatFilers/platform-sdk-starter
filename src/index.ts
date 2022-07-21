@@ -17,7 +17,7 @@ const CategoryAndBoolean = new Sheet(
         lastName: TextField(),
         email: EmailField({
             nonPublic: true,
-            onValue: (v) => v.toUpperCase(),
+            compute: (v) => v.toUpperCase(),
         }),
         phoneNumber: TextField(),
         startDate: TextField(),
