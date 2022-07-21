@@ -18,6 +18,7 @@ const TestSchema = new Workbook(
 ```
 
 ## Getting Started
+
 ### Configure the environment
 1. Create a `.env` file in the project root using the `.env.example` file as a template.
 2. Follow these [instructions](https://support.flatfile.com/hc/en-us/articles/4406299638932-How-can-I-create-API-Keys-) to generate an **Access Key ID** and **Secret Access Key**
@@ -36,9 +37,6 @@ const TestSchema = new Workbook(
 Then navigate over to your dashboard and see newly deployed workspace
 
 Include screenshot of data table from deployed schema
-
-
-
 ## Concepts
 The Flatfile hook system has been designed to enable fine grained functions to be used in combination to perform regular data validation and normalization tasks.  Flatfile is building out a comprehensive standard library so that developers can plug in the proper functions without having to write them from scratch.  This standard lib is leveraged by HDDL to describe implementations concisely.
 
