@@ -8,7 +8,7 @@ import {
 } from '@flatfile/configure'
 
 const CategoryAndBoolean = new Sheet(
-    'CategoryAndBoolean',
+    'New Template With Category And Boolean',
     {
         firstName: TextField({
             required: true,
@@ -18,6 +18,10 @@ const CategoryAndBoolean = new Sheet(
         email: EmailField({
             nonPublic: true,
             compute: (v) => v.toUpperCase(),
+        }),
+        boolean: BooleanField(),
+        selectOptions: CategoryField({
+            categories: { red: 'Red', blue: 'Blue', green: 'Green' }
         }),
         phoneNumber: TextField(),
         startDate: TextField(),
