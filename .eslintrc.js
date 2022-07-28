@@ -7,7 +7,6 @@ module.exports = {
     },
     extends: [
         "eslint:recommended",
-        "plugin:react/recommended",
         "prettier",
     ],
     parserOptions: {
@@ -17,12 +16,7 @@ module.exports = {
         "ecmaVersion": 12,
         "sourceType": "module"
     },
-    plugins: [
-        "react"
-    ],
     rules: {
-        "react/prop-types": [0, {}],
-        "react/no-unescaped-entities": [0, {}],
         "no-unused-vars": [0, {}],
         "no-case-declarations": [0, {}],
         "no-redeclare": [0, {}],
@@ -40,9 +34,4 @@ module.exports = {
             },
         },
     ],
-    settings: {
-        react: {
-            version: 'detect',
-        },
-    },
 };
