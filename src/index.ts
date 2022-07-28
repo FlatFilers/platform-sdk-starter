@@ -1,51 +1,48 @@
 import {
-    BooleanField,
-    CategoryField,
-    EmailField,
-    TextField,
-    Sheet,
-    Workbook,
+  BooleanField,
+  CategoryField,
+  EmailField,
+  TextField,
+  Sheet,
+  Workbook,
 } from '@flatfile/configure'
 
-
-
 const CategoryAndBoolean = new Sheet(
-    'New Template With Category And Boolean',
-    {
-        firstName: TextField({
-            required: true,
-            description: 'foo',
-        }),
+  'New Template With Category And Boolean',
+  {
+    firstName: TextField({
+      required: true,
+      description: 'foo',
+    }),
 
-        lastName: TextField(),
-        email: EmailField({
-            nonPublic: true,
-            compute: (v) => v.toUpperCase(),
-        }),
-        boolean: BooleanField(),
-        selectOptions: CategoryField('Custom Category',
-        {
-            categories: { red: 'Red', blue: 'Blue', green: 'Green' }
-        }),
-        phoneNumber: TextField(),
-        startDate: TextField(),
+    lastName: TextField(),
+    email: EmailField({
+      nonPublic: true,
+      compute: (v) => v.toUpperCase(),
+    }),
+    boolean: BooleanField(),
+    selectOptions: CategoryField('Custom Category', {
+      categories: { red: 'Red', blue: 'Blue', green: 'Green' },
+    }),
+    phoneNumber: TextField(),
+    startDate: TextField(),
+  },
+  {
+    allowCustomFields: true,
+    readOnly: true,
+    onChange(record) {
+      const fName = record.get('firstName')
+      console.log(`lastName was ${record.get('lastName')}`)
+      record.set('lastName', fName)
+      return record
     },
-    {
-        allowCustomFields: true,
-        readOnly: true,
-        onChange(record) {
-            const fName = record.get('firstName')
-            console.log(`lastName was ${record.get('lastName')}`)
-            record.set('lastName', fName)
-            return record
-        },
-    }
+  }
 )
 
 export default new Workbook({
-    name: 'Category And Boolean Onboarding',
-    namespace: 'onboarding',
-    sheets: {
-        CategoryAndBoolean,
-    },
+  name: 'Category And Boolean Onboarding',
+  namespace: 'onboarding',
+  sheets: {
+    CategoryAndBoolean,
+  },
 })
