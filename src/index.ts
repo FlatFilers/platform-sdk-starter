@@ -7,6 +7,8 @@ import {
     Workbook,
 } from '@flatfile/configure'
 
+
+
 const CategoryAndBoolean = new Sheet(
     'New Template With Category And Boolean',
     {
@@ -14,6 +16,7 @@ const CategoryAndBoolean = new Sheet(
             required: true,
             description: 'foo',
         }),
+
         lastName: TextField(),
         email: EmailField({
             nonPublic: true,
