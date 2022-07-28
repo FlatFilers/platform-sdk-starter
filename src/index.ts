@@ -23,7 +23,8 @@ const CategoryAndBoolean = new Sheet(
             compute: (v) => v.toUpperCase(),
         }),
         boolean: BooleanField(),
-        selectOptions: CategoryField({
+        selectOptions: CategoryField('Custom Category',
+        {
             categories: { red: 'Red', blue: 'Blue', green: 'Green' }
         }),
         phoneNumber: TextField(),
