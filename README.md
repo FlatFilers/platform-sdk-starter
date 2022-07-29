@@ -4,18 +4,43 @@ Basic starter project for the Flatfile Platform SDK
 ## Introduction
 The platform SDK allows you to configure your Flatfile installation and deploy from the command line.
 
-## Sample Schema
+## Sample Workbook
 ```
-const TestSchema = new Workbook(
-  name: 'My first workbook',
-  namespace: 'My company',
+const Employees = new Sheet(
+  'Standard form that employee records should map too,
+  {
+    firstName: TextField({
+      required: true,
+      description: 'Given name'}),
+    lastName: TextField({}), 
+    fullName: TextField({}),
+    email: EmailField({
+      nonPublic: true,
+      compute: (v) => v.toUpperCase()}),
+    stillEmployed: BooleanField(),
+    department: CategoryField('Department', {
+      categories: { engineering: 'Engineering', hr: 'People Ops', sales: 'Revenue'}}),
+	startDate: DateField({}),
+	salary: NumberField({
+	  'Salary', {description:'Annual Salary in USD', required:true, 
+      validate: ff.hooklib.between(0, 350_000)})},
+  {
+    allowCustomFields: true,
+    readOnly: true,
+    onChange(record) {
+	  const fullName = `{record.get('firstName')} {record.get('lastName')}`
+      console.log(`fullName, {fullName}`)
+      record.set(fullName', fullName)
+      return record}})
+
+export default new Workbook({
+  name: 'Employee Onboarding',
+  namespace: 'onboarding',
   sheets: {
-	  orders: new Sheet(
-	    'orders', 
-          {orderId: NumberField({required:true, description:'order id primary key', unique:true}),
-	       customerId: NumberField({required:true, description:'foreign key to customer id'}),
-	       price: NumberField({required:true})}, {})})
+    Employees}})
 ```
+
+Include screenshot of data table from deployed schema
 
 ## Getting Started
 
@@ -36,7 +61,16 @@ const TestSchema = new Workbook(
 
 Then navigate over to your dashboard and see newly deployed workspace
 
-Include screenshot of data table from deployed schema
+## Sample Workbook explained
+
+This workbook uses the 6 builtin Flatfile fields `TextField`, `NumberField`, `DateField`, `CategoryField`, `EmailField`, `BooleanField`, to represent a workbook used to receive employee data.  There are a couple of interesting things to note about this Sheet and Workbook:
+
+Note that `fullName` is computed from `firstName` and `lastName`.  The `onChange` function gets the whole row to modify.
+Look at the `validate` function `salary`,  This uses Flatfile's builtin library to succinctly express that Salary must be between 0 and 350,000.
+
+department, look at the `categories` option.  This takes keys of database value and Values of labels for those keys.
+
+
 ## Concepts
 The Flatfile hook system has been designed to enable fine grained functions to be used in combination to perform regular data validation and normalization tasks.  Flatfile is building out a comprehensive standard library so that developers can plug in the proper functions without having to write them from scratch.  This standard lib is leveraged by HDDL to describe implementations concisely.
 
