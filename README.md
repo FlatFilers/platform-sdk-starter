@@ -4,6 +4,25 @@ Basic starter project for the Flatfile Platform SDK
 ## Introduction
 The platform SDK allows you to configure your Flatfile installation and deploy from the command line.
 
+
+## Getting Started
+
+### Configure the environment
+1. Create a `.env` file in the project root using the `.env.example` file as a template.
+2. Follow these [instructions](https://support.flatfile.com/hc/en-us/articles/4406299638932-How-can-I-create-API-Keys-) to generate an **Access Key ID** and **Secret Access Key**
+3. Add the Access Key ID to your `.env` file as the `FLATFILE_ACCESS_KEY_ID` variable
+4. Add the Secret Access Key to your `.env` file as the `FLATFILE_SECRET` variable
+5. Login to Flatfile and [find your team ID](https://support.flatfile.com/hc/en-us/articles/6097149079188-Where-is-my-TeamID-What-other-IDs-do-I-need-to-know-)
+6. Add the Team ID to your `.env` file as the `FLATFILE_TEAM_ID` variable
+
+### Deploy the Schema
+1. Login to Flatfile and [find your team ID](https://support.flatfile.com/hc/en-us/articles/6097149079188-Where-is-my-TeamID-What-other-IDs-do-I-need-to-know-)
+2. From the root directory of this project run `npx --yes @flatfile/cli publish ./src/index.ts --team <YOUR_TEAM_ID>`
+
+
+1. From the root directory of this project run `npm run deploy`
+
+Then navigate over to your dashboard and see newly deployed workspace
 ## Sample Workbook
 ```
 const Employees = new Sheet(
@@ -42,26 +61,8 @@ export default new Workbook({
 
 Include screenshot of data table from deployed schema
 
-## Getting Started
 
-### Configure the environment
-1. Create a `.env` file in the project root using the `.env.example` file as a template.
-2. Follow these [instructions](https://support.flatfile.com/hc/en-us/articles/4406299638932-How-can-I-create-API-Keys-) to generate an **Access Key ID** and **Secret Access Key**
-3. Add the Access Key ID to your `.env` file as the `FLATFILE_ACCESS_KEY_ID` variable
-4. Add the Secret Access Key to your `.env` file as the `FLATFILE_SECRET` variable
-5. Login to Flatfile and [find your team ID](https://support.flatfile.com/hc/en-us/articles/6097149079188-Where-is-my-TeamID-What-other-IDs-do-I-need-to-know-)
-6. Add the Team ID to your `.env` file as the `FLATFILE_TEAM_ID` variable
-
-### Deploy the Schema
-1. Login to Flatfile and [find your team ID](https://support.flatfile.com/hc/en-us/articles/6097149079188-Where-is-my-TeamID-What-other-IDs-do-I-need-to-know-)
-2. From the root directory of this project run `npx --yes @flatfile/cli publish ./src/index.ts --team <YOUR_TEAM_ID>`
-
-
-1. From the root directory of this project run `npm run deploy`
-
-Then navigate over to your dashboard and see newly deployed workspace
-
-## Sample Workbook explained
+### Sample Workbook explained
 
 This workbook uses the 6 builtin Flatfile fields `TextField`, `NumberField`, `DateField`, `CategoryField`, `EmailField`, `BooleanField`, to represent a workbook used to receive employee data.  There are a couple of interesting things to note about this Sheet and Workbook:
 
@@ -70,11 +71,35 @@ Look at the `validate` function `salary`,  This uses Flatfile's builtin library 
 
 department, look at the `categories` option.  This takes keys of database value and Values of labels for those keys.
 
+## SDK philosophy
+
+We are writing this SDK to enable skilled practitioneers to quickly implement powerful transformations that take unstructured data from untrusted data and shape that data into clean normalized data for input into many systems.  This is the core of what Flatfile builds and we take it seriously.  We also take our relationship with customers seriously, balancing putting tools in your hands quickly with supporting existing usecases.  We are here to listen to your feedback and build tools for you.
+
+This initial release of the SDK is purposely limited in scope to include only the pieces we are most sure about.  We intend to rapidly release new functionality to the SDK and our platform as our understanding grows and we have time to put the best tools in front of you.  
+
+When releasing pieces to the SDK our thought process is guided by he following principles.
+
+1. Does this solve a problem in an extensible way... Will we paint ourselves into a corner to solve a current problem
+2. Can we support this code for the next 6 months until a breaking release.
+3. Does this work as we expect it to.
+
+# What breaks at major releases? (6 months.. 1 year,  2 years)
+
+
+Our expectation is that major concepts will remain the same between releases??
+Additional non breaking functionality will be rapidly added in minor releases.
+When we move to a new major release, we will continue supporting the old release with security additions and gauruntee it will still run for 2 years on our platform.  New functionality will no longer be released to previous major releases.  We will do everything we can to facilitate upgrading your codebase to the new major release.
+
+
+
 
 ## Concepts
 The Flatfile hook system has been designed to enable fine grained functions to be used in combination to perform regular data validation and normalization tasks.  Flatfile is building out a comprehensive standard library so that developers can plug in the proper functions without having to write them from scratch.  This standard lib is leveraged by HDDL to describe implementations concisely.
 
   The data pipeline orders data transformations sos that functions at each point can be typed as strictly with the most strictly prescribed functionality.
+
+
+
 
 ![Event Sequence diagram](/assets/Event-Sequence.png)
 
@@ -92,6 +117,13 @@ The most common custom written hooks that we expect to see are row compute and f
 
   We expect users to very rarely write cast, these are some of the easiest and most important to add to FFL.
   most `empty`s will be implemented via `default` FFL
+
+## Best practices
+Use field functions as much as possible.
+field.compute should be idempotent, calling the same compute function on the output from the last invocation should return the original input
+`compute:(v:string) => {return v.toLocaleLowerCase()}` is a good function `compute("ASDF") === compute('asdf') === 'asdf'`
+
+
 
 ## FAQ
 
