@@ -1,35 +1,39 @@
 {
-    "name": "@flatfile/platform-sdk-starter",
-    "version": "0.0.0",
-    "description": "Basic starter project for the Flatfile Platform SDK",
-    "main": "./dist/index.js",
-    "module": "./dist/index.mjs",
-    "types": "./dist/index.d.ts",
-    "private": true,
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/FlatFilers/platform-sdk-starter.git"
-    },
-    "author": "",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/FlatFilers/platform-sdk-starter/issues"
-    },
-    "homepage": "https://github.com/FlatFilers/platform-sdk-starter#readme",
-    "scripts": {
-        "build": "tsup src/index.ts --format esm,cjs --dts",
-        "dev": "tsup src/index.ts --format esm,cjs --watch --dts",
-        "deploy": "flatfile publish ./src/index.ts",
-        "lint": "TIMING=1 eslint \"src/**/*.{ts,tsx,js,jsx}\" --fix",
-        "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-        "test": "jest --runInBand --detectOpenHandles --forceExit --passWithNoTests"
-    },
-    "devDependencies": {
-        "@flatfile/cli": "^0.1.0",
-        "@flatfile/configure": "^0.1.0",
-        "@types/jest": "^28.1.4",
-        "eslint": "^8.19.0",
-        "jest": "^28.1.2",
-        "ts-jest": "^28.0.5"
-    }
+  "name": "@flatfile/platform-sdk-starter",
+  "version": "0.0.0",
+  "description": "Basic starter project for the Flatfile Platform SDK",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlatFilers/platform-sdk-starter.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FlatFilers/platform-sdk-starter/issues"
+  },
+  "homepage": "https://github.com/FlatFilers/platform-sdk-starter#readme",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "dev": "tsup src/index.ts --format esm,cjs --watch --dts",
+    "deploy": "flatfile publish ./src/index.ts",
+    "lint": "TIMING=1 eslint \"src/**/*.{ts,tsx,js,jsx}\" --fix",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "test": "jest --runInBand --detectOpenHandles --forceExit --passWithNoTests"
+  },
+  "devDependencies": {
+    "@flatfile/cli": "^0.1.0",
+    "@flatfile/configure": "^0.3.1",
+    "@types/jest": "^28.1.4",
+    "eslint": "^8.19.0",
+    "jest": "^28.1.2",
+    "ts-jest": "^28.0.5"
+  },
+  "dependencies": {
+    "date-fns": "^2.29.1",
+    "phone-number-formatter-us": "^1.0.0"
+  }
 }

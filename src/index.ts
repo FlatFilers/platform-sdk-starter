@@ -7,41 +7,66 @@ import {
     Workbook,
 } from '@flatfile/configure'
 
-const CategoryAndBoolean = new Sheet(
-    'New Template With Category And Boolean',
+import { 
+    isNil,
+    isNotNil,
+    splitNames,
+    emailOrPhoneRequired,
+    dateFormatter,
+    countryAndZipCodeFormatter
+} from './data-hooks.js'
+
+const phoneFormatter = require ('phone-number-formatter-us')
+
+const mySheet = new Sheet(
+    'My Sheet 2',
     {
-        firstName: TextField({
-            required: true,
-            description: 'foo',
+        createDate: TextField('Create Date'),
+        firstName: TextField('First Name', {
+            description: 'Person First Name',
         }),
-        lastName: TextField(),
-        email: EmailField({
+        lastName: TextField('Last Name', {
+            required: true
+        }),
+        email: EmailField('Email Address', {
             nonPublic: true,
-            compute: (v) => v.toUpperCase(),
+            unique: true
         }),
-        boolean: BooleanField(),
-        selectOptions: CategoryField({
-            categories: { red: 'Red', blue: 'Blue', green: 'Green' }
+        phone: TextField('Phone Number', {
+            compute: (v) => isNotNil(v) ? phoneFormatter(v) : null,
         }),
-        phoneNumber: TextField(),
-        startDate: TextField(),
+        postalCode: TextField(),
+        country: TextField('Country', {
+            description: 'Primary country of residence'
+        }),
+        optedIn: BooleanField('Opted In'),
+        status: CategoryField('Deal Status', {
+            categories: {
+                prospecting: 'Prospecting',
+                discovery: 'Discovery',
+                proposal: 'Proposal',
+                negotiation: 'Negotiation',
+                closed_won: 'Closed Won',
+                closed_lost: 'Closed Lost'
+            }
+        }),
     },
     {
         allowCustomFields: true,
         readOnly: true,
-        onChange(record) {
-            const fName = record.get('firstName')
-            console.log(`lastName was ${record.get('lastName')}`)
-            record.set('lastName', fName)
+        onChange(record) {            
+            splitNames(record);
+            emailOrPhoneRequired(record);
+            dateFormatter(record);
+            countryAndZipCodeFormatter(record);
             return record
         },
-    }
-)
+    })
 
 export default new Workbook({
-    name: 'Category And Boolean Onboarding',
-    namespace: 'onboarding',
+    name: 'My Data Onboarding',
+    namespace: 'my onboarding',
     sheets: {
-        CategoryAndBoolean,
+        mySheet,
     },
 })
