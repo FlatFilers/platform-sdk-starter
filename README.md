@@ -94,16 +94,16 @@ We are big believers in Test Driven Development at Flatfile.  Well written tests
 ### Concepts
 The Flatfile hook system has been designed to enable fine grained functions to be used in combination to perform regular data validation and normalization tasks.  Flatfile is building out a comprehensive standard library so that developers can plug in the proper functions without having to write them from scratch.  This standard lib is leveraged by HDDL to describe implementations concisely.
 
-  The data pipeline orders data transformations sos that functions at each point can be typed as strictly with the most strictly prescribed functionality.
+  The data pipeline orders data transformations so that functions at each point can be typed as strictly with the most strictly prescribed functionality.  This strict typing leads to more reliable functions that don't have surprise missing, undefined, or weird values.
 
 
 ![Event Sequence diagram](/assets/Event-Sequence.png)
 
   1. Matching takes place.  At this point we have rows of fields with names mapped to sheet field names.  Currently there is no ability to influence matching from the SDK
   2. field cast, functions here take a string or undefined and return either the primitive type specified by the field, null, or throw an error.
-  3. field default, if `cast` returned null (but didn't throw an exception), a default value is filled in for the field
+  3. field default, if `cast` returned null (but didn't throw an error), a default value is filled in for the field
   4. field compute functions receive a single fully present value and return a value of the same type
-  5. row compute,  functions receive a row with all required fields fully present and optional fields typed `optional`.  Best used to compute derived values, can also be used to update existing fields.
+  5. row compute,  functions receive a row with all required fields fully present and optional fields typed `optional?:string`.  Best used to compute derived values, can also be used to update existing fields.
   6. field validate, functions receive a fully present value and return annotations for the corresponding cell
   7. row validate, functions receive the full row.
 
