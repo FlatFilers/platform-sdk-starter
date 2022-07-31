@@ -85,9 +85,7 @@ When our default `cast` function can't parse an incoming value in a reliable way
 
 ### Testing
 
-We are big believers in Test Driven Development at Flatfile.  Well written tests help you reason about the behavior of complex systems.  We extensively used tests while developing this SDK, look here.  We encourage you to use our testing system to speed your development.  Running tests on a Sheet or Workbook is much faster than deploying to Flatfile, and manually uploading data to verify behavior.  Your tests will stay in this repo and help you make better decisions as you update your sheets and workbooks to reflect changing business requirements.
-
-
+We are big believers in Test Driven Development at Flatfile.  Well written tests help you reason about the behavior of complex systems.  We extensively used tests while developing this SDK, look here.  We encourage you to use our testing system to speed your development.  Running tests on a Sheet or Workbook is much faster than deploying to Flatfile, and manually uploading data to verify behavior.  Your tests will stay in this repo and help you make better decisions as you update your sheets and workbooks to reflect changing business requirements. Stay tuned for future releases we will add even more capabilities to our testing system.  
 
 ## Advanced Topics
 
