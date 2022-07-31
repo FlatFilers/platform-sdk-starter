@@ -2,7 +2,11 @@
 Basic starter project for the Flatfile Platform SDK
 
 ## Introduction
-The platform SDK allows you to configure your Flatfile installation and deploy from the command line.
+- Platform SDK is the tool use to configure both the Flatfile Portal product and the workspace product
+- You will use this to define the ideal target structure of the data in your system and Flatfile will
+  take care of mapping any user provided data to this structure
+- This is an opinionated piece of software based on our extensive experience shaping unstructured messy data into clean data you can trust to import into your system.  Because of that philosophy many of our functions and processing flows are strict and nuanced.  We strive to provide sensible defaults, sound core concepts that can be extended, and especially to not do unexpected things with your data.
+
 
 
 ## Getting Started
@@ -71,11 +75,60 @@ Look at the `validate` function `salary`,  This uses Flatfile's builtin library 
 
 department, look at the `categories` option.  This takes keys of database value and Values of labels for those keys.
 
+We expect users to commonly override Validate to match their internal usecases,  Less commonly we expect rowCompute and recordsAsyncCompute to be used.  Further intricacies of the hook processing system is explained at the end of this document.
+
+### A note on parsing, casting, and field conversion.
+
+We have written sensible default implementations of cast functions for String, Number, and Date.  We wrote extensive tests to document and verify their behavior.  Please refer to those tests if you have any questions.
+
+When our default `cast` function can't parse an incoming value in a reliable way, the cast function throws an error, the descriptive error message shows up in the UI, and the original value is stored in the table so users can edit that value into a proper type.
+
+### Testing
+
+We are big believers in Test Driven Development at Flatfile.  Well written tests help you reason about the behavior of complex systems.  We extensively used tests while developing this SDK, look here.  We encourage you to use our testing system to speed your development.  Running tests on a Sheet or Workbook is much faster than deploying to Flatfile, and manually uploading data to verify behavior.  Your tests will stay in this repo and help you make better decisions as you update your sheets and workbooks to reflect changing business requirements.
+
+
+
+## Advanced Topics
+
+### Concepts
+The Flatfile hook system has been designed to enable fine grained functions to be used in combination to perform regular data validation and normalization tasks.  Flatfile is building out a comprehensive standard library so that developers can plug in the proper functions without having to write them from scratch.  This standard lib is leveraged by HDDL to describe implementations concisely.
+
+  The data pipeline orders data transformations sos that functions at each point can be typed as strictly with the most strictly prescribed functionality.
+
+
+![Event Sequence diagram](/assets/Event-Sequence.png)
+
+  1. Matching takes place.  At this point we have rows of fields with names mapped to sheet field names.  Currently there is no ability to influence matching from the SDK
+  2. field cast, functions here take a string or undefined and return either the primitive type specified by the field, null, or throw an error.
+  3. field default, if `cast` returned null (but didn't throw an exception), a default value is filled in for the field
+  4. field compute functions receive a single fully present value and return a value of the same type
+  5. row compute,  functions receive a row with all required fields fully present and optional fields typed `optional`.  Best used to compute derived values, can also be used to update existing fields.
+  6. field validate, functions receive a fully present value and return annotations for the corresponding cell
+  7. row validate, functions receive the full row.
+
+  if any function for a field throws an error, further processing is stopped for that field (what about the row?)
+
+The most common custom written hooks that we expect to see are row compute and field validate
+
+We expect users to very rarely write cast, these are some of the easiest and most important to add to FFL.
+
+### Async functions
+RowCompute is synchronous and only operates on one row at a time, in practice this isn't a big limitation because synchronous functions generally run extremely quickly in the node runtime.
+
+RecordsAsyncCompute runs after all RowCompute, and only operates on batches of records, 1000 at a time by default.  We made this engineering decision to encourage bulk operations when making external HTTP calls which tend to be slow.
+
+
+### Best practices
+Use field functions as much as possible.
+field.compute should be idempotent and converge to the same value after calling on the same input, calling the same compute function on the output from the last invocation should return the original input
+`compute:(v:string) => {return v.toLocaleLowerCase()}` is a good function `compute("ASDF") === compute('asdf') === 'asdf'`
+
 ## SDK philosophy
 
 We are writing this SDK to enable skilled practitioneers to quickly implement powerful transformations that take unstructured data from untrusted data and shape that data into clean normalized data for input into many systems.  This is the core of what Flatfile builds and we take it seriously.  We also take our relationship with customers seriously, balancing putting tools in your hands quickly with supporting existing usecases.  We are here to listen to your feedback and build tools for you.
 
-This initial release of the SDK is purposely limited in scope to include only the pieces we are most sure about.  We intend to rapidly release new functionality to the SDK and our platform as our understanding grows and we have time to put the best tools in front of you.  
+This initial release of the SDK is purposely limited in scope to include only the pieces we are most sure about.  We intend to rapidly release new functionality to the SDK and our platform as our understanding grows and we have time to put the best tools in front of you.
 
 When releasing pieces to the SDK our thought process is guided by he following principles.
 
@@ -89,39 +142,6 @@ When releasing pieces to the SDK our thought process is guided by he following p
 Our expectation is that major concepts will remain the same between releases??
 Additional non breaking functionality will be rapidly added in minor releases.
 When we move to a new major release, we will continue supporting the old release with security additions and gauruntee it will still run for 2 years on our platform.  New functionality will no longer be released to previous major releases.  We will do everything we can to facilitate upgrading your codebase to the new major release.
-
-
-
-
-## Concepts
-The Flatfile hook system has been designed to enable fine grained functions to be used in combination to perform regular data validation and normalization tasks.  Flatfile is building out a comprehensive standard library so that developers can plug in the proper functions without having to write them from scratch.  This standard lib is leveraged by HDDL to describe implementations concisely.
-
-  The data pipeline orders data transformations sos that functions at each point can be typed as strictly with the most strictly prescribed functionality.
-
-
-
-
-![Event Sequence diagram](/assets/Event-Sequence.png)
-
-  1. Matching takes place.  At this point we have rows of fields with names mapped to sheet field names.  Currently there is no ability to influence matching from the SDK
-  2. field cast, functions here take a string or undefined and return either the primitive type specified by the field, or undefined.
-  3. field empty, functions here allow a field to provide a default value. this function returns the primitive type of the field or undefined.
-  4. field compute functions receive a single FNUT value and return a value of the same type
-  5. row compute,  functions receive a row with all required fields FNUT and optional fields maybe typed.  Best used to compute derived values, can also be used to update existing fields.
-  6. field validate, functions receive a FNUT value and return annotations for the corresponding cell
-  7. row validate, functions receive the full row.
-
-  if any function for a field throws an error, further processing is stopped for that field (what about the row?)
-
-The most common custom written hooks that we expect to see are row compute and field validate
-
-  We expect users to very rarely write cast, these are some of the easiest and most important to add to FFL.
-  most `empty`s will be implemented via `default` FFL
-
-## Best practices
-Use field functions as much as possible.
-field.compute should be idempotent, calling the same compute function on the output from the last invocation should return the original input
-`compute:(v:string) => {return v.toLocaleLowerCase()}` is a good function `compute("ASDF") === compute('asdf') === 'asdf'`
 
 
 
