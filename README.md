@@ -50,7 +50,7 @@ const Employees = new Sheet(
   {
     allowCustomFields: true,
     readOnly: true,
-    onChange(record) {
+    rowCompute(record) {
 	  const fullName = `{record.get('firstName')} {record.get('lastName')}`
       console.log(`fullName, {fullName}`)
       record.set(fullName', fullName)
@@ -150,15 +150,11 @@ When we move to a new major release, we will continue supporting the old release
 
 * How can check the type and size of an url and return an error if the linked file is > 5mb or not an image
   * Currently this is best accomplished with a text field named `s3_url` that will match to the URL provided in the upload, and a  row `compute` that stores the size of the download to `s3_url_size`,  `s3_url_size` should have an `validate` of less than 5M.
-
   * In the near future this will be handled with a computed filed that takes `s3_url` as an input and outputs `s3_url_size`
-
   * In the longer term this will be handled by a `SmartURLCapture` field that stores URLs to a synced s3 bucket and provides metadata about the download including size.  The `validate` will run on the size property of the `SmartURLCapture` field
-
-* Using a domain field, I can call the clearbit API and populate another field with an image url to their logo.
+* Using a domain name (www.flatfile.com) field, I can call the clearbit API and populate another field with an image url to their logo.
   * Currently this is best accomplished via a row `compute`.
   * Eventually we will build in Clearbit integrated fields
-
 * When adding an EmailField, if I specify “showSpamScore: true” I want a second, non-matcheable, readonly column to be added immediately after `email` called Spam Score. On input of any email I want to update the spam score field with the results from an API.
   * To get similar behavior use row `compute` to fake a computed field like the previous three examples
   * The result is possible but this implementation is currently not possible with the SDK
@@ -166,11 +162,10 @@ When we move to a new major release, we will continue supporting the old release
   
 
 * I can round a number to two decimal places and simultaneously add a warning saying “this number was rounded to two decimal places: original number 90.090293
-  * This would be best accomplished with field `compute`.  It is unclear if the warning would be lost the next time a row was editted (because `compute` would then receive the already rounded version, and there wouldn't be anything to warn about).  
-  * This usecase speaks to the need to maintain an `original` value and `output` value.  Currently our system conflates the two.
-* I can generate an error if an email is an invalid format that says “Email is invalid format”
+  * This needs to be done via `rowCompute` or `batchRecordsCompute` we currently only allow mutating data and simultaneously adding message in those hooks.
+* How can I generate an error if an email is an invalid format that says “Email is invalid format”
   * This would be accomplished with `validate`
-* I can normalize a phone number and use a nearby country field to “hint” which country the phone number may belong to get a more accurate result. The country field must be normalized to an ISO code first.
+* How can I normalize a phone number and use a nearby country field to “hint” which country the phone number may belong to get a more accurate result. The country field must be normalized to an ISO code first.
   * At first glance this could work as a row `compute` to add Country code to phone numbers.
   * In a future version of the SDK, this probably requires hooks to influence the matching system.
   
