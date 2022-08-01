@@ -145,10 +145,10 @@ When we move to a new major release, we will continue supporting the old release
 
 ## FAQ
 
-* I can lowercase an email field anytime input is provided by a file or manual entry
+* How can I lowercase an email field anytime input is provided by a file or manual entry
   *This is a good use for field `compute`.  This function will be idempotent (running it over and over on the same input produces the same output and state)
 
-* I can check the type and size of an url and return an error if the linked file is > 5mb or not an image
+* How can check the type and size of an url and return an error if the linked file is > 5mb or not an image
   * Currently this is best accomplished with a text field named `s3_url` that will match to the URL provided in the upload, and a  row `compute` that stores the size of the download to `s3_url_size`,  `s3_url_size` should have an `validate` of less than 5M.
 
   * In the near future this will be handled with a computed filed that takes `s3_url` as an input and outputs `s3_url_size`
