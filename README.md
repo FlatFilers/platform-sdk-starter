@@ -97,11 +97,11 @@ const Employees = new Sheet(
 This workbook uses the 6 builtin Flatfile fields `TextField`, `NumberField`, `DateField`, `OptionField`, `BooleanField`, to represent a workbook used to receive employee data.  There are a couple of interesting things to note about this Sheet and Workbook:
 
 Note that `fullName` is computed from `firstName` and `lastName`.  The `onChange` function gets the whole row to modify.
-Look at the `validate` function `salary`,  This uses Flatfile's builtin library to succinctly express that Salary must be between 0 and 350,000.
+Look at the `validate` function on the `salary` field, salary must be greater than 30,000.
 
 department, look at the `categories` option.  This takes keys of database value and Values of labels for those keys.
 
-We expect users to commonly override Validate to match their internal usecases,  Less commonly we expect recordCompute and batchRecordsCompue to be used.  Further intricacies of the hook processing system are explained at the end of this document.
+We expect users to commonly override Validate to match their internal usecases,  Less commonly we expect recordCompute and batchRecordsCompute to be used.  Further intricacies of the hook processing system are explained at the end of this document.
 
 ## What datahooks do I want to use?
 Per field, you probably want `validate` this function gets the proper type per field, and lets you add messages to the cell, including errors, warnings, and rejections.  For simple row work (that doesn't make HTTP calls) use `recordCompute` on sheet.  If you need to make an a call to an external API, reach for `batchRecordsCompute` on sheet, this allows you to request info about multipel values at once for increased performance.
