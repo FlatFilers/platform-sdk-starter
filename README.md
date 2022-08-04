@@ -28,7 +28,7 @@ Basic starter project for the Flatfile Platform SDK
 
 Then navigate over to your dashboard and see newly deployed workspace
 ## Sample Workbook
-```
+```js
 const Employees = new Sheet(
   'ValidateSalaryEmployees..',
   {
