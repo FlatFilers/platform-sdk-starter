@@ -30,45 +30,71 @@ Then navigate over to your dashboard and see newly deployed workspace
 ## Sample Workbook
 ```
 const Employees = new Sheet(
-  'Standard form that employee records should map too,
+  'ValidateSalaryEmployees..',
   {
     firstName: TextField({
       required: true,
-      description: 'Given name'}),
-    lastName: TextField({}), 
+      description: 'Given name',
+    }),
+    lastName: TextField({}),
     fullName: TextField({}),
-    email: EmailField({
-      nonPublic: true,
-      compute: (v) => v.toUpperCase()}),
     stillEmployed: BooleanField(),
-    department: CategoryField('Department', {
-      categories: { engineering: 'Engineering', hr: 'People Ops', sales: 'Revenue'}}),
-	startDate: DateField({}),
-	salary: NumberField({
-	  'Salary', {description:'Annual Salary in USD', required:true, 
-      validate: ff.hooklib.between(0, 350_000)})},
+    department: OptionField({
+      label: 'Department',
+      options: {
+        engineering: 'Engineering',
+        hr: 'People Ops',
+        sales: 'Revenue',
+      },
+    }),
+    startDate: DateField('Start Date'),
+    salary: NumberField({
+      label: 'Salary',
+      description: 'Annual Salary in USD',
+      required: true,
+      validate: (salary: number) => {
+        const minSalary = 30_000
+        if (salary < minSalary) {
+          return [
+            new Message(
+              `${salary} is less than minimum wage ${minSalary}`,
+              'warn',
+              'validate'
+            ),
+          ]
+        }
+      },
+    }),
+  },
   {
     allowCustomFields: true,
     readOnly: true,
-    rowCompute(record) {
-	  const fullName = `{record.get('firstName')} {record.get('lastName')}`
-      console.log(`fullName, {fullName}`)
-      record.set(fullName', fullName)
-      return record}})
-
-export default new Workbook({
-  name: 'Employee Onboarding',
-  namespace: 'onboarding',
-  sheets: {
-    Employees}})
+    recordCompute: (record) => {
+      const fullName = `${record.get('firstName')} ${record.get('lastName')}`
+      record.set('fullName', fullName)
+    },
+    batchRecordsCompute: async (records) => {
+      const response = await fetch('https://api.us.flatfile.io/health', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+      const result = await response.json()
+      records.records.map(async (record) => {
+        await record.set('fromHttp', result.info.postgres.status)
+      })
+    },
+  }
+)
 ```
 
-Include screenshot of data table from deployed schema
+![Sample Data upload](/assets/SampleImportErrors.png)
 
 
 ### Sample Workbook explained
 
-This workbook uses the 6 builtin Flatfile fields `TextField`, `NumberField`, `DateField`, `CategoryField`, `EmailField`, `BooleanField`, to represent a workbook used to receive employee data.  There are a couple of interesting things to note about this Sheet and Workbook:
+This workbook uses the 6 builtin Flatfile fields `TextField`, `NumberField`, `DateField`, `OptionField`, `BooleanField`, to represent a workbook used to receive employee data.  There are a couple of interesting things to note about this Sheet and Workbook:
 
 Note that `fullName` is computed from `firstName` and `lastName`.  The `onChange` function gets the whole row to modify.
 Look at the `validate` function `salary`,  This uses Flatfile's builtin library to succinctly express that Salary must be between 0 and 350,000.
@@ -77,11 +103,14 @@ department, look at the `categories` option.  This takes keys of database value 
 
 We expect users to commonly override Validate to match their internal usecases,  Less commonly we expect rowCompute and recordsAsyncCompute to be used.  Further intricacies of the hook processing system is explained at the end of this document.
 
+## What datahooks do I want to use?
+Per field, you probably want `validate` this function gets the proper type per field, and lets you add messages to the cell, including errors, warnings, and rejections.  For simple row work (that doesn't make HTTP calls) use `rowCompute` on sheet.  If you need to make an a call to an external API, reach for `batchRecordsCompute` on sheet, this allows you to request info about multipel values at once for increased performance.  
+
 ### A note on parsing, casting, and field conversion.
 
-We have written sensible default implementations of cast functions for String, Number, and Date.  We wrote extensive tests to document and verify their behavior.  Please refer to those tests if you have any questions.
+We have written sensible default implementations of cast functions for TextField, NumberField, and DateField.  We wrote extensive tests to document and verify their behavior.  Please refer to those tests if you have any questions.
 
-When our default `cast` function can't parse an incoming value in a reliable way, the cast function throws an error, the descriptive error message shows up in the UI, and the original value is stored in the table so users can edit that value into a proper type.
+When our default `cast` function can't parse an incoming value in a reliable way, the cast function throws an error, the error message shows up in the UI, and the original value is stored in the table so users can edit that value into a proper type.
 
 ### Testing
 
