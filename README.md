@@ -101,14 +101,14 @@ Look at the `validate` function `salary`,  This uses Flatfile's builtin library 
 
 department, look at the `categories` option.  This takes keys of database value and Values of labels for those keys.
 
-We expect users to commonly override Validate to match their internal usecases,  Less commonly we expect rowCompute and recordsAsyncCompute to be used.  Further intricacies of the hook processing system is explained at the end of this document.
+We expect users to commonly override Validate to match their internal usecases,  Less commonly we expect recordCompute and batchRecordsCompue to be used.  Further intricacies of the hook processing system are explained at the end of this document.
 
 ## What datahooks do I want to use?
-Per field, you probably want `validate` this function gets the proper type per field, and lets you add messages to the cell, including errors, warnings, and rejections.  For simple row work (that doesn't make HTTP calls) use `rowCompute` on sheet.  If you need to make an a call to an external API, reach for `batchRecordsCompute` on sheet, this allows you to request info about multipel values at once for increased performance.  
+Per field, you probably want `validate` this function gets the proper type per field, and lets you add messages to the cell, including errors, warnings, and rejections.  For simple row work (that doesn't make HTTP calls) use `recordCompute` on sheet.  If you need to make an a call to an external API, reach for `batchRecordsCompute` on sheet, this allows you to request info about multipel values at once for increased performance.
 
 ### A note on parsing, casting, and field conversion.
 
-We have written sensible default implementations of cast functions for TextField, NumberField, and DateField.  We wrote extensive tests to document and verify their behavior.  Please refer to those tests if you have any questions.
+We have written sensible default implementations of cast functions for TextField, NumberField, and DateField.  We wrote extensive tests to document and verify their behavior.  Please refer to [the CastFunction tests](https://github.com/FlatFilers/platform-sdk-mono/blob/main/packages/configure/src/stdlib/CastFunctions.spec.ts) to see more.
 
 When our default `cast` function can't parse an incoming value in a reliable way, the cast function throws an error, the error message shows up in the UI, and the original value is stored in the table so users can edit that value into a proper type.
 
@@ -124,15 +124,17 @@ The Flatfile hook system has been designed to enable fine grained functions to b
   The data pipeline orders data transformations so that functions at each point can be typed as strictly with the most strictly prescribed functionality.  This strict typing leads to more reliable functions that don't have surprise missing, undefined, or weird values.
 
 
+
 ![Event Sequence diagram](/assets/Event-Sequence.png)
 
   1. Matching takes place.  At this point we have rows of fields with names mapped to sheet field names.  Currently there is no ability to influence matching from the SDK
   2. field cast, functions here take a string or undefined and return either the primitive type specified by the field, null, or throw an error.
   3. field default, if `cast` returned null (but didn't throw an error), a default value is filled in for the field
   4. field compute functions receive a single fully present value and return a value of the same type
-  5. row compute,  functions receive a row with all required fields fully present and optional fields typed `optional?:string`.  Best used to compute derived values, can also be used to update existing fields.
-  6. field validate, functions receive a fully present value and return annotations for the corresponding cell
-  7. row validate, functions receive the full row.
+  5. `recordCompute`,  functions receive a row with all required fields fully present and optional fields typed `optional?:string`.  Best used to compute derived values, can also be used to update existing fields.
+  6. `batchRecordsCompute` asynchronous (http/api) calls are made to fill in values from external services.  This takes `records` so it is easier to make bulk calls.
+  7. field `validate`, functions receive a fully present value and return annotations for the corresponding cell
+
 
   if any function for a field throws an error, further processing is stopped for that field (what about the row?)
 
@@ -141,9 +143,9 @@ The most common custom written hooks that we expect to see are row compute and f
 We expect users to very rarely write cast, these are some of the easiest and most important to add to FFL.
 
 ### Async functions
-RowCompute is synchronous and only operates on one row at a time, in practice this isn't a big limitation because synchronous functions generally run extremely quickly in the node runtime.
+`recordCompute` is synchronous and only operates on one row at a time, in practice this isn't a big limitation because synchronous functions generally run extremely quickly in the node runtime.
 
-RecordsAsyncCompute runs after all RowCompute, and only operates on batches of records, 1000 at a time by default.  We made this engineering decision to encourage bulk operations when making external HTTP calls which tend to be slow.
+`batchRecordsCompute` runs after all `recordCompute` hasve finished, and only operates on batches of records.  We made this engineering decision to encourage bulk operations when making external HTTP calls which tend to be slow.
 
 
 ### Best practices
@@ -191,7 +193,7 @@ When we move to a new major release, we will continue supporting the old release
   
 
 * I can round a number to two decimal places and simultaneously add a warning saying “this number was rounded to two decimal places: original number 90.090293
-  * This needs to be done via `rowCompute` or `batchRecordsCompute` we currently only allow mutating data and simultaneously adding message in those hooks.
+  * This needs to be done via `recordCompute` or `batchRecordsCompute` we currently only allow mutating data and simultaneously adding message in those hooks.
 * How can I generate an error if an email is an invalid format that says “Email is invalid format”
   * This would be accomplished with `validate`
 * How can I normalize a phone number and use a nearby country field to “hint” which country the phone number may belong to get a more accurate result. The country field must be normalized to an ISO code first.
