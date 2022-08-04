@@ -2,7 +2,7 @@
 Basic starter project for the Flatfile Platform SDK
 
 ## Introduction
-- Platform SDK is the tool use to configure both the Flatfile Portal product and the workspace product
+- Platform SDK is the tool used to configure both the Flatfile Portal product and the Workspace product
 - You will use this to define the ideal target structure of the data in your system and Flatfile will
   take care of mapping any user provided data to this structure
 - This is an opinionated piece of software based on our extensive experience shaping unstructured messy data into clean data you can trust to import into your system.  Because of that philosophy many of our functions and processing flows are strict and nuanced.  We strive to provide sensible defaults, sound core concepts that can be extended, and especially to not do unexpected things with your data.
@@ -13,7 +13,7 @@ Basic starter project for the Flatfile Platform SDK
 
 ### Configure the environment
 1. Create a `.env` file in the project root using the `.env.example` file as a template.
-2. Follow these [instructions](https://support.flatfile.com/hc/en-us/articles/4406299638932-How-can-I-create-API-Keys-) to generate an **Access Key ID** and **Secret Access Key**
+2. Follow these [instructions](https://docs.flatfile.com/api-reference/rest#managing-access-keys) to generate an **Access Key ID** and **Secret Access Key**
 3. Add the Access Key ID to your `.env` file as the `FLATFILE_ACCESS_KEY_ID` variable
 4. Add the Secret Access Key to your `.env` file as the `FLATFILE_SECRET` variable
 5. Login to Flatfile and [find your team ID](https://support.flatfile.com/hc/en-us/articles/6097149079188-Where-is-my-TeamID-What-other-IDs-do-I-need-to-know-)
@@ -28,7 +28,7 @@ Basic starter project for the Flatfile Platform SDK
 
 Then navigate over to your dashboard and see newly deployed workspace
 ## Sample Workbook
-```js
+```
 const Employees = new Sheet(
   'ValidateSalaryEmployees..',
   {
@@ -121,7 +121,7 @@ We are big believers in Test Driven Development at Flatfile.  Well written tests
 ### Concepts
 The Flatfile hook system has been designed to enable fine grained functions to be used in combination to perform regular data validation and normalization tasks.  Flatfile is building out a comprehensive standard library so that developers can plug in the proper functions without having to write them from scratch.  This standard lib is leveraged by HDDL to describe implementations concisely.
 
-  The data pipeline orders data transformations so that functions at each point can be typed as strictly with the most strictly prescribed functionality.  This strict typing leads to more reliable functions that don't have surprise missing, undefined, or weird values.
+The data pipeline orders data transformations so that functions at each point can be typed as strictly with the most strictly prescribed functionality.  This strict typing leads to more reliable functions that don't have surprise missing, undefined, or weird values.
 
 
 
