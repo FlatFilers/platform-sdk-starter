@@ -1,48 +1,68 @@
 import {
   BooleanField,
-  CategoryField,
-  EmailField,
+  OptionField,
   TextField,
   Sheet,
   Workbook,
+  NumberField,
 } from '@flatfile/configure'
 
-const CategoryAndBoolean = new Sheet(
-  'New Template With Category And Boolean',
+import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
+import fetch from 'node-fetch'
+
+const Employees = new Sheet(
+  'Employees',
   {
     firstName: TextField({
       required: true,
-      description: 'foo',
+      description: 'Given name',
     }),
+    lastName: TextField({}),
+    fullName: TextField({}),
 
-    lastName: TextField(),
-    email: EmailField({
-      nonPublic: true,
-      compute: (v) => v.toUpperCase(),
+    stillEmployed: BooleanField(),
+    department: OptionField({
+      label: 'Department',
+      options: {
+        engineering: 'Engineering',
+        hr: 'People Ops',
+        sales: 'Revenue',
+      },
     }),
-    boolean: BooleanField(),
-    selectOptions: CategoryField('Custom Category', {
-      categories: { red: 'Red', blue: 'Blue', green: 'Green' },
+    fromHttp: TextField({ label: 'Set by batchRecordCompute' }),
+    salary: NumberField({
+      label: 'Salary',
+      description: 'Annual Salary in USD',
+      required: true,
     }),
-    phoneNumber: TextField(),
-    startDate: TextField(),
   },
   {
     allowCustomFields: true,
     readOnly: true,
-    onChange(record) {
-      const fName = record.get('firstName')
-      console.log(`lastName was ${record.get('lastName')}`)
-      record.set('lastName', fName)
+    recordCompute: (record) => {
+      const fullName = `{record.get('firstName')} {record.get('lastName')}`
+      record.set('fullhName', fullName)
       return record
+    },
+    batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
+      const response = await fetch('https://api.us.flatfile.io/health', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+      const result = await response.json()
+      payload.records.map(async (record: FlatfileRecord) => {
+        record.set('fromHttp', result.info.postgres.status)
+      })
     },
   }
 )
 
 export default new Workbook({
-  name: 'Category And Boolean Onboarding',
-  namespace: 'onboarding',
+  name: 'Employees',
+  namespace: 'employee',
   sheets: {
-    CategoryAndBoolean,
+    Employees,
   },
 })

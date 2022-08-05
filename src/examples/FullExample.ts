@@ -1,5 +1,6 @@
-import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
 import fetch from 'node-fetch'
+
+import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
 import {
   Sheet,
   Workbook,
@@ -7,7 +8,6 @@ import {
   BooleanField,
   NumberField,
   OptionField,
-  Message,
 } from '@flatfile/configure'
 
 const Employees = new Sheet(
@@ -44,7 +44,7 @@ const Employees = new Sheet(
       record.set('fullhName', fullName)
       return record
     },
-    batchRecordsCompute: async (payload: FlatfileRecords) => {
+    batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
       const response = await fetch('https://api.us.flatfile.io/health', {
         method: 'GET',
         headers: {
@@ -52,7 +52,7 @@ const Employees = new Sheet(
         },
       })
       const result = await response.json()
-      payload.records.map(async (record:FlatfileRecord) => {
+      payload.records.map(async (record: FlatfileRecord) => {
         await record.set('fromHttp', result.info.postgres.status)
       })
     },
