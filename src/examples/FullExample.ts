@@ -17,8 +17,8 @@ const Employees = new Sheet(
       required: true,
       description: 'Given name',
     }),
-    lastName: TextField({}),
-    fullName: TextField({}),
+    lastName: TextField(),
+    fullName: TextField(),
 
     stillEmployed: BooleanField(),
     department: OptionField({
