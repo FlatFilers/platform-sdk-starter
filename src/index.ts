@@ -5,6 +5,7 @@ import {
   Sheet,
   Workbook,
   NumberField,
+  Message,
 } from '@flatfile/configure'
 
 import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
@@ -17,14 +18,18 @@ const Employees = new Sheet(
       required: true,
       description: 'Given name',
     }),
-    lastName: TextField(),
+    lastName: TextField({
+      compute: (v: any) => {
+        return `Rock`
+      },
+    }),
     fullName: TextField(),
 
     stillEmployed: BooleanField(),
     department: OptionField({
       label: 'Department',
       options: {
-        engineering: 'Engineering',
+        engineering: { label: 'Engineering' },
         hr: 'People Ops',
         sales: 'Revenue',
       },
@@ -34,6 +39,18 @@ const Employees = new Sheet(
       label: 'Salary',
       description: 'Annual Salary in USD',
       required: true,
+      validate: (salary: number) => {
+        const minSalary = 30_000
+        if (salary < minSalary) {
+          return [
+            new Message(
+              `${salary} is less than minimum wage ${minSalary}`,
+              'warn',
+              'validate'
+            ),
+          ]
+        }
+      },
     }),
   },
   {
