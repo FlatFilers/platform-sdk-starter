@@ -1,16 +1,14 @@
-import {
-  BooleanField,
-  DateField,
-  Message,
-  NumberField,
-  OptionField,
-  Sheet,
-  TextField,
-  Workbook,
-} from '@flatfile/configure'
+import fetch from 'node-fetch'
 
 import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
-import fetch from 'node-fetch'
+import {
+  Sheet,
+  Workbook,
+  TextField,
+  BooleanField,
+  NumberField,
+  OptionField,
+} from '@flatfile/configure'
 
 const Employees = new Sheet(
   'Employees',
@@ -19,18 +17,14 @@ const Employees = new Sheet(
       required: true,
       description: 'Given name',
     }),
-    lastName: TextField({
-      compute: (v: any) => {
-        return `Rock`
-      },
-    }),
+    lastName: TextField(),
     fullName: TextField(),
 
     stillEmployed: BooleanField(),
     department: OptionField({
       label: 'Department',
       options: {
-        engineering: { label: 'Engineering' },
+        engineering: 'Engineering',
         hr: 'People Ops',
         sales: 'Revenue',
       },
@@ -40,20 +34,7 @@ const Employees = new Sheet(
       label: 'Salary',
       description: 'Annual Salary in USD',
       required: true,
-      validate: (salary: number) => {
-        const minSalary = 30_000
-        if (salary < minSalary) {
-          return [
-            new Message(
-              `${salary} is less than minimum wage ${minSalary}`,
-              'warn',
-              'validate'
-            ),
-          ]
-        }
-      },
     }),
-    startDate: DateField()
   },
   {
     allowCustomFields: true,
@@ -72,15 +53,15 @@ const Employees = new Sheet(
       })
       const result = await response.json()
       payload.records.map(async (record: FlatfileRecord) => {
-        record.set('fromHttp', result.info.postgres.status)
+        await record.set('fromHttp', result.info.postgres.status)
       })
     },
   }
 )
 
 export default new Workbook({
-  name: 'Employees',
-  namespace: 'employee',
+  name: 'Migration stage1',
+  namespace: 'MyCompany',
   sheets: {
     Employees,
   },
