@@ -1,11 +1,12 @@
 import {
   BooleanField,
-  OptionField,
-  TextField,
-  Sheet,
-  Workbook,
-  NumberField,
+  DateField,
   Message,
+  NumberField,
+  OptionField,
+  Sheet,
+  TextField,
+  Workbook,
 } from '@flatfile/configure'
 
 import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
@@ -52,6 +53,7 @@ const Employees = new Sheet(
         }
       },
     }),
+    startDate: DateField()
   },
   {
     allowCustomFields: true,
