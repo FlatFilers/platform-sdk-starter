@@ -8,10 +8,6 @@ Basic starter project for the Flatfile Platform SDK
 - This is an opinionated piece of software based on our extensive experience shaping unstructured messy data into clean data you can trust to import into your system.  Because of that philosophy many of our functions and processing flows are strict and nuanced.  We strive to provide sensible defaults, sound core concepts that can be extended, and especially to not do unexpected things with your data.
 
 
-## Getting Started
-
-
-
 ## Sample Workbook
 ```
 const Employees = new Sheet('Employees', {
@@ -39,10 +35,11 @@ const Employees = new Sheet('Employees', {
               `${salary} is less than minimum wage ${minSalary}`,
 ...			  
 ```
-[Full Example](src/examples/FullExample.ts)
+[Full Example Source Code](src/examples/FullExample.ts)
 ![Sample Data upload](/assets/SampleImportErrors.png)
 
-
+## Getting Started 
+We will deploy the above example project.
 ### Configure the environment
 1. Create a `.env` file in the project root using the `.env.example` file as a template.
 2. Follow these [instructions](https://docs.flatfile.com/api-reference/rest#managing-access-keys) to generate an **Access Key ID** and **Secret Access Key**
@@ -52,11 +49,8 @@ const Employees = new Sheet('Employees', {
 6. Add the Team ID to your `.env` file as the `FLATFILE_TEAM_ID` variable
 
 ### Deploy the Schema
-1. Login to Flatfile and [find your team ID](https://support.flatfile.com/hc/en-us/articles/6097149079188-Where-is-my-TeamID-What-other-IDs-do-I-need-to-know-)
-2. From the root directory of this project run `npx --yes @flatfile/cli publish ./src/index.ts --team <YOUR_TEAM_ID>`
-
-
-3. From the root directory of this project run `npm run deploy`
+1. From the root directory of this project run `npx --yes @flatfile/cli publish ./src/index.ts --team <YOUR_TEAM_ID>`
+2. From the root directory of this project run `npm run deploy`
 
 Then navigate over to your dashboard and see newly deployed workspace
 
@@ -71,7 +65,7 @@ department, look at the `categories` option.  This takes keys of database value 
 
 We expect users to commonly override Validate to match their internal usecases,  Less commonly we expect recordCompute and batchRecordsCompute to be used.  Further intricacies of the hook processing system are explained at the end of this document.
 
-## What datahooks do I want to use?
+## What Data Hooks do I want to use?
 Per field, you probably want `validate` this function gets the proper type per field, and lets you add messages to the cell, including errors, warnings, and rejections.  For simple row work (that doesn't make HTTP calls) use `recordCompute` on sheet.  If you need to make an a call to an external API, reach for `batchRecordsCompute` on sheet, this allows you to request info about multipel values at once for increased performance.
 
 ### A note on parsing, casting, and field conversion.
@@ -80,6 +74,12 @@ We have written sensible default implementations of cast functions for TextField
 
 When our default `cast` function can't parse an incoming value in a reliable way, the cast function throws an error, the error message shows up in the UI, and the original value is stored in the table so users can edit that value into a proper type.
 
+### Best practices
+#### Use field functions as much as possible.
+field.compute should be idempotent and converge to the same value after calling on the same input, calling the same compute function on the output from the last invocation should return the original input
+`compute:(v:string) => {return v.toLocaleLowerCase()}` is a good function `compute("ASDF") === compute('asdf') === 'asdf'`
+
+
 ### Testing
 
 We are big believers in Test Driven Development at Flatfile.  Well written tests help you reason about the behavior of complex systems.  We extensively used tests while developing this SDK, look here.  We encourage you to use our testing system to speed your development.  Running tests on a Sheet or Workbook is much faster than deploying to Flatfile, and manually uploading data to verify behavior.  Your tests will stay in this repo and help you make better decisions as you update your sheets and workbooks to reflect changing business requirements. Stay tuned for future releases we will add even more capabilities to our testing system.  
@@ -87,12 +87,9 @@ We are big believers in Test Driven Development at Flatfile.  Well written tests
 ## Advanced Topics
 
 ### Concepts
-The Flatfile hook system has been designed to enable fine grained functions to be used in combination to perform regular data validation and normalization tasks.  Flatfile is building out a comprehensive standard library so that developers can plug in the proper functions without having to write them from scratch.  This standard lib is leveraged by HDDL to describe implementations concisely.
+The Flatfile Data Hook system has been designed to enable fine grained functions to be used in combination to perform regular data validation and normalization tasks.  Flatfile is building out a comprehensive standard library so that developers can plug in the proper functions without having to write them from scratch.  This standard lib is leveraged by HDDL to describe implementations concisely.
 
 The data pipeline orders data transformations so that functions at each point can be typed as strictly with the most strictly prescribed functionality.  This strict typing leads to more reliable functions that don't have surprise missing, undefined, or weird values.
-
-
-
 ![Event Sequence diagram](/assets/Event-Sequence.png)
 
   1. Matching takes place.  At this point we have rows of fields with names mapped to sheet field names.  Currently there is no ability to influence matching from the SDK
@@ -116,10 +113,6 @@ We expect users to very rarely write cast, these are some of the easiest and mos
 `batchRecordsCompute` runs after all `recordCompute` hasve finished, and only operates on batches of records.  We made this engineering decision to encourage bulk operations when making external HTTP calls which tend to be slow.
 
 
-### Best practices
-Use field functions as much as possible.
-field.compute should be idempotent and converge to the same value after calling on the same input, calling the same compute function on the output from the last invocation should return the original input
-`compute:(v:string) => {return v.toLocaleLowerCase()}` is a good function `compute("ASDF") === compute('asdf') === 'asdf'`
 
 ## SDK philosophy
 
@@ -132,14 +125,6 @@ When releasing pieces to the SDK our thought process is guided by he following p
 1. Does this solve a problem in an extensible way... Will we paint ourselves into a corner to solve a current problem
 2. Can we support this code for the next 6 months until a breaking release.
 3. Does this work as we expect it to.
-
-# What breaks at major releases? (6 months.. 1 year,  2 years)
-
-
-Our expectation is that major concepts will remain the same between releases??
-Additional non breaking functionality will be rapidly added in minor releases.
-When we move to a new major release, we will continue supporting the old release with security additions and gauruntee it will still run for 2 years on our platform.  New functionality will no longer be released to previous major releases.  We will do everything we can to facilitate upgrading your codebase to the new major release.
-
 
 
 ## FAQ
