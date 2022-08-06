@@ -4,7 +4,8 @@ Basic starter project for the Flatfile Platform SDK
 
 ## Introduction
 
-- Platform SDK is the tool used to configure both the Flatfile Portal product and the Workspaces product
+The Flatfile Platform SDK is the tool used to configure all pre-packaged products at Flatfile. Currently, Flatfile's two flagship products are: Flatfile Portal and Flatfile Workspaces
+
 - You will use this to define the ideal target structure of the data in your system and Flatfile will
   take care of mapping any user provided data to this structure
 - This is an opinionated piece of software based on our extensive experience shaping unstructured messy data into clean data you can trust to import into your system. Because of that philosophy many of our functions and processing flows are strict and nuanced. We strive to provide sensible defaults, sound core concepts that can be extended, and especially to not do unexpected things with your data.
