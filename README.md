@@ -1,17 +1,32 @@
-# Flatfile Platform SDK Starter kit
 
-Basic starter project for the Flatfile Platform SDK
+# Quickstart
+Use this quickstart guide to get up and running with Flatfile. You'll learn how to get your access keys, configure your environment, and deploy an example project for importing employee data.
 
-## Introduction
+### 1. Establish Access
 
-- Platform SDK is the tool used to configure both the Flatfile Portal product and the Workspaces product directly from your code.
-- You will use this to define the ideal target structure of the data in your system and Flatfile will
-  take care of mapping any user provided data to this structure.
-- This is an opinionated piece of software based on our extensive experience shaping unstructured messy data into clean data you can trust to import into your system. Because of that philosophy many of our functions and processing flows are strict and nuanced. We strive to provide sensible defaults, sound core concepts that can be extended, and especially to not do unexpected things with your data.
+After you create your account in Flatfile, we create a **Team ID**, an **Access Key ID**, and a **Secret Access Key** for you. You will need this information to configure your environment.
 
-## Sample configuration
+1. [Sign up](https://api.flatfile.io/auth/github) or [Sign in](app.flatfile.com) to Flatfile.
+2. [Locate](https://support.flatfile.com/hc/en-us/articles/6097149079188-Where-is-my-TeamID-What-other-IDs-do-I-need-to-know-) your Flatfile **Team ID** and write it down.
+3. [Generate](https://docs.flatfile.com/api-reference/rest#managing-access-keys)  an **Access Key ID** and **Secret Access Key**.
 
-This repo contains a fully functional Flatfile Workbook for importing employee data. We'll walk through this example to show you how the Platform SDK works:
+
+### 2. Configure your environment
+
+1. Create a `.env` file in the project root using the `.env.example` file as a template.
+2. Add the Access Key ID to your `.env` file as the `FLATFILE_ACCESS_KEY_ID` variable
+4. Add the Secret Access Key to your `.env` file as the `FLATFILE_SECRET` variable
+6. Add the Team ID to your `.env` file as the `FLATFILE_TEAM_ID` variable
+7. Add the Environment you want to deploy to in your `.env` file as the `FLATFILE_ENV` variable. It defaults to 'test' and you can add 'prod' when you're ready to deploy to production.
+
+
+### 3. Introduction to Workbooks
+
+<!-- TODO what are workbooks? -->
+
+Here is an example of a fully functional Flatfile **Workbook** that we'll use in this example to demonstrate importing employee data.
+
+<!-- TODO highlight what's inside here -->
 
 ```js
 const Employees = new Sheet(
@@ -82,84 +97,29 @@ const Employees = new Sheet(
 The above code will generate a workbook that looks like this:
 ![Sample Data upload](/assets/SampleImportErrors.png)
 
-## Getting Started
 
-We will deploy the example project in this repo.
+### 4. Deploy the Schema
 
-### Configure the environment
-
-1. Create a `.env` file in the project root using the `.env.example` file as a template.
-2. Follow these [instructions](https://docs.flatfile.com/api-reference/rest#managing-access-keys) to generate an **Access Key ID** and **Secret Access Key**
-3. Add the Access Key ID to your `.env` file as the `FLATFILE_ACCESS_KEY_ID` variable
-4. Add the Secret Access Key to your `.env` file as the `FLATFILE_SECRET` variable
-5. Login to Flatfile and [find your team ID](https://support.flatfile.com/hc/en-us/articles/6097149079188-Where-is-my-TeamID-What-other-IDs-do-I-need-to-know-)
-6. Add the Team ID to your `.env` file as the `FLATFILE_TEAM_ID` variable
-7. Add the Environment you want to deploy to in your `.env` file as the `FLATFILE_ENV` variable. It defaults to 'test' and you can add 'prod' when you're ready to deploy to production.
-
-### Deploy the Schema
+Follow these steps to deploy a Workbook and view it in your Dashboard. Because your secret keys are being used, Flatfile will know to create your first Workspace in the correct place.
 
 1. From the root directory of this project run `npm run deploy`
+2. To see the newly deployed **Workbook**, open your [Dashboard](app.flatfile.com) and have a look.
 
-Then navigate over to your dashboard and see newly deployed workspace
+#### Sample Workbook explained
 
-## Sample Workbook explained
+Now, let's take a closer look at the example **Workbook** we just deployed, starting with the **Fields**. This **Workbook** uses all six built-in Flatfile fields to represent a workbook used to receive employee data:
 
-Let's take a closer look at the example workbook we just deployed, starting with the Fields:
-
-```js
-const Employees = new Sheet(
-  'Employees',
-  {
-    firstName: TextField({
-      required: true,
-      description: 'Given name',
-    }),
-    lastName: TextField(),
-    fullName: TextField(),
-
-    stillEmployed: BooleanField(),
-    department: OptionField({
-      label: 'Department',
-      options: {
-        engineering: { label: 'Engineering' },
-        hr: 'People Ops',
-        sales: 'Revenue',
-      },
-    }),
-    fromHttp: TextField({ label: 'Set by batchRecordCompute' }),
-    salary: NumberField({
-      label: 'Salary',
-      description: 'Annual Salary in USD',
-      required: true,
-      validate: (salary: number) => {
-        const minSalary = 30_000
-        if (salary < minSalary) {
-          return [
-            new Message(
-              `${salary} is less than minimum wage ${minSalary}`,
-              'warn',
-              'validate'
-            ),
-          ]
-        }
-      },
-    }),
-  },
-  ...
-)
-...
-```
-
-This workbook uses all six built-in Flatfile fields to represent a workbook used to receive employee data:
-* `TextField`: a string of text
-* `NumberField`: a numerical value
-* `DateField`: a date
-* `OptionField`: a field with a set of pre-defined values
-* `BooleanField`: a true / false field
+1. `TextField`: a string of text
+2. `NumberField`: a numerical value
+3. `DateField`: a date
+4. `OptionField`: a field with a set of pre-defined values
+5. `BooleanField`: a true / false field
 
 ### Field options
 
 Let's take a closer look at some of the options we've set on these fields:
+
+#### TextField
 
 ```js
 firstName: TextField({
@@ -168,21 +128,7 @@ firstName: TextField({
 })
 ```
 
-Here we've indicated that the `firstName` field is required, and we've given it a human-readable description.
-
-```js
-department: OptionField({
-  label: 'Department',
-  options: {
-    engineering: { label: 'Engineering' },
-    hr: 'People Ops',
-    sales: 'Revenue',
-  },
-}),
-```
-
-Here we provide a pre-defined list of values that this field can have.
-<!-- TODO what does `label` do? -->
+#### NumberField
 
 ```js
 salary: NumberField({
@@ -204,7 +150,31 @@ salary: NumberField({
 }),
 ```
 
-Here we provide a `validate` function that defines what we consider to be a valid value for this field. In this case, we've decided that `salary` must be greater than or equal to 30,000. We also provide a human-readable message to be dipslayed when the validation criterion is not met.
+Here we've indicated that the `firstName` field is required, and we've given it a human-readable description.
+
+We alsol provide a `validate` function that defines what we consider to be a valid value for this field. In this case, we've decided that `salary` must be greater than or equal to 30,000. We also provide a human-readable message to be dipslayed when the validation criterion is not met.
+
+<!-- TODO Date Field? -->
+
+#### OptionField
+
+```js
+department: OptionField({
+  label: 'Department',
+  options: {
+    engineering: { label: 'Engineering' },
+    hr: 'People Ops',
+    sales: 'Revenue',
+  },
+}),
+```
+
+Here we provide a pre-defined list of values that this field can have.
+<!-- TODO what does `label` do? -->
+
+
+<!-- TODO Boolean Field? -->
+
 
 ### Sheet options
 
@@ -239,7 +209,7 @@ const Employees = new Sheet(
 ...
 ```
 
-<!-- 
+<!--
 
 TODO: fill out this section
 
@@ -251,7 +221,7 @@ First we specify two options on the sheet: `allowCustomFields` and `readOnly`.
 
 -->
 
-Here <!-- TODO change to "Next" after above section is filled out -->we define our Data Hooks, functions which operate on user-inputted data and perform transformations on it to meet your system's needs. There are two types of Data Hooks in this example: a `recordCompute` hook and a `batchRecordsCompute` hook.
+Here <!-- TODO change to "Next" after above section is filled out -->we define our Data Hooks&reg;, functions which operate on user-inputted data and perform transformations on it to meet your system's needs. There are two types of Data Hooks&reg; in this example: a `recordCompute` hook and a `batchRecordsCompute` hook.
 
 ```js
 recordCompute: (record) => {
@@ -280,20 +250,22 @@ batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
 
 `batchRecordsCompute` is a Data Hook which runs after all `recordCompute` calls have finished and receives the full list of processed rows, at which point you can perform bulk operations on them. This is a good place to put slower operations that benefit from batching, such as external HTTP requests. In this example, we fetch a single value from an API and write it to each record.
 
-## Deciding which hooks to use
+### 5. Get into the details
+
+#### Knowing which hooks to use
 
 `validate` should be used in most cases where you want to confirm that user-inputted data matches your specifications. For most fields, you probably want to use `validate`. This function gets the proper type per field, and lets you add messages to the cell, including errors, warnings, and rejections, so the user can correct errors themselves.
 
 `recordCompute` and `batchRecordsCompute` should only be used for cases where you must modify user-inputted data or generate new values not provided by the user but needed for your systems. For simple row work (that doesn't make HTTP calls) use `recordCompute`. If you need to make an a call to an external API, reach for `batchRecordsCompute` on sheet, as this allows you to request info about multiple values at once for increased performance.
 
-### A note on parsing, casting, and field conversion.
+#### Parsing, casting, and field conversion.
 
 <!-- TODO: explain what a cast function is and how it is used for parsing input -->
 We have written sensible default implementations of cast functions for TextField, NumberField, and DateField. We wrote extensive tests to document and verify their behavior. Please refer to [the CastFunction tests](https://github.com/FlatFilers/platform-sdk-mono/blob/main/packages/configure/src/stdlib/CastFunctions.spec.ts) to see more.
 
 When our default `cast` function can't parse an incoming value in a reliable way, the cast function throws an error, the error message shows up in the UI, and the original value is stored in the table so users can edit that value into a proper type.
 
-### Field functions best practices
+#### Field functions best practices
 
 `field.compute` should be idempotent and converge to the same value after calling on the same input, calling the same compute function on the output from the last invocation should return the original input.
 
@@ -304,13 +276,13 @@ compute:(v:string) => {return v.toLocaleLowerCase()}
 is a good function, since `compute("ASDF") === compute('asdf') === 'asdf'`.
 <!-- TODO provide an example of a bad function -->
 
-## Testing
+### 6. Test your stuff
 
 We are big believers in Test Driven Development at Flatfile. Well written tests help you reason about the behavior of complex systems. We extensively used tests while developing this SDK, look here <!-- TODO: where? -->. We encourage you to use our testing system to speed your development. Running tests on a Sheet or Workbook is much faster than deploying to Flatfile, and manually uploading data to verify behavior. Your tests will stay in this repo and help you make better decisions as you update your sheets and workbooks to reflect changing business requirements. Stay tuned for future releases we will add even more capabilities to our testing system.
 
-## Advanced Topics
+### 7. Advanced Topics
 
-### Concepts
+#### Concepts
 
 The Flatfile Data Hook system has been designed to enable fine-grained functions to be used in combination to perform regular data validation and normalization tasks. Flatfile is building out a comprehensive standard library so that developers can plug in the proper functions without having to write them from scratch. This standard library is leveraged by HDDL to describe implementations concisely.
 
@@ -333,13 +305,13 @@ The most common custom written hooks that we expect to see are row compute and f
 
 We expect users to very rarely write their own cast functions; these are some of the easiest and most important to add to FFL.
 
-### Async functions
+#### Async functions
 
 `recordCompute` is synchronous and only operates on one row at a time. In practice this isn't a big limitation because synchronous functions generally run extremely quickly in the node runtime.
 
 `batchRecordsCompute` runs after all `recordCompute` hasve finished, and only operates on batches of records. We made this engineering decision to encourage bulk operations when making external HTTP calls which tend to be slow.
 
-## SDK philosophy
+#### SDK philosophy
 
 We are writing this SDK to enable skilled practitioneers to quickly implement powerful transformations that take unstructured data from untrusted sources and shape that data into a clean, normalized format for input into many systems. This is the core of what Flatfile builds and we take it seriously. We also take our relationship with customers seriously, balancing putting tools in your hands quickly with supporting existing usecases. We are here to listen to your feedback and build tools for you.
 
@@ -351,31 +323,32 @@ When releasing pieces to the SDK our thought process is guided by he following p
 2. Can we support this code for the next 6 months until a breaking release?
 3. Does this work as we expect it to?
 
-## FAQ
+---
+### FAQ
 
-- How can I lowercase an email field anytime input is provided by a file or manual entry?
+- **How can I lowercase an email field anytime input is provided by a file or manual entry?**
   - This is a good use for field `compute`. This function will be idempotent (running it over and over on the same input produces the same output and state)
-- How can check the type and size of an url and return an error if the linked file is > 5mb or not an image?
+- **How can check the type and size of an url and return an error if the linked file is > 5mb or not an image?**
   - Currently this is best accomplished with a text field named `s3_url` that will match to the URL provided in the upload, and a row `compute` that stores the size of the download to `s3_url_size`, `s3_url_size` should have an `validate` of less than 5mb.
   - In the near future this will be handled with a computed filed that takes `s3_url` as an input and outputs `s3_url_size`.
   - In the longer term this will be handled by a `SmartURLCapture` field that stores URLs to a synced s3 bucket and provides metadata about the download including size. The `validate` will run on the size property of the `SmartURLCapture` field
-- Using a domain name (www.flatfile.com) field, how can I call the clearbit API and populate another field with an image url to their logo?
+- **Using a domain name (www.flatfile.com) field, how can I call the clearbit API and populate another field with an image url to their logo?**
   - Currently this is best accomplished via a row `compute`.
   - Eventually we will build in Clearbit-integrated fields.
-- When adding an EmailField, if I specify “showSpamScore: true” I want a second, non-matcheable, readonly column to be added immediately after `email` called Spam Score. On input of any email I want to update the spam score field with the results from an API.
+- **When adding an EmailField, if I specify “showSpamScore: true” I want a second, non-matcheable, readonly column to be added immediately after `email` called Spam Score. On input of any email I want to update the spam score field with the results from an API.**
   - To get similar behavior use row `compute` to fake a computed field like the previous three examples.
   - The result is possible but this implementation is currently not possible with the SDK.
   - Implementing this behavior requires composite fields or changes to the SchemaDDL so that a single Field call can emit to underlying fields
-- Can I round a number to two decimal places and simultaneously add a warning saying “this number was rounded to two decimal places: original number 90.090293
+- **Can I round a number to two decimal places and simultaneously add a warning saying “this number was rounded to two decimal places: original number 90.090293**
   - This needs to be done via `recordCompute` or `batchRecordsCompute`. We currently only allow mutating data and simultaneously adding message in those hooks.
-- How can I generate an error if an email is an invalid format that says “Email is invalid format”
+- **How can I generate an error if an email is an invalid format that says “Email is invalid format”**
   - This would be accomplished with `validate`.
-- How can I normalize a phone number and use a nearby country field to “hint” which country the phone number may belong to get a more accurate result? The country field must be normalized to an ISO code first.
+- **How can I normalize a phone number and use a nearby country field to “hint” which country the phone number may belong to get a more accurate result? The country field must be normalized to an ISO code first.**
   - At first glance this could work as a row `compute` to add Country code to phone numbers.
   - In a future version of the SDK, this probably requires hooks to influence the matching system.
-- Can this be used to customize the schema based on the user that is logging in?
+- **Can this be used to customize the schema based on the user that is logging in?**
   - No. That wouldn't result in the proper user experience because the schema is for every user.
   - To customize behavior per user requires writing custom react editors for fields that specialize based on the logged-in user, then tying these editors or other custom functionality in with SchemaIL. We haven't written these custom fields, nor tied them in with SchemaIL.
-- Can the SDK be used to generate dynamic schemas tied to my ORM or database definition
+- **Can the SDK be used to generate dynamic schemas tied to my ORM or database definition?**
   - Currently this may be possible, but it isn't recommended.
   - Eventually this will be possible by writing tools that translate from ORM or database DDL to schemaIL. We are currently solidifying the core functionality of the platform and this will remain out of scope for the foreseeable future.
