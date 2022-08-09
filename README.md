@@ -9,29 +9,9 @@ Basic starter project for the Flatfile Platform SDK
   take care of mapping any user provided data to this structure.
 - This is an opinionated piece of software based on our extensive experience shaping unstructured messy data into clean data you can trust to import into your system. Because of that philosophy many of our functions and processing flows are strict and nuanced. We strive to provide sensible defaults, sound core concepts that can be extended, and especially to not do unexpected things with your data.
 
-## Getting Started
+## Sample configuration
 
-We will deploy the example project in this repo.
-
-### Configure the environment
-
-1. Create a `.env` file in the project root using the `.env.example` file as a template.
-2. Follow these [instructions](https://docs.flatfile.com/api-reference/rest#managing-access-keys) to generate an **Access Key ID** and **Secret Access Key**
-3. Add the Access Key ID to your `.env` file as the `FLATFILE_ACCESS_KEY_ID` variable
-4. Add the Secret Access Key to your `.env` file as the `FLATFILE_SECRET` variable
-5. Login to Flatfile and [find your team ID](https://support.flatfile.com/hc/en-us/articles/6097149079188-Where-is-my-TeamID-What-other-IDs-do-I-need-to-know-)
-6. Add the Team ID to your `.env` file as the `FLATFILE_TEAM_ID` variable
-7. Add the Environment you want to deploy to in your `.env` file as the `FLATFILE_ENV` variable. It defaults to 'test' and you can add 'prod' when you're ready to deploy to production.
-
-### Deploy the Schema
-
-1. From the root directory of this project run `npm run deploy`
-
-Then navigate over to your dashboard and see newly deployed workspace
-
-## Sample Workbook explained
-
-Let's take a closer look at the example workbook we just deployed.
+This repo contains a fully functional Flatfile Workbook for importing employee data. We'll walk through this example to show you how the Platform SDK works:
 
 ```js
 const Employees = new Sheet(
@@ -58,7 +38,6 @@ const Employees = new Sheet(
       label: 'Salary',
       description: 'Annual Salary in USD',
       required: true,
-      // TODO this is not in the actual example
       validate: (salary: number) => {
         const minSalary = 30_000
         if (salary < minSalary) {
@@ -98,10 +77,80 @@ const Employees = new Sheet(
 ...
 ```
 
-[Full Example Source Code](src/examples/FullExample.ts)
+[View full source code](src/examples/FullExample.ts)
+
+The above code will generate a workbook that looks like this:
 ![Sample Data upload](/assets/SampleImportErrors.png)
 
-This workbook uses the six built-in Flatfile fields to represent a workbook used to receive employee data:
+## Getting Started
+
+We will deploy the example project in this repo.
+
+### Configure the environment
+
+1. Create a `.env` file in the project root using the `.env.example` file as a template.
+2. Follow these [instructions](https://docs.flatfile.com/api-reference/rest#managing-access-keys) to generate an **Access Key ID** and **Secret Access Key**
+3. Add the Access Key ID to your `.env` file as the `FLATFILE_ACCESS_KEY_ID` variable
+4. Add the Secret Access Key to your `.env` file as the `FLATFILE_SECRET` variable
+5. Login to Flatfile and [find your team ID](https://support.flatfile.com/hc/en-us/articles/6097149079188-Where-is-my-TeamID-What-other-IDs-do-I-need-to-know-)
+6. Add the Team ID to your `.env` file as the `FLATFILE_TEAM_ID` variable
+7. Add the Environment you want to deploy to in your `.env` file as the `FLATFILE_ENV` variable. It defaults to 'test' and you can add 'prod' when you're ready to deploy to production.
+
+### Deploy the Schema
+
+1. From the root directory of this project run `npm run deploy`
+
+Then navigate over to your dashboard and see newly deployed workspace
+
+## Sample Workbook explained
+
+Let's take a closer look at the example workbook we just deployed, starting with the Fields:
+
+```js
+const Employees = new Sheet(
+  'Employees',
+  {
+    firstName: TextField({
+      required: true,
+      description: 'Given name',
+    }),
+    lastName: TextField(),
+    fullName: TextField(),
+
+    stillEmployed: BooleanField(),
+    department: OptionField({
+      label: 'Department',
+      options: {
+        engineering: { label: 'Engineering' },
+        hr: 'People Ops',
+        sales: 'Revenue',
+      },
+    }),
+    fromHttp: TextField({ label: 'Set by batchRecordCompute' }),
+    salary: NumberField({
+      label: 'Salary',
+      description: 'Annual Salary in USD',
+      required: true,
+      validate: (salary: number) => {
+        const minSalary = 30_000
+        if (salary < minSalary) {
+          return [
+            new Message(
+              `${salary} is less than minimum wage ${minSalary}`,
+              'warn',
+              'validate'
+            ),
+          ]
+        }
+      },
+    }),
+  },
+  ...
+)
+...
+```
+
+This workbook uses all six built-in Flatfile fields to represent a workbook used to receive employee data:
 * `TextField`: a string of text
 * `NumberField`: a numerical value
 * `DateField`: a date
@@ -112,7 +161,7 @@ This workbook uses the six built-in Flatfile fields to represent a workbook used
 
 Let's take a closer look at some of the options we've set on these fields:
 
-```
+```js
 firstName: TextField({
   required: true,
   description: 'Given name',
@@ -121,7 +170,7 @@ firstName: TextField({
 
 Here we've indicated that the `firstName` field is required, and we've given it a human-readable description.
 
-```
+```js
 department: OptionField({
   label: 'Department',
   options: {
@@ -132,9 +181,10 @@ department: OptionField({
 }),
 ```
 
-Here we provide a pre-defined list of values that this field can have. TODO what does `label` do?
+Here we provide a pre-defined list of values that this field can have.
+<!-- TODO what does `label` do? -->
 
-```
+```js
 salary: NumberField({
   label: 'Salary',
   description: 'Annual Salary in USD',
@@ -158,21 +208,52 @@ Here we provide a `validate` function that defines what we consider to be a vali
 
 ### Sheet options
 
-Next, let's look at the options that we've set on the sheet itself.
+Next, let's look at the options that we've set on the sheet itself:
 
-```
-allowCustomFields: true
+```js
+const Employees = new Sheet(
+  'Employees',
+  ...
+  {
+    allowCustomFields: true,
+    readOnly: true,
+    recordCompute: (record) => {
+      const fullName = `{record.get('firstName')} {record.get('lastName')}`
+      record.set('fullName', fullName)
+      return record
+    },
+    batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
+      const response = await fetch('https://api.us.flatfile.io/health', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+      const result = await response.json()
+      payload.records.map(async (record: FlatfileRecord) => {
+        record.set('fromHttp', result.info.postgres.status)
+      })
+    },
+  }
+)
+...
 ```
 
-TODO: explain what `allowCustomFields` does
+<!-- 
 
-```
-readOnly: true
-```
+TODO: fill out this section
 
-TODO: explain what `readOnly` does
+First we specify two options on the sheet: `allowCustomFields` and `readOnly`.
 
-```
+`allowCustomFields`: explain what this does and what its default value is
+
+`readOnly`: explain what this does and what its default value is
+
+-->
+
+Here <!-- TODO change to "Next" after above section is filled out -->we define our Data Hooks, functions which operate on user-inputted data and perform transformations on it to meet your system's needs. There are two types of Data Hooks in this example: a `recordCompute` hook and a `batchRecordsCompute` hook.
+
+```js
 recordCompute: (record) => {
   const fullName = `{record.get('firstName')} {record.get('lastName')}`
   record.set('fullName', fullName)
@@ -180,9 +261,9 @@ recordCompute: (record) => {
 }
 ```
 
-`recordCompute` is a Data Hook: a function which operates on user-inputted data and performs transformations on it to meet your system's needs. `recordCompute` is a Data Hook which runs synchronously for each record. In this example, we use the values of the `firstName` and `lastName` fields to generate and set the derived `fullName` field.
+`recordCompute` is a Data Hook which runs synchronously for each record. In this example, we use the values of the `firstName` and `lastName` fields to generate and set the derived `fullName` field.
 
-```
+```js
 batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
   const response = await fetch('https://api.us.flatfile.io/health', {
     method: 'GET',
@@ -207,8 +288,7 @@ batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
 
 ### A note on parsing, casting, and field conversion.
 
-TODO: explain what a cast function is and how it is used for parsing input
-
+<!-- TODO: explain what a cast function is and how it is used for parsing input -->
 We have written sensible default implementations of cast functions for TextField, NumberField, and DateField. We wrote extensive tests to document and verify their behavior. Please refer to [the CastFunction tests](https://github.com/FlatFilers/platform-sdk-mono/blob/main/packages/configure/src/stdlib/CastFunctions.spec.ts) to see more.
 
 When our default `cast` function can't parse an incoming value in a reliable way, the cast function throws an error, the error message shows up in the UI, and the original value is stored in the table so users can edit that value into a proper type.
@@ -222,12 +302,11 @@ compute:(v:string) => {return v.toLocaleLowerCase()}
 ```
 
 is a good function, since `compute("ASDF") === compute('asdf') === 'asdf'`.
-
-TODO provide an example of a bad function
+<!-- TODO provide an example of a bad function -->
 
 ## Testing
 
-We are big believers in Test Driven Development at Flatfile. Well written tests help you reason about the behavior of complex systems. We extensively used tests while developing this SDK, look here (TODO: where?). We encourage you to use our testing system to speed your development. Running tests on a Sheet or Workbook is much faster than deploying to Flatfile, and manually uploading data to verify behavior. Your tests will stay in this repo and help you make better decisions as you update your sheets and workbooks to reflect changing business requirements. Stay tuned for future releases we will add even more capabilities to our testing system.
+We are big believers in Test Driven Development at Flatfile. Well written tests help you reason about the behavior of complex systems. We extensively used tests while developing this SDK, look here <!-- TODO: where? -->. We encourage you to use our testing system to speed your development. Running tests on a Sheet or Workbook is much faster than deploying to Flatfile, and manually uploading data to verify behavior. Your tests will stay in this repo and help you make better decisions as you update your sheets and workbooks to reflect changing business requirements. Stay tuned for future releases we will add even more capabilities to our testing system.
 
 ## Advanced Topics
 
@@ -238,17 +317,17 @@ The Flatfile Data Hook system has been designed to enable fine-grained functions
 The Flatfile data pipeline orders data transformations so that functions at each point can be strictly typed with the most strictly prescribed functionality. This strict typing leads to more reliable functions that don't have surprise missing, undefined, or weird values.
 ![Event Sequence diagram](/assets/Event-Sequence.png)
 
-TODO add numbers to the diagram corresponding with below
+<!-- TODO add numbers to the diagram corresponding with below -->
 
 1. Matching takes place. At this point we have rows of fields with names mapped to sheet field names. Currently there is no ability to influence matching from the SDK
 2. `field:cast`: functions here take a string or undefined and return either the primitive type specified by the field, null, or throw an error.
 3. `field:default`: if `cast` returned null (but didn't throw an error), a default value is filled in for the field
-4. `field:compute`: functions receive a single fully present value and return a value of the same type TODO add an example of this to the example project
+4. `field:compute`: functions receive a single fully present value and return a value of the same type <!-- TODO add an example of this to the example project -->
 5. `recordCompute`: functions receive a row with all required fields fully present and optional fields typed `optional?:string`. Best used to compute derived values, but can also be used to update existing fields.
 6. `batchRecordsCompute`: asynchronous (HTTP/api) calls are made to fill in values from external services. This takes `records` so it is easier to make bulk calls.
 7. `field:validate`: functions receive a fully present value and return annotations for the corresponding cell
 
-If any of the above functions for a field throws an error, further processing is stopped for that field. TODO: what about the row?
+If any of the above functions for a field throws an error, further processing is stopped for that field. <!-- TODO: what about the row? -->
 
 The most common custom written hooks that we expect to see are row compute and field validate.
 
