@@ -385,8 +385,8 @@ When releasing pieces to the SDK our thought process is guided by he following p
 A `Field` object represents a column of data in a `Sheet`.  They are similar to columns in a database.  Fields can include hooks that clean, transform, and validate incoming data.
 ### Sheet
 A `Sheet` object describes the desired characteristics or "shape" of data that you expect for an individual CSV file or sheet in an excel file. Sheets can be thought of as roughly analogous to database tables.  
-### Data Hook
-Data Hooks are the Flatfile copyrighted term for code that runs on `Field`s and `Sheet`s to transform and validate data.
+### Data Hook®
+Data Hooks® are the Flatfile copyrighted term for code that runs on `Field`s and `Sheet`s to transform and validate data.
 ### Field Hook
 Field hooks are data hooks that run on individual fields.  There are three field level hooks, `cast` which transforms strings into the type specified by the field, `compute` which takes the type specified by the field and returns the type specified by the field, and `validate` which take the type specified by the field and returns validation messages.
 ### Workbook
