@@ -388,7 +388,10 @@ A `Sheet` object describes the desired characteristics or "shape" of data that y
 ### Data Hook®
 Data Hooks® are the Flatfile copyrighted term for code that runs on `Field`s and `Sheet`s to transform and validate data.
 ### Field Hook
-Field hooks are data hooks that run on individual fields.  There are three field level hooks, `cast` which transforms strings into the type specified by the field, `compute` which takes the type specified by the field and returns the type specified by the field, and `validate` which take the type specified by the field and returns validation messages.
+Field hooks are data hooks that run on individual fields.  There are three field-level hooks:
+1. `cast` transforms strings into the type specified by the field.
+2. `compute` takes the type specified by the field and returns the type specified by the field.
+3. `validate` takes the type specified by the field and returns validation messages.
 ### Workbook
 A Workbook is a collection of Sheets.  The Sheets of a Workbook can be linked together via `ForeignKey`.  Workbooks are similar to database schemas.
 
