@@ -382,18 +382,15 @@ When releasing pieces to the SDK our thought process is guided by he following p
 
 ## Glossary
 ### Sheet
-A `Sheet` object describes the desired characteristics or "shape" of data that you expect for an individual CSV file or sheet in an excel file. Sheets can be thought of as roughly analogous to database tables.  
+A `Sheet` object describes the desired characteristics or "shape" of data that you expect for an individual CSV file or sheet in an excel file. A Sheet can be thought of as roughly analogous to a database table.  
 ### Field
-A `Field` object represents a column of data in a `Sheet`.  They are similar to columns in a database.  Fields can include hooks that clean, transform, and validate incoming data.
+A `Field` object represents a column of data in a `Sheet`.  They are similar to columns in a database.  Fields can be configured to clean, transform and validate incoming data through options and hooks.
 ### Data Hook®
 Data Hooks® are the Flatfile copyrighted term for code that runs on `Field`s and `Sheet`s to transform and validate data.
 ### Field Hook
-Field hooks are data hooks that run on individual fields.  There are three field-level hooks:
-1. `cast` transforms strings into the type specified by the field.
-2. `compute` takes the type specified by the field and returns the type specified by the field.
-3. `validate` takes the type specified by the field and returns validation messages.
+Field hooks are Data Hook®s that run on individual fields.  There are three field-level hooks:
 ### Workbook
-A Workbook is a collection of Sheets.  The Sheets of a Workbook can be linked together via `ForeignKey`.  Workbooks are similar to database schemas.
+A Workbook is a collection of Sheets.  The Sheets of a Workbook can be optionally linked together via `ForeignKey`.  A Workbook is similar to a database schema.
 
 
 ## Object Reference
@@ -406,6 +403,8 @@ Persists strings.  Defaults to `StringCast` `cast`.
 Persists numbers.  Defaults to `NumberCast` `cast`
 #### BooleanField
 Persists booleans.  Defaults to `BooleanCast` `cast`
+#### DateField.
+Persists Dates.  Defaults to `DateCast` `cast`
 
 ### Special Fields
 #### OptionField
@@ -461,14 +460,16 @@ Is a value for this field required after the `default` stage of field hooks.  If
 Is this field the primary key for a sheet, or part of a composite primary key (not currently supported).  Primary implies unique too.
 #### Unique
 Is this field required to be unique across the whole sheet.  We have chosen to treat a field with multiple `null`s as still unique.  [Tests and comments](https://github.com/FlatFilers/platform-sdk-mono/blob/main/packages/configure/src/ddl/Sheet.ts#L41-L46)
+
+
 #### `cast`
-The cast function for this field
+`cast` transforms input into the type specified by the field.
 #### `default`
 The default value for this field
 #### `compute`
-The compute function for this field
+`compute` takes the type specified by the field and returns the type specified by the field.
 #### `validate`
-The function that accepts the final value for the field and returns any validation messages.
+`validate` takes the type specified by the field and returns validation messages.  This is the most commonly used field hook.
 
 
 ### SheetOptions
