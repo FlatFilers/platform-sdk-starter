@@ -206,3 +206,116 @@ When releasing pieces to the SDK our thought process is guided by he following p
 - Can the SDK be used to generate dynamic schemas tied to my ORM or database definition
   - Currently this may be possible but isn't recommended
   - Eventually this will be possible by writing tools that translate from ORM or database DDL to schemaIL. We are currently solidifying the core functionality of the platform and this will remain out of scope for months.
+
+## Glossary
+
+### Field
+A `Field` object represents a column of data in a `Sheet`.  They are similar to columns in a database.  Fields can include hooks that clean, transform, and validate incoming data.
+### Sheet
+A `Sheet` object describes the characteristics of data that matches an individual CSV file or sheet in an excel file.  They can be thought of as roughly analogous to database tables.  
+### Data Hook
+Data Hooks are the Flatfile copyrighted term for code that runs on `Field`s and `Sheet`s to transform and validate data.
+### Field Hook
+Field hooks are data hooks that run on individual fields.  There are three field level hooks, `cast` which transforms strings into the type specified by the field, `compute` which takes the type specified by the field and returns the type specified by the field, and `validate` which take the type specified by the field and returns validation messages.
+### Workbook
+A workbook is a collection of sheets.  The sheets of a workbook can be linked together via `ForeignKey`.  Workbooks are similar to database schemas.
+
+
+
+
+## Object Reference
+Technically taken from SchemaIL interfaces
+### BaseFields
+The base fields closely mirror primitive types and vary primarily by their default cast functions.  Read [the CastFunction tests](https://github.com/FlatFilers/platform-sdk-mono/blob/main/packages/configure/src/stdlib/CastFunctions.spec.ts) for explicit understanding of cast function behavior.
+#### TextField
+Persists strings.  Defaults to `StringCast` `cast`.
+#### NumberField
+Persists numbers.  Defaults to `NumberCast` `cast`
+#### BooleanField
+Persists booleans.  Defaults to `BooleanCast` `cast`
+
+### Special Fields
+#### OptionField
+Presents the user with discrete options. Accepts a specific option of
+```ts
+options:{'dbValue': 'Label displayed to user'}
+options:{'dbValue': {label: 'Label displayed to user',  futureOption1: undefined}
+```
+It is called like this 
+```
+    department: OptionField({
+      label: 'Department',
+      options: {
+        engineering: 'Engineering',
+        hr: 'People Ops',
+        sales: 'Revenue',
+      },
+    }),
+```
+or
+```ts
+    department: OptionField({
+      label: 'Department',
+      options: {
+        engineering: {label:'Engineering'},
+        hr: {label:'People Ops'},
+        sales: {label:'Revenue'}
+      },
+    }),
+
+```
+
+### FieldOptions
+```ts
+interface BaseField {
+  label: string
+  field: string
+  description?: string
+  required?: boolean
+  primary?: boolean
+  unique?: boolean
+}
+```
+Every field can set at least the above properties
+#### Label
+Controls the label displayed for the field in the UI
+#### Description
+Longform description for a field that is show on hover??
+#### Required
+Is a value for this field required after the `default` stage of field hooks.  If set to true, an error will be thrown and registered as such on the cell for that value, no further processing will take place for that field.
+#### Primary
+Is this field the primary key for a sheet, or part of a composite primary key (not currently supported).  Primary implies unique too.
+#### Unique
+Is this field required to be unique across the whole sheet.  We have chosen to treat a field with multiple `null`s as still unique.  [Tests and comments](https://github.com/FlatFilers/platform-sdk-mono/blob/main/packages/configure/src/ddl/Sheet.ts#L41-L46)
+#### `cast`
+the cast function for this field
+#### `default`
+the default value for this field
+#### `compute`
+the compute function for this field
+#### `validation`
+the function that accepts the final value for the field and returns any validation messages.
+
+
+### SheetOptions
+```ts
+export interface SheetOptions<FC> {
+  allowCustomFields: boolean
+  readOnly: boolean
+  recordCompute: RecordCompute
+  batchRecordsCompute: RecordsComputeType
+}
+```
+
+#### allowCustomFields
+Allows data owners to create extra fields from their upload when they don't match with any existing field for the Sheet
+#### readOnlyFields
+???? @bangarang
+#### recordCompute
+function that receives a row with all required fields fully present and optional fields typed `optional?:string`. Best used to compute derived values, can also be used to update existing fields.
+#### batchRecordsCompute
+asynchronous function that is best for (http/api) calls. External calls can be made to fill in values from external services. This takes `records` so it is easier to make bulk calls.
+
+
+
+
