@@ -487,6 +487,6 @@ Allows data owners to create extra fields from their upload when they don't matc
 #### recordCompute
 Function that receives a row with all required fields fully present and optional fields typed `optional?:string`. Best used to compute derived values, can also be used to update existing fields.
 #### batchRecordsCompute
-asynchronous function that is best for (http/api) calls. External calls can be made to fill in values from external services. This takes `records` so it is easier to make bulk calls.
+Asynchronous function that is best for HTTP/API calls. External calls can be made to fill in values from external services. This takes `records` so it is easier to make bulk calls.
 
 
