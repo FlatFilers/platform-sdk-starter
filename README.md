@@ -440,13 +440,18 @@ or
 
 ### FieldOptions
 ```ts
-export interface GenericFieldOptions {
+interface FieldOptions {
   label: string
   primary: boolean
   required: boolean
   unique: boolean
+  cast: (value: Dirty<T>) => Nullable<T>
+  default: Nullable<T>
+  compute: (value: T) => T
+  validate: (value: T) => void | Message[]
 }
 ```
+(Field Options Definitions)[https://github.com/FlatFilers/platform-sdk-mono/blob/main/packages/configure/src/ddl/Field.ts#L43-L69]
 Every field can set at least the above properties
 #### Label
 Controls the label displayed for the field in the UI
