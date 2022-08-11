@@ -8,6 +8,7 @@ import {
   BooleanField,
   NumberField,
   OptionField,
+  Message,
 } from '@flatfile/configure'
 
 const Employees = new Sheet(
@@ -34,6 +35,18 @@ const Employees = new Sheet(
       label: 'Salary',
       description: 'Annual Salary in USD',
       required: true,
+      validate: (salary: number) => {
+        const minSalary = 30_000
+        if (salary < minSalary) {
+          return [
+            new Message(
+              `${salary} is less than minimum wage ${minSalary}`,
+              'warn',
+              'validate'
+            ),
+          ]
+        }
+      },
     }),
   },
   {
