@@ -381,10 +381,10 @@ When releasing pieces to the SDK our thought process is guided by he following p
   - Eventually this will be possible by writing tools that translate from ORM or database DDL to schemaIL. We are currently solidifying the core functionality of the platform and this will remain out of scope for the foreseeable future.
 
 ## Glossary
-### Field
-A `Field` object represents a column of data in a `Sheet`.  They are similar to columns in a database.  Fields can include hooks that clean, transform, and validate incoming data.
 ### Sheet
 A `Sheet` object describes the desired characteristics or "shape" of data that you expect for an individual CSV file or sheet in an excel file. Sheets can be thought of as roughly analogous to database tables.  
+### Field
+A `Field` object represents a column of data in a `Sheet`.  They are similar to columns in a database.  Fields can include hooks that clean, transform, and validate incoming data.
 ### Data Hook®
 Data Hooks® are the Flatfile copyrighted term for code that runs on `Field`s and `Sheet`s to transform and validate data.
 ### Field Hook
@@ -440,20 +440,16 @@ or
 
 ### FieldOptions
 ```ts
-interface BaseField {
+export interface GenericFieldOptions {
   label: string
-  field: string
-  description?: string
-  required?: boolean
-  primary?: boolean
-  unique?: boolean
+  primary: boolean
+  required: boolean
+  unique: boolean
 }
 ```
 Every field can set at least the above properties
 #### Label
 Controls the label displayed for the field in the UI
-#### Description
-Longform description for a field that is show on hover??
 #### Required
 Is a value for this field required after the `default` stage of field hooks.  If set to true, an error will be thrown and registered as such on the cell for that value, no further processing will take place for that field.
 #### Primary
@@ -461,13 +457,13 @@ Is this field the primary key for a sheet, or part of a composite primary key (n
 #### Unique
 Is this field required to be unique across the whole sheet.  We have chosen to treat a field with multiple `null`s as still unique.  [Tests and comments](https://github.com/FlatFilers/platform-sdk-mono/blob/main/packages/configure/src/ddl/Sheet.ts#L41-L46)
 #### `cast`
-the cast function for this field
+The cast function for this field
 #### `default`
-the default value for this field
+The default value for this field
 #### `compute`
-the compute function for this field
-#### `validation`
-the function that accepts the final value for the field and returns any validation messages.
+The compute function for this field
+#### `validate`
+The function that accepts the final value for the field and returns any validation messages.
 
 
 ### SheetOptions
@@ -475,15 +471,14 @@ the function that accepts the final value for the field and returns any validati
 export interface SheetOptions<FC> {
   allowCustomFields: boolean
   readOnly: boolean
-  recordCompute: RecordCompute
-  batchRecordsCompute: RecordsComputeType
+  recordCompute: (record:FlatfileRecord<any>, logger?:any): void
+  batchRecordsCompute: (records: FlatfileRecords<any>) => Promise<void>
+
 }
 ```
 
 #### allowCustomFields
 Allows data owners to create extra fields from their upload when they don't match with any existing field for the Sheet
-#### readOnlyFields
-???? @bangarang
 #### recordCompute
 Function that receives a row with all required fields fully present and optional fields typed `optional?:string`. Best used to compute derived values, can also be used to update existing fields.
 #### batchRecordsCompute
