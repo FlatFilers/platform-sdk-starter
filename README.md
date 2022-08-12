@@ -10,7 +10,7 @@ After you create your account in Flatfile, we create a **Team ID**, an **Access 
 
 1. [Sign up](https://api.flatfile.io/auth/github) or [Sign in](app.flatfile.com) to Flatfile.
 2. [Locate](https://support.flatfile.com/hc/en-us/articles/6097149079188-Where-is-my-TeamID-What-other-IDs-do-I-need-to-know-) your Flatfile **Team ID** and write it down.
-3. [Generate](https://docs.flatfile.com/api-reference/rest#managing-access-keys)  an **Access Key ID** and **Secret Access Key**.
+3. [Generate](https://docs.flatfile.com/api-reference#managing-access-keys)  an **Access Key ID** and **Secret Access Key**.
 
 
 ### 2. Configure your environment
