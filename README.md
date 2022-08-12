@@ -484,7 +484,7 @@ export interface SheetOptions<FC> {
 ```
 
 #### allowCustomFields
-Allows data owners to create extra fields from their upload when they don't match with any existing field for the Sheet
+Allows the end user to create additional fields from their upload when the incoming column does not match with any existing field for the Sheet.
 #### recordCompute
 Function that receives a row with all required fields fully present and optional fields typed `optional?:string`. Best used to compute derived values, can also be used to update existing fields.
 #### batchRecordsCompute
