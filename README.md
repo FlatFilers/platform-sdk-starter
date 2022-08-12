@@ -104,8 +104,9 @@ The above code will generate a **Workbook** that looks like this:
 
 Follow these steps to deploy a **Workbook** and view it in your **Dashboard**. Because your secret keys are being used, Flatfile will know to create your first **Workspace** in the correct place.
 
-1. From the root directory of this project run `npm run deploy`
-2. To see the newly deployed **Workbook**, open your [Dashboard](app.flatfile.com) and have a look.
+1. From the root directory of this project run `npm install` to install all necessary packages.
+2. Run `npm run deploy`
+3. To see the newly deployed **Workbook**, open your [Dashboard](app.flatfile.com) and have a look.
 
 #### Sample Workbook explained
 
