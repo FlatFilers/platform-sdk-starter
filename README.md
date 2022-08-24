@@ -9,8 +9,8 @@ Use this quickstart guide to get up and running with Flatfile. You'll learn how 
 After you create your account in Flatfile, we create a **Team ID**, an **Access Key ID**, and a **Secret Access Key** for you. You will need this information to configure your environment.
 
 1. [Sign up](https://api.flatfile.io/auth/github) or [Sign in](app.flatfile.com) to Flatfile.
-2. [Locate](https://support.flatfile.com/hc/en-us/articles/6097149079188-Where-is-my-TeamID-What-other-IDs-do-I-need-to-know-) your Flatfile **Team ID** and write it down.
-3. [Generate](https://docs.flatfile.com/api-reference#managing-access-keys)  an **Access Key ID** and **Secret Access Key**.
+2. [Locate](https://support.flatfile.com/hc/en-us/articles/8410988807828) your Flatfile **Team ID** and write it down.
+3. [Generate](https://docs.flatfile.com/docs/api-reference/#managing-access-keys)  an **Access Key ID** and **Secret Access Key**.
 
 
 ### 2. Configure your environment
@@ -396,7 +396,7 @@ Presents the user with discrete options. Accepts a specific option of
 options:{'dbValue': 'Label displayed to user'}
 options:{'dbValue': {label: 'Label displayed to user',  futureOption1: undefined}
 ```
-It is called like this 
+It is called like this
 ```
     department: OptionField({
       label: 'Department',
@@ -472,5 +472,3 @@ Allows the end user to create additional fields from their upload when the incom
 Function that receives a row with all required fields fully present and optional fields typed `optional?:string`. Best used to compute derived values, can also be used to update existing fields.
 #### batchRecordsCompute
 Asynchronous function that is best for HTTP/API calls. External calls can be made to fill in values from external services. This takes `records` so it is easier to make bulk calls.
-
-
