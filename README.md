@@ -12,7 +12,6 @@ After you create your account in Flatfile, we create a **Team ID**, an **Access 
 2. [Locate](https://support.flatfile.com/hc/en-us/articles/8410988807828) your Flatfile **Team ID** and write it down.
 3. [Generate](https://docs.flatfile.com/docs/api-reference/#managing-access-keys)  an **Access Key ID** and **Secret Access Key**.
 
-
 ### 2. Configure your environment
 
 1. Create a `.env` file in the project root using the `.env.example` file as a template.
