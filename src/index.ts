@@ -1,98 +1,87 @@
 import {
-  Sheet,
-  Workbook,
-  TextField,
-  LinkedField,
   BooleanField,
   DateField,
   Message,
   NumberField,
   OptionField,
+  Sheet,
+  TextField,
+  Workbook,
 } from '@flatfile/configure'
 
-const BaseSheet = new Sheet(
-  'BaseSheet',
-  {
-    firstName: TextField({
-      unique: true,
-      primary: true,
-    }),
-    middleName: TextField('Middle'),
-    lastName: TextField(),
-  },
-  {
-    previewFieldKey: 'middleName',
-  }
-)
+import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
+import fetch from 'node-fetch'
 
-const SheetWithLink = new Sheet('SheetWithLink', {
-  nickname: TextField(),
-  firstName: LinkedField({
-    label: 'First Name',
-    sheet: BaseSheet,
-  }),
-})
-
-const NewSheetFromSDK = new Sheet(
-  'NewSheetFromSDK',
+const Employees = new Sheet(
+  'Employees',
   {
     firstName: TextField({
       required: true,
-      description: 'foo',
-      unique: true,
+      description: 'Given name',
     }),
     lastName: TextField({
-      default: 'bar',
-      compute: (val: string): string => {
-        if (val === 'bar') {
-          return 'baz'
-        }
-        return val
-      },
-      validate: (val: string): void | Message[] => {
-        if (val === 'Rock') {
-          throw 'Rock is not allowed'
-        }
+      compute: (v: any) => {
+        return `Rock`
       },
     }),
-    middleName: TextField(),
-    boolean: BooleanField(),
-    phoneNumber: TextField({
-      default: '555-555-5557',
-    }),
-    age: NumberField({
-      description: 'Age in Dog Years',
-    }),
-    selectOptions: OptionField({
-      label: 'Lots of options',
-      description: 'Select from a list of options',
+    fullName: TextField(),
+
+    stillEmployed: BooleanField(),
+    department: OptionField({
+      label: 'Department',
       options: {
-        red: 'Red Thing',
-        blue: { label: 'Blue Label' },
-        orange: { label: 'Orange peel' },
-        green: { label: 'Green is the best' },
+        engineering: { label: 'Engineering' },
+        hr: 'People Ops',
+        sales: 'Revenue',
       },
     }),
-    startDate: DateField('Start Date'),
+    fromHttp: TextField({ label: 'Set by batchRecordCompute' }),
+    salary: NumberField({
+      label: 'Salary',
+      description: 'Annual Salary in USD',
+      required: true,
+      validate: (salary: number) => {
+        const minSalary = 30_000
+        if (salary < minSalary) {
+          return [
+            new Message(
+              `${salary} is less than minimum wage ${minSalary}`,
+              'warn',
+              'validate'
+            ),
+          ]
+        }
+      },
+    }),
+    startDate: DateField()
   },
   {
     allowCustomFields: true,
     readOnly: true,
-    recordCompute(record: any, logger: any) {
-      const fName = record.get('firstName')
-      logger.info(`lastName was ${record.get('lastName')}`)
-      record.set('lastName', fName)
+    recordCompute: (record) => {
+      const fullName = `{record.get('firstName')} {record.get('lastName')}`
+      record.set('fullhName', fullName)
       return record
+    },
+    batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
+      const response = await fetch('https://api.us.flatfile.io/health', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+      const result = await response.json()
+      payload.records.map(async (record: FlatfileRecord) => {
+        record.set('fromHttp', result.info.postgres.status)
+      })
     },
   }
 )
 
 export default new Workbook({
-  name: 'Template with a link',
-  namespace: 'relational-link-test',
+  name: 'Employees',
+  namespace: 'employee',
   sheets: {
-    BaseSheet,
-    SheetWithLink,
-    NewSheetFromSDK,
+    Employees,
   },
 })
