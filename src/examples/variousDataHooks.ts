@@ -1,6 +1,6 @@
 import { format, isDate, isFuture, parseISO } from 'date-fns'
 //import $ from jquery;
-import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
+import {} from '@flatfile/hooks'
 import {
   Sheet,
   Workbook,
@@ -47,6 +47,20 @@ const Contacts = new Sheet(
     }),
     phoneNumber: TextField({
       label: 'Phone Number',
+      validate: (phoneNumber: string) => {
+        if (phoneNumber) {
+          let validPhone = formatPhoneNumber(phoneNumber)
+          if (validPhone === 'Invalid phone number') {
+            return [
+              new Message(
+                'This does not appear to be a valid phone number',
+                'error',
+                'validate'
+              ),
+            ]
+          }
+        }
+      },
     }),
     createDate: TextField({
       label: 'Create Date',
@@ -60,7 +74,7 @@ const Contacts = new Sheet(
         }
       },
     }),
-    zipCode: NumberField({
+    zipCode: TextField({
       label: 'Zip Code',
     }),
     subscriber: BooleanField({
@@ -81,7 +95,7 @@ const Contacts = new Sheet(
   {
     allowCustomFields: true,
     readOnly: true,
-    recordCompute: (record) => {
+    recordCompute: (record, logger) => {
       //name splitting example: splits full names in the first name field
       if (record.get('firstName') && !record.get('lastName')) {
         const fName = record.get('firstName') as string
@@ -97,11 +111,52 @@ const Contacts = new Sheet(
       }
 
       //warning if no email and phone
-      if (!record.get('phone') && !record.get('email')) {
+      if (!record.get('phoneNumber') && !record.get('email')) {
         record.addWarning(
-          ['email', 'phone'],
+          ['email', 'phoneNumber'],
           'Please include one of either Phone or Email'
         )
+      }
+
+      //Phone normalization and validation -- moved up to phoneNumber field as validate type hook rather than recordCompute
+      // if (record.get('phoneNumber')) {
+      //   const phone = record.get('phoneNumber') as string
+      //   let validPhone = formatPhoneNumber(phone)
+      //   if (validPhone !== 'Invalid phone number') {
+      //     return phone
+      //   } else {
+      //     record.addError(
+      //       'phoneNumber',
+      //       'This does not appear to be a valid phone Number'
+      //     )
+      //   }
+      // }
+
+      //date normalization and validation ** come back to this, it's not recognizing the future dates
+      if (record.get('createDate')) {
+        let newDate = record.get('create.Date') as string
+        let thisDate = format(new Date(newDate), 'yyyy-MM-dd')
+        let realDate = parseISO(thisDate)
+        if (isDate(realDate)) {
+          if (isFuture(realDate)) {
+            record.addError('createDate', 'Date cannot be in the future')
+          } else {
+            record.addError(
+              'createDate',
+              'Please check that the date is formatted yyyy-MM-dd'
+            )
+          }
+        }
+      }
+      //logger.info('hello')
+      //zip code padding
+      if (record.get('zipCode')) {
+        let zip = record.get('zipCode') as string
+        if (zip.length < 5 && record.get('country') === 'US') {
+          zip = zip.padStart(5, '0')
+          record.set('zipCode', zip)
+          record.addInfo('zipCode', 'Zip Code was padded with zeroes')
+        }
       }
     },
   }
