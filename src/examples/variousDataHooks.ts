@@ -1,6 +1,7 @@
 import { format, isDate, isFuture, parseISO } from 'date-fns'
 //import $ from jquery;
-import {} from '@flatfile/hooks'
+import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
+import countries from './countries'
 import {
   Sheet,
   Workbook,
@@ -140,15 +141,15 @@ const Contacts = new Sheet(
         if (isDate(realDate)) {
           if (isFuture(realDate)) {
             record.addError('createDate', 'Date cannot be in the future')
-          } else {
-            record.addError(
-              'createDate',
-              'Please check that the date is formatted yyyy-MM-dd'
-            )
           }
+        } else {
+          record.addError(
+            'createDate',
+            'Please check that the date is formatted yyyy-MM-dd'
+          )
         }
       }
-      //logger.info('hello')
+
       //zip code padding
       if (record.get('zipCode')) {
         let zip = record.get('zipCode') as string
@@ -158,7 +159,42 @@ const Contacts = new Sheet(
           record.addInfo('zipCode', 'Zip Code was padded with zeroes')
         }
       }
+
+      if (record.get('country')) {
+        if (!countries.find((c) => c.code === record.get('country'))) {
+          const countryCode = record.get('country') as string
+          const suggestion = countries.find(
+            (c) =>
+              c.name.toLowerCase().indexOf(countryCode?.toLowerCase()) !== -1
+          )
+          record.set('country', suggestion ? suggestion.code : countryCode)
+          if (!suggestion) {
+            record.addError('country', 'Country Code is not valid')
+          }
+        }
+      }
     },
+    // batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
+    //   const response = await fetch(
+    //     'https://v1.nocodeapi.com/brentkwebdev/google_sheets/KcPvLNxbwsYSIbZK?tabId=Sheet1',
+    //     {
+    //       method: 'GET',
+    //       headers: {
+    //         Accept: 'application/json',
+    //       },
+    //     }
+    //   )
+    //   const result = await response.json()
+    //   let serverEmails = result.data.map((x: any) => {
+    //     return x.email
+    //   });
+    //   payload.records.map((record: FlatfileRecord) => {
+    //     const fileEmails = record.get('email') as string
+    //     if (serverEmails.includes(fileEmails)) {
+    //       record.addError('email', 'This email already exists')
+    //     }
+    //   })
+    // },
   }
 )
 
