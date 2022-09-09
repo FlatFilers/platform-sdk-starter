@@ -1,22 +1,22 @@
 import {
     BooleanField,
-    CategoryField,
-    EmailField,
+    OptionField,
+    // EmailField,
     TextField,
     Sheet,
     Workbook,
 } from '@flatfile/configure'
 
-import { 
-    isNil,
-    isNotNil,
-    splitNames,
-    emailOrPhoneRequired,
-    dateFormatter,
-    countryAndZipCodeFormatter
-} from './data-hooks.js'
+// import {
+//     isNil,
+//     isNotNil,
+//     splitNames,
+//     emailOrPhoneRequired,
+//     dateFormatter,
+//     countryAndZipCodeFormatter
+// } from './data-hooks.js'
 
-const phoneFormatter = require ('phone-number-formatter-us')
+// const phoneFormatter = require ('phone-number-formatter-us')
 
 const mySheet = new Sheet(
     'My Sheet 2',
@@ -28,20 +28,20 @@ const mySheet = new Sheet(
         lastName: TextField('Last Name', {
             required: true
         }),
-        email: EmailField('Email Address', {
-            nonPublic: true,
-            unique: true
-        }),
-        phone: TextField('Phone Number', {
-            compute: (v) => isNotNil(v) ? phoneFormatter(v) : null,
-        }),
+        // email: EmailField('Email Address', {
+        //     nonPublic: true,
+        //     unique: true
+        // }),
+        // phone: TextField('Phone Number', {
+        //     compute: (v) => isNotNil(v) ? phoneFormatter(v) : null,
+        // }),
         postalCode: TextField(),
         country: TextField('Country', {
             description: 'Primary country of residence'
         }),
         optedIn: BooleanField('Opted In'),
-        status: CategoryField('Deal Status', {
-            categories: {
+        status: OptionField('Deal Status', {
+            options: {
                 prospecting: 'Prospecting',
                 discovery: 'Discovery',
                 proposal: 'Proposal',
@@ -54,13 +54,13 @@ const mySheet = new Sheet(
     {
         allowCustomFields: true,
         readOnly: true,
-        onChange(record) {            
-            splitNames(record);
-            emailOrPhoneRequired(record);
-            dateFormatter(record);
-            countryAndZipCodeFormatter(record);
-            return record
-        },
+        // onChange(record) {
+        //     splitNames(record);
+        //     emailOrPhoneRequired(record);
+        //     dateFormatter(record);
+        //     countryAndZipCodeFormatter(record);
+        //     return record
+        // },
     })
 
 export default new Workbook({
