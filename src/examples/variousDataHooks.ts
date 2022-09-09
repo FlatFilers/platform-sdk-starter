@@ -33,7 +33,10 @@ const Contacts = new Sheet(
     lastName: TextField({
       label: 'Last Name',
     }),
-    email: TextField({
+    //email validation field is coming.  Elisa or someone else, I'm happy to pair with you as we create our example field
+
+    
+    email: TextField({  
       description: 'Please enter your email address',
       unique: true,
       validate: (email: string) => {
@@ -46,6 +49,7 @@ const Contacts = new Sheet(
         }
       },
     }),
+    //phoneNumber field is coming
     phoneNumber: TextField({
       label: 'Phone Number',
       validate: (phoneNumber: string) => {
@@ -63,9 +67,12 @@ const Contacts = new Sheet(
         }
       },
     }),
+
+    // this should probably a DateField 
     createDate: TextField({
       label: 'Create Date',
     }),
+
     country: TextField({
       label: 'Country',
       validate: (country: string) => {
@@ -96,6 +103,8 @@ const Contacts = new Sheet(
   {
     allowCustomFields: true,
     readOnly: true,
+
+    // ahh name splitting and combining.  We are working on this
     recordCompute: (record, logger) => {
       //name splitting example: splits full names in the first name field
       if (record.get('firstName') && !record.get('lastName')) {
@@ -111,6 +120,8 @@ const Contacts = new Sheet(
         }
       }
 
+
+      // I am thinking about a way to epxress joint requirements via the expression language.  Stay tuned
       //warning if no email and phone
       if (!record.get('phoneNumber') && !record.get('email')) {
         record.addWarning(
@@ -160,6 +171,7 @@ const Contacts = new Sheet(
         }
       }
 
+      // show substitutioncast demo/write some tests
       if (record.get('country')) {
         if (!countries.find((c) => c.code === record.get('country'))) {
           const countryCode = record.get('country') as string

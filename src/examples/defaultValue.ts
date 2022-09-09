@@ -35,22 +35,27 @@ const defaultValue = new Sheet(
       label: 'Language',
     }),
     country: TextField({
-      label: 'Country',
+      label: 'Country', default:'USA',
     }),
   },
   {
     allowCustomFields: true,
     readOnly: true,
-    recordCompute: (record) => {
-      const CountryField = record.get('country')
-      if (CountryField === '') {
-        record.set('country', 'USA')
-        record.addWarning(
-          'country',
-          'Default Country of USA was applied, please edit if this is incorrect'
-        )
-      }
-    },
+    // recordCompute isn't needed here if we use the field level default
+
+    // A common pattern/request that I see is  "default" or "compute" changed the value of a field, and we want to set an info message describing that change.  We purposely had compute only change values and not set messages too... it made for a cleaner easier to document function.  What would you all think of this "any change to value made by default or compute automatically gets an info message describing that change.. with no developer work"?
+
+    
+    // recordCompute: (record) => {
+    //   const CountryField = record.get('country')
+    //   if (CountryField === '') {
+    //     record.set('country', 'USA')
+    //     record.addWarning(
+    //       'country',
+    //       'Default Country of USA was applied, please edit if this is incorrect'
+    //     )
+    //   }
+    // },
   }
 )
 
