@@ -36,11 +36,7 @@
         "ts-jest": "^28.0.5"
     },
     "dependencies": {
-<<<<<<< HEAD
         "node-fetch": "^3.2.10",
         "phone-number-formatter-us": "^1.0.0"
-=======
-        "node-fetch": "^3.2.10"
->>>>>>> 9367c141b16bdd6668670babc17f58aa8a90be27
     }
 }

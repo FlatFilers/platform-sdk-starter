@@ -40,16 +40,17 @@ const mySheet = new Sheet(
             description: 'Primary country of residence'
         }),
         optedIn: BooleanField('Opted In'),
-        status: OptionField('Deal Status', {
+        status: OptionField({
+            label: "Deal Status",
             options: {
-                prospecting: 'Prospecting',
-                discovery: 'Discovery',
-                proposal: 'Proposal',
-                negotiation: 'Negotiation',
-                closed_won: 'Closed Won',
-                closed_lost: 'Closed Lost'
-            }
-        }),
+              prospecting: "Prospecting",
+              discovery: "Discovery",
+              proposal: "Proposal",
+              negotiation: "Negotiation",
+              closed_won: "Closed Won",
+              closed_lost: "Closed Lost",
+            },
+          })
     },
     {
         allowCustomFields: true,
