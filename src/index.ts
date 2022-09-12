@@ -64,13 +64,13 @@ const mySheet = new Sheet(
   {
     allowCustomFields: true,
     readOnly: true,
-    // onChange(record) {
-    //     splitNames(record);
-    //     emailOrPhoneRequired(record);
-    //     dateFormatter(record);
-    //     countryAndZipCodeFormatter(record);
-    //     return record
-    // },
+    onChange(record) {
+        splitNames(record);
+        emailOrPhoneRequired(record);
+        dateFormatter(record);
+        countryAndZipCodeFormatter(record);
+        return record
+    },
   }
 );
 
