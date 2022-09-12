@@ -21,7 +21,9 @@ import {
 const mySheet = new Sheet(
   "My Sheet 2",
   {
-    createDate: TextField("Create Date"),
+    createDate: TextField({
+      label: "Create Date"
+    }),
     firstName: TextField({
       label: "First Name",
       description: "Person First Name",
@@ -37,12 +39,16 @@ const mySheet = new Sheet(
     // phone: TextField('Phone Number', {
     //     compute: (v) => isNotNil(v) ? phoneFormatter(v) : null,
     // }),
-    postalCode: TextField(),
+    postalCode: TextField({
+      label: "Postal Code"
+    }),
     country: TextField({
       label: "Country",
       description: "Primary country of residence",
     }),
-    optedIn: BooleanField("Opted In"),
+    optedIn: BooleanField({
+      label: "Opted In"
+    }),
     status: OptionField({
       label: "Deal Status",
       options: {
