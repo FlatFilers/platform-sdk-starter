@@ -1,87 +1,72 @@
 import {
-  BooleanField,
-  DateField,
-  Message,
-  NumberField,
-  OptionField,
-  Sheet,
-  TextField,
-  Workbook,
+    BooleanField,
+    OptionField,
+    // EmailField,
+    TextField,
+    Sheet,
+    Workbook,
 } from '@flatfile/configure'
 
-import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
-import fetch from 'node-fetch'
+// import {
+//     isNil,
+//     isNotNil,
+//     splitNames,
+//     emailOrPhoneRequired,
+//     dateFormatter,
+//     countryAndZipCodeFormatter
+// } from './data-hooks.js'
 
-const Employees = new Sheet(
-  'Employees',
-  {
-    firstName: TextField({
-      required: true,
-      description: 'Given name',
-    }),
-    lastName: TextField({
-      compute: (v: any) => {
-        return `Rock`
-      },
-    }),
-    fullName: TextField(),
+// const phoneFormatter = require ('phone-number-formatter-us')
 
-    stillEmployed: BooleanField(),
-    department: OptionField({
-      label: 'Department',
-      options: {
-        engineering: { label: 'Engineering' },
-        hr: 'People Ops',
-        sales: 'Revenue',
-      },
-    }),
-    fromHttp: TextField({ label: 'Set by batchRecordCompute' }),
-    salary: NumberField({
-      label: 'Salary',
-      description: 'Annual Salary in USD',
-      required: true,
-      validate: (salary: number) => {
-        const minSalary = 30_000
-        if (salary < minSalary) {
-          return [
-            new Message(
-              `${salary} is less than minimum wage ${minSalary}`,
-              'warn',
-              'validate'
-            ),
-          ]
-        }
-      },
-    }),
-    startDate: DateField()
-  },
-  {
-    allowCustomFields: true,
-    readOnly: true,
-    recordCompute: (record) => {
-      const fullName = `{record.get('firstName')} {record.get('lastName')}`
-      record.set('fullhName', fullName)
-      return record
+const mySheet = new Sheet(
+    'My Sheet 2',
+    {
+        createDate: TextField('Create Date'),
+        firstName: TextField('First Name', {
+            description: 'Person First Name',
+        }),
+        lastName: TextField('Last Name', {
+            required: true
+        }),
+        // email: EmailField('Email Address', {
+        //     nonPublic: true,
+        //     unique: true
+        // }),
+        // phone: TextField('Phone Number', {
+        //     compute: (v) => isNotNil(v) ? phoneFormatter(v) : null,
+        // }),
+        postalCode: TextField(),
+        country: TextField('Country', {
+            description: 'Primary country of residence'
+        }),
+        optedIn: BooleanField('Opted In'),
+        status: OptionField('Deal Status', {
+            options: {
+                prospecting: 'Prospecting',
+                discovery: 'Discovery',
+                proposal: 'Proposal',
+                negotiation: 'Negotiation',
+                closed_won: 'Closed Won',
+                closed_lost: 'Closed Lost'
+            }
+        }),
     },
-    batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
-      const response = await fetch('https://api.us.flatfile.io/health', {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-        },
-      })
-      const result = await response.json()
-      payload.records.map(async (record: FlatfileRecord) => {
-        record.set('fromHttp', result.info.postgres.status)
-      })
-    },
-  }
-)
+    {
+        allowCustomFields: true,
+        readOnly: true,
+        // onChange(record) {
+        //     splitNames(record);
+        //     emailOrPhoneRequired(record);
+        //     dateFormatter(record);
+        //     countryAndZipCodeFormatter(record);
+        //     return record
+        // },
+    })
 
 export default new Workbook({
-  name: 'Employees',
-  namespace: 'employee',
-  sheets: {
-    Employees,
-  },
+    name: 'My Data Onboarding',
+    namespace: 'my onboarding',
+    sheets: {
+        mySheet,
+    },
 })
