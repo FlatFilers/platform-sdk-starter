@@ -22,12 +22,14 @@ const mySheet = new Sheet(
     'My Sheet 2',
     {
         createDate: TextField('Create Date'),
-        firstName: TextField('First Name', {
-            description: 'Person First Name',
-        }),
-        lastName: TextField('Last Name', {
-            required: true
-        }),
+        firstName: TextField({
+            label: "First Name",
+            description: "Person First Name",
+          }),
+          lastName: TextField({
+            label: "Last Name",
+            required: true,
+          }),
         // email: EmailField('Email Address', {
         //     nonPublic: true,
         //     unique: true
@@ -36,9 +38,10 @@ const mySheet = new Sheet(
         //     compute: (v) => isNotNil(v) ? phoneFormatter(v) : null,
         // }),
         postalCode: TextField(),
-        country: TextField('Country', {
-            description: 'Primary country of residence'
-        }),
+        country: TextField({
+            label: "Country",
+            description: "Primary country of residence",
+          }),
         optedIn: BooleanField('Opted In'),
         status: OptionField({
             label: "Deal Status",
