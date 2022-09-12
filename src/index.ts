@@ -7,16 +7,16 @@ import {
   Workbook,
 } from "@flatfile/configure";
 
-// import {
-//     isNil,
-//     isNotNil,
-//     splitNames,
-//     emailOrPhoneRequired,
-//     dateFormatter,
-//     countryAndZipCodeFormatter
-// } from './data-hooks.js'
+import {
+    isNil,
+    isNotNil,
+    splitNames,
+    emailOrPhoneRequired,
+    dateFormatter,
+    countryAndZipCodeFormatter
+} from './data-hooks.js'
 
-// const phoneFormatter = require ('phone-number-formatter-us')
+const phoneFormatter = require ('phone-number-formatter-us')
 
 const mySheet = new Sheet(
   "My Sheet 2",
@@ -36,9 +36,9 @@ const mySheet = new Sheet(
     //     nonPublic: true,
     //     unique: true
     // }),
-    // phone: TextField('Phone Number', {
-    //     compute: (v) => isNotNil(v) ? phoneFormatter(v) : null,
-    // }),
+    phone: TextField('Phone Number', {
+        compute: (v) => isNotNil(v) ? phoneFormatter(v) : null,
+    }),
     postalCode: TextField({
       label: "Postal Code"
     }),
