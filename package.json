@@ -19,19 +19,18 @@
     "scripts": {
         "build": "tsup src/index.ts --format esm,cjs --dts",
         "dev": "tsup src/index.ts --format esm,cjs --watch --dts",
-        "deploy": "flatfile publish ./src/index.ts",
+        "deploy": "npx flatfile publish ./src/index.ts",
         "lint": "TIMING=1 eslint \"src/**/*.{ts,tsx,js,jsx}\" --fix",
         "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
         "test": "jest --runInBand --detectOpenHandles --forceExit --passWithNoTests"
     },
     "devDependencies": {
-        "@flatfile/cli": "^0.2.0",
-        "@flatfile/configure": "^0.3.4", 
+        "@flatfile/configure": "^0.3.5",
         "@flatfile/hooks": "^1.2.0",
         "@types/jest": "^28.1.4",
         "@typescript-eslint/parser": "^5.31.0",
-        "eslint": "^8.19.0",
         "eslint-config-prettier": "^8.5.0",
+        "eslint": "^8.19.0",
         "jest": "^28.1.2",
         "prettier": "^2.7.1",
         "ts-jest": "^28.0.5"
