@@ -4,6 +4,11 @@
 # Platform SDK Quickstart
 Use this quickstart guide to get up and running with Flatfile. You'll learn how to get your access keys, configure your environment, and deploy an example project for importing employee data.
 
+:::tip Upgrading from a previous SDK?
+
+If you've used previous versions of Flatfile you can skip steps 1 & 2. Start with step 3 to learn about changes from past versions (we'll call them out where relevant).
+:::
+
 ### 1. Establish Access
 
 After you create your account in Flatfile, we create a **Team ID**, an **Access Key ID**, and a **Secret Access Key** for you. You will need this information to configure your environment.
@@ -173,7 +178,12 @@ department: OptionField({
 }),
 ```
 
-Here we provide a pre-defined list of values that this field can have.
+Here we provide a pre-defined list of values that this field can have. 
+
+:::tip Note
+
+Option fields were previously referred to as Category or Enum fields.
+:::
 <!-- TODO what does `label` do? -->
 
 
@@ -253,6 +263,11 @@ batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
 ```
 
 `batchRecordsCompute` is a **Data Hook** which runs after all `recordCompute` calls have finished and receives the full list of processed rows, at which point you can perform bulk operations on them. This is a good place to put slower operations that benefit from batching, such as external HTTP requests. In this example, we fetch a single value from an API and write it to each record.
+
+:::tip Note
+
+Data Hooks from previous versions of Flatfile can be added to either `recordsCompute` or `batchRecordsCompute` depending on their function. See the "knowing which hooks to use" section below for more info on choosing the right hook for your validation.
+:::
 
 ### 5. Get into the details
 
