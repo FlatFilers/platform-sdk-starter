@@ -81,7 +81,7 @@ const Employees = new Sheet(
 
 const EmployeesPortal = new Portal({
   name: 'EmployeesPortal',
-  sheet: 'Employees',
+  sheet: 'Employees'
 })
 
 export default new Workbook({
