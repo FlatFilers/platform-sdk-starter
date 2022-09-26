@@ -19,7 +19,7 @@
     "scripts": {
         "build": "tsup src/index.ts --format esm,cjs --dts",
         "dev": "tsup src/index.ts --format esm,cjs --watch --dts",
-        "deploy": "flatfile publish ./src/index.ts",
+        "deploy": "npx flatfile publish ./src/index.ts",
         "lint": "TIMING=1 eslint \"src/**/*.{ts,tsx,js,jsx}\" --fix",
         "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
         "test": "jest --runInBand --detectOpenHandles --forceExit --passWithNoTests"
