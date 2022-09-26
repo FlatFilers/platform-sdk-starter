@@ -4,7 +4,9 @@ Use this quickstart guide to get up and running with Flatfile. You'll learn how 
 
 ### NOTE: Upgrading from Beta?
 
-Be sure to remove your exsisting ```.package-lock``` and ```node_modules``` and follow along to reinstall.
+Be sure to run ```npm update```
+
+*If running into update issues, then remove ```packagelock.json``` and ```node_modules``` to reinstall*
 
 ### 1. Establish Access
 
