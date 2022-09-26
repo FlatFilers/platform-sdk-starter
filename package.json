@@ -1,6 +1,6 @@
 {
     "name": "@flatfile/platform-sdk-starter",
-    "version": "0.0.0",
+    "version": "1.0.4",
     "description": "Basic starter project for the Flatfile Platform SDK",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
