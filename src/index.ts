@@ -4,6 +4,7 @@ import {
   Message,
   NumberField,
   OptionField,
+  Portal,
   Sheet,
   TextField,
   Workbook,
@@ -78,10 +79,16 @@ const Employees = new Sheet(
   }
 )
 
+const EmployeesPortal = new Portal({
+  name: 'EmployeesPortal',
+  sheet: 'Employees'
+})
+
 export default new Workbook({
   name: 'Employees',
   namespace: 'employee',
   sheets: {
     Employees,
   },
+  portals: [EmployeesPortal],
 })

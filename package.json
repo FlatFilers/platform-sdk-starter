@@ -1,6 +1,6 @@
 {
     "name": "@flatfile/platform-sdk-starter",
-    "version": "0.0.0",
+    "version": "1.0.4",
     "description": "Basic starter project for the Flatfile Platform SDK",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
@@ -19,15 +19,14 @@
     "scripts": {
         "build": "tsup src/index.ts --format esm,cjs --dts",
         "dev": "tsup src/index.ts --format esm,cjs --watch --dts",
-        "deploy": "flatfile publish ./src/index.ts",
+        "deploy": "npx flatfile publish ./src/index.ts",
         "lint": "TIMING=1 eslint \"src/**/*.{ts,tsx,js,jsx}\" --fix",
         "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
         "test": "jest --runInBand --detectOpenHandles --forceExit --passWithNoTests"
     },
     "devDependencies": {
-        "@flatfile/cli": "^0.2.0",
-        "@flatfile/configure": "^0.3.4", 
-        "@flatfile/hooks": "^1.2.0",
+        "@flatfile/configure": "^0.3.6", 
+        "flatfile": "*",
         "@types/jest": "^28.1.4",
         "@typescript-eslint/parser": "^5.31.0",
         "eslint": "^8.19.0",

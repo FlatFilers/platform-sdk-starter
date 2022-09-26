@@ -1,8 +1,12 @@
 
-> Note: This Platform SDK is currently in BETA
-
 # Platform SDK Quickstart
 Use this quickstart guide to get up and running with Flatfile. You'll learn how to get your access keys, configure your environment, and deploy an example project for importing employee data.
+
+### NOTE: Upgrading from Beta?
+
+Be sure to run ```npm update```
+
+*If running into update issues, then remove ```package-lock.json``` and ```node_modules``` to reinstall*
 
 ### 1. Establish Access
 
