@@ -26,7 +26,7 @@
     },
     "devDependencies": {
         "@flatfile/cli": "^0.2.0",
-        "@flatfile/configure": "^0.3.4", 
+        "@flatfile/configure": "^0.3.6", 
         "@flatfile/hooks": "^1.2.0",
         "@types/jest": "^28.1.4",
         "@typescript-eslint/parser": "^5.31.0",
