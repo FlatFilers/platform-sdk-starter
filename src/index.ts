@@ -32,7 +32,8 @@ const mySheet = new Sheet(
             label: 'Last Name',
             required: true
         }),
-        phone: TextField('Phone Number', {
+        phone: TextField({
+            label: 'Phone Number',
             compute: (v) => isNotNil(v) ? phoneFormatter(v) : null,
         }),
         postalCode: TextField({
