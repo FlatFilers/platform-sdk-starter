@@ -1,24 +1,25 @@
 import {
-    BooleanField,
-    OptionField,
-    // EmailField,
-    TextField,
-    Sheet,
-    Workbook,
-} from '@flatfile/configure'
+  BooleanField,
+  OptionField,
+  // EmailField,
+  TextField,
+  Sheet,
+  Workbook,
+} from "@flatfile/configure";
 
-// import {
-//     isNil,
-//     isNotNil,
-//     splitNames,
-//     emailOrPhoneRequired,
-//     dateFormatter,
-//     countryAndZipCodeFormatter
-// } from './data-hooks.js'
+import {
+    isNil,
+    isNotNil,
+    splitNames,
+    emailOrPhoneRequired,
+    dateFormatter,
+    countryAndZipCodeFormatter
+} from './data-hooks.js'
 
-// const phoneFormatter = require ('phone-number-formatter-us')
+const phoneFormatter = require ('phone-number-formatter-us')
 
 const mySheet = new Sheet(
+
     'My Sheet 2',
     {
         createDate: TextField({
@@ -61,22 +62,23 @@ const mySheet = new Sheet(
             }
         }),
     },
-    {
-        allowCustomFields: true,
-        readOnly: true,
-        // onChange(record) {
-        //     splitNames(record);
-        //     emailOrPhoneRequired(record);
-        //     dateFormatter(record);
-        //     countryAndZipCodeFormatter(record);
-        //     return record
-        // },
-    })
+  {
+    allowCustomFields: true,
+    readOnly: true,
+    recordCompute(record) {
+        splitNames(record);
+        emailOrPhoneRequired(record);
+        dateFormatter(record);
+        countryAndZipCodeFormatter(record);
+        return record
+    },
+  }
+);
 
 export default new Workbook({
-    name: 'My Data Onboarding',
-    namespace: 'my onboarding',
-    sheets: {
-        mySheet,
-    },
-})
+  name: "My Data Onboarding",
+  namespace: "my onboarding",
+  sheets: {
+    mySheet,
+  },
+});
