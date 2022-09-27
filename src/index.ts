@@ -1,7 +1,6 @@
 import {
   BooleanField,
   OptionField,
-  // EmailField,
   TextField,
   Sheet,
   Workbook,
@@ -33,13 +32,9 @@ const mySheet = new Sheet(
             label: 'Last Name',
             required: true
         }),
-        // email: EmailField('Email Address', {
-        //     nonPublic: true,
-        //     unique: true
-        // }),
-        // phone: TextField('Phone Number', {
-        //     compute: (v) => isNotNil(v) ? phoneFormatter(v) : null,
-        // }),
+        phone: TextField('Phone Number', {
+            compute: (v) => isNotNil(v) ? phoneFormatter(v) : null,
+        }),
         postalCode: TextField({
             label: 'Postal Code'
         }),
