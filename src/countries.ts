@@ -229,6 +229,7 @@ export default new Map([
   ["United Arab Emirates".toLowerCase(), "AE"],
   ["United Kingdom".toLowerCase(), "GB"],
   ["United States".toLowerCase(), "US"],
+  ["United States of America".toLowerCase(), "US"],
   ["USA".toLowerCase(), "US"],
   ["United States Minor Outlying Islands".toLowerCase(), "UM"],
   ["Uruguay".toLowerCase(), "UY"],
