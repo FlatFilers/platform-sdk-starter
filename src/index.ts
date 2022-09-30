@@ -92,4 +92,3 @@ export default new Workbook({
   },
   portals: [EmployeesPortal],
 })
-
