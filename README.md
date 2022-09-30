@@ -476,3 +476,5 @@ Allows the end user to create additional fields from their upload when the incom
 Function that receives a row with all required fields fully present and optional fields typed `optional?:string`. Best used to compute derived values, can also be used to update existing fields.
 #### batchRecordsCompute
 Asynchronous function that is best for HTTP/API calls. External calls can be made to fill in values from external services. This takes `records` so it is easier to make bulk calls.
+
+New change here
