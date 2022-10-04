@@ -57,23 +57,21 @@ describe('Cast Function tests ->', () => {
     assertDC("17/2/2009", d), //"D/M/YY"#Day-Month-Year with no leading zeros
     assertDC("2009/2/17", d), //"YY/M/D"#Year-Month-Day with no leading zeros
     assertDC(" 2/17/2009", d) //"bM/bD/YY" #Month-Day-Year with spaces instead of leading zeros
-    // assertDC("17/ 2/2009", d) //"bD/bM/YY" #Day-Month-Year with spaces instead of leading zeros
-    // assertDC("2009/ 2/17", d) //"YY/bM/bD" #Year-Month-Day with spaces instead of leading zeros
-
-
-    // assertDC("20090217", d)  //"YYMMDD",  #Year-Month-Day with no separators
     assertDC("17Feb2009", d) // "DDMonYY" #Day-Month abbreviation-Year with leading zeros
     assertDC("17 February, 2009", d) // "D Month, Yr" #Day-Month name-Year
     assertDC("2009, February 17", d) // "Yr, Month D" #Year-Month name-Day
     assertDC("Feb 17, 2009", d)   // "Mon-DD-YYYY"  #Month abbreviation, Day with leading zeros, Year
     assertDC("17 Feb, 2009", d) //  "DD-Mon-YYYY"  #Day with leading zeros, Month abbreviation, Year
 
+
+    // assertDC("17/ 2/2009", d) //"bD/bM/YY" #Day-Month-Year with spaces instead of leading zeros
+    // assertDC("2009/ 2/17", d) //"YY/bM/bD" #Year-Month-Day with spaces instead of leading zeros
+    // assertDC("20090217", d)  //"YYMMDD",  #Year-Month-Day with no separators
     // assertDC("2009, Feb 17", d) // "YYYYY-Mon-DD"  #Year, Month abbreviation, Day with leading zeros
     // assertDC( "Feb 17, 2009", d) // "Mon DD, YYYY" #Month abbreviation, Day with leading zeros, Year
     // assertDC("17 Feb, 2009", d) // "DD Mon, YYYY"  #Day with leading zeros, Month abbreviation, Year
     // assertDC("2009, Feb 17", d) // "YYYY, Mon DD"  #Year, Month abbreviation, Day with leading zeros
-
-// //#The following rows completely fail to parse
+    // //#The following rows completely fail to parse
     // assertDC("02172009", d) // "MMDDYY"  #Month-Day-Year with no separators
     // assertDC("17022009", d)  // "DDMMYY" #Day-Month-Year with no separators
     // assertDC("Feb172009", d) // "MonDDYY" #Month abbreviation-Day-Year with leading zeros
