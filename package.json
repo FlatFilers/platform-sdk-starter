@@ -26,12 +26,15 @@
     },
     "devDependencies": {
         "@flatfile/configure": "^0.3.6",
+        "@flatfile/hooks": "^1.2.0",
         "@types/jest": "^28.1.4",
+        "@types/lodash": "^4.14.186",
         "@typescript-eslint/parser": "^5.31.0",
         "eslint": "^8.19.0",
         "eslint-config-prettier": "^8.5.0",
         "flatfile": "*",
         "jest": "^28.1.2",
+        "lodash": "^4.17.21",
         "prettier": "^2.7.1",
         "ts-jest": "^28.0.5"
     },

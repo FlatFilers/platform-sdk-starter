@@ -476,3 +476,68 @@ Allows the end user to create additional fields from their upload when the incom
 Function that receives a row with all required fields fully present and optional fields typed `optional?:string`. Best used to compute derived values, can also be used to update existing fields.
 #### batchRecordsCompute
 Asynchronous function that is best for HTTP/API calls. External calls can be made to fill in values from external services. This takes `records` so it is easier to make bulk calls.
+
+
+## SheetTester®
+
+This helper utility gives you tools to test real records and fields locally against your field hooks (`default`, `cast`, `compute` and `validate`) and record-level compute functions (`recordCompute` and `batchRecordsCompute`). This runs the exact same logic that is done on Flatfile's production servers so it will produce the same results locally for quick testing before deploying. 
+
+For example, with this TestSheet:
+```js
+const TestSheet = new Sheet(
+  'TestSheet',
+  {
+    firstName: TextField({
+      required: true,
+      description: 'foo',
+      compute: (v) => v.toUpperCase(),
+    }),
+    age: NumberField(),
+    testBoolean: BooleanField({ default: false }),
+  },
+  {
+    recordCompute: (record, _session, _logger) => {
+      const age = record.get('age')
+      const newAge = typeof age === 'number' ? age * 2 : 0
+      record.set('age', newAge)
+    },
+  }
+)
+```
+
+### transformField(fieldName: string, value: string)
+This takes a field name and value and returns the transformed value based on all sheet operations: 
+
+```js
+expect(await testSheet.transformField('age', '10')).toEqual(20)
+```
+
+### testRecord(record: object)
+This takes a full record and returns the transformed record based on all sheet operations: 
+
+```js
+const inputRow = { firstName: 'foo', age: '10', testBoolean: 'true' }
+
+const expectedOutputRow = { age: 20, firstName: 'FOO', testBoolean: true }
+const res = await testSheet.testRecord(inputRow)
+expect(res).toMatchObject(expectedOutputRow)
+```
+
+### testRecords(record: object[])
+This takes an array of full records and returns the transformed records based on all sheet operations: 
+
+```js
+const inputRows = [
+    { firstName: 'foo', age: '10', testBoolean: 'true' },
+    { firstName: 'bar', age: '8', testBoolean: 'true' },
+]
+
+const expectedOutputRows = [
+    { age: 20, firstName: 'FOO', testBoolean: true },
+    { age: 16, firstName: 'BAR', testBoolean: true },
+]
+
+const results = await testSheet.testRecords(inputRows)
+expect(results).toMatchObject(expectedOutputRows)
+```
+
