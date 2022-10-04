@@ -25,14 +25,17 @@
         "test": "jest --runInBand --detectOpenHandles --forceExit --passWithNoTests"
     },
     "devDependencies": {
-        "@flatfile/configure": "^0.3.6", 
-        "flatfile": "*",
+        "@flatfile/configure": "^0.3.6",
         "@types/jest": "^28.1.4",
         "@typescript-eslint/parser": "^5.31.0",
         "eslint": "^8.19.0",
         "eslint-config-prettier": "^8.5.0",
+        "flatfile": "*",
         "jest": "^28.1.2",
         "prettier": "^2.7.1",
         "ts-jest": "^28.0.5"
+    },
+    "dependencies": {
+        "chrono-node": "^2.4.1"
     }
 }
