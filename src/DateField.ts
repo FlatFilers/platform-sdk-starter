@@ -1,5 +1,5 @@
 import * as chrono from 'chrono-node'
-//import { StringCast} from '@flatfile/configure/stdlib/CastFunctions'
+import { Field, FullBaseFieldOptions } from '@flatfile/configure/stdlib/CastFunctions'
 
 export const StringCast = (raw: string | undefined | null): string | null => {
   if (typeof raw === 'undefined') {
@@ -31,3 +31,11 @@ const ChronoStringDateCast = (raw:string) => {
   return chrono.parseDate(raw)
 }
 export const ChronoDateCast = StringCastCompose(ChronoStringDateCast)
+
+
+type O = Record<string, any>
+type PartialBaseFieldsAndOptions = Partial<FullBaseFieldOptions<Date, O>>
+export DateField = (options?: string | PartialBaseFieldsAndOptions) => {
+
+  const field = new Field<Date, O>(fullOpts as FullBaseFieldOptions<Date, O>)
+}
