@@ -39,7 +39,7 @@ export class SheetTester {
     return inputRecords.records[0]?.toJSON()
   }
 
-  private async transformRecords(recordBatch: any[]) {
+  private async transformRecords(recordBatch: Record<string, any>[]) {
     const session = new FlatfileSession({
       ...this.testSession,
       schemaSlug: this.sheetName,

@@ -2,7 +2,7 @@ import { SheetTester } from './SheetTester'
 import TestWorkbook from './testWorkbook'
 
 describe('Workbook tests ->', () => {
-  const testSheet = new SheetTester(TestWorkbook, 'CategoryAndBoolean')
+  const testSheet = new SheetTester(TestWorkbook, 'TestSheet')
 
   test('Single Record works', async () => {
     const inputRow = { firstName: 'foo', age: '10', testBoolean: 'true' }
@@ -26,7 +26,7 @@ describe('Workbook tests ->', () => {
     const results = await testSheet.testRecords(inputRows)
     expect(results).toMatchObject(expectedOutputRows)
   })
-  
+
   test('transformField() work', async () => {
     expect(await testSheet.transformField('firstName', 'alex')).toEqual('ALEX')
     expect(await testSheet.transformField('age', '10')).toEqual(20)
