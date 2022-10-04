@@ -6,8 +6,8 @@ import {
   Workbook,
 } from '@flatfile/configure'
 
-const CategoryAndBoolean = new Sheet(
-  'CategoryAndBoolean',
+const TestSheet = new Sheet(
+  'TestSheet',
   {
     firstName: TextField({
       required: true,
@@ -18,8 +18,6 @@ const CategoryAndBoolean = new Sheet(
     testBoolean: BooleanField({ default: false }),
   },
   {
-    allowCustomFields: true,
-    readOnly: true,
     recordCompute: (record, _session, _logger) => {
       const age = record.get('age')
       const newAge = typeof age === 'number' ? age * 2 : 0
@@ -31,5 +29,5 @@ const CategoryAndBoolean = new Sheet(
 export default new Workbook({
   name: `Test Workbook`,
   namespace: 'test',
-  sheets: { CategoryAndBoolean },
+  sheets: { TestSheet },
 })
