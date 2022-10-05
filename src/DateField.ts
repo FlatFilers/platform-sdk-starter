@@ -1,5 +1,28 @@
 import * as chrono from 'chrono-node'
-import { Field, GenericDefaults, SchemaILField, FieldHookDefaults, FullBaseFieldOptions } from '@flatfile/configure/stdlib/CastFunctions'
+//import { Field, GenericDefaults, SchemaILField, FieldHookDefaults, FullBaseFieldOptions } from '@flatfile/configure/stdlib/CastFunctions'
+import { Field, GenericFieldOptions, FieldHookDefaults, FullBaseFieldOptions } from '@flatfile/configure'
+import { SchemaILField } from '@flatfile/schema'
+
+const GenericDefaults: GenericFieldOptions = {
+  description: '',
+  label: '',
+  type: 'string',
+  primary: false,
+  required: false,
+  unique: false,
+  stageVisibility: {
+    mapping: true,
+    review: true,
+    export: true,
+  },
+  annotations: {
+    default: false,
+    defaultMessage: 'This field was automatically given a default value of',
+    compute: false,
+    computeMessage: 'This value was automatically reformatted - original data:',
+  },
+}
+
 
 export const StringCast = (raw: string | undefined | null): string | null => {
   if (typeof raw === 'undefined') {
@@ -38,10 +61,15 @@ type T = Date
 type PartialBaseFieldsAndOptions = Partial<FullBaseFieldOptions<T, O>>
 export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
     // if labelOptions is a string, then it is the label
-    const label = typeof options === 'string' ? options : undefined
-    // if options is an object, then it is the options
-    const passedOptions =
-      (typeof options !== 'string' ? options : options) ?? {}
+  let passedOptions:PartialBaseFieldsAndOptions 
+  if (options === undefined) {
+    passedOptions = {}
+  }
+  else if (typeof options === 'string') {
+    passedOptions = {label: options}
+  } else {
+    passedOptions = options
+  }
 
     const passedStageVisibility = (passedOptions as SchemaILField)
       ?.stageVisibility
@@ -62,7 +90,7 @@ export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
       ...GenericDefaults,
       ...FieldHookDefaults<T>(),
       cast:ChronoDateCast, 
-      ...(label ? { label } : { ...passedOptions }),
+      ...passedOptions,
       stageVisibility,
       annotations,
     }

@@ -1,4 +1,4 @@
-import { ChronoDateCast } from './DateField'
+import { ChronoDateCast, DateField } from './DateField'
 describe('Cast Function tests ->', () => {
   const makeCastAssert = (castFn: any) => {
     const assertFn = (raw: any, output: any): void => {
@@ -83,6 +83,11 @@ describe('Cast Function tests ->', () => {
 
   })
 
+  test('instantiate DateField', () => {
+    const d = DateField()
+    console.log(d)
+    expect(1).toBe(1)
+  })
   
 
 })
