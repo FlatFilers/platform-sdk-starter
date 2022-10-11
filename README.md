@@ -459,6 +459,30 @@ The default value for this field
 `validate` takes the type specified by the field and returns validation messages.  This is the most commonly used field hook.
 
 
+#### Other Field Options
+##### Description
+Long form description that appears in the UI upon hover of the field name.
+##### Annotations
+Annotations are automatically filled in messages that the platform sdk provides when `default` or `compute` changes a value. Following independent options set as an object - `{}`
+###### default
+If set to `true` insertions of the `default` value will be annotated with an info message of `defaultMessage`
+###### defaultMessage
+The message to use when a `default` value is inserted.  If none specified, defaults to 'This field was automatically given a default value of'
+###### compute
+If set to `true` instances where `compute` changes the value of a field will be annotated with an info message of `computeMessage`
+###### computeMessage
+The message to use when a `compute` changes a value.  if none specified, defaults to 'This value was automatically reformatted - original data:'
+##### stageVisibility
+controls what parts of mapping/review/export a field occurs in
+###### mapping
+When set to `false` this field will not appear for matching in the mapping stage.
+###### review
+This field will not appear in the review stage
+###### export
+This field will not be exported.
+
+
+
 ### SheetOptions
 ```ts
 export interface SheetOptions<FC> {
