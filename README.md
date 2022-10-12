@@ -617,10 +617,9 @@ To github.com:paddymul/private-platform-sdk-starter.git
 Go to the URL suggested from the command line
 https://github.com/paddymul/private-platform-sdk-starter/pull/new/feat/my-implmentation
 ![Create a private repo](/assets/GH-create-PR.png)
-Picture
 Click create PR
 
-- invite flatfile collaborators
+- Invite flatfile collaborators
 This step allows us to see the code you have written to the repo
 Navigate to the settings for your new repo
 
