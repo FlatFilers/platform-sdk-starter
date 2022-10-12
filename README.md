@@ -565,3 +565,69 @@ const results = await testSheet.testRecords(inputRows)
 expect(results).toMatchObject(expectedOutputRows)
 ```
 
+## Using git and github to collaborate with Flatfile
+
+The platform-sdk allows you to use git to manage your Flatfile config.  You can also use git to get feedback on your implementation from Flatfile engineers.  Using git can be tricky, we recommend you follow the prescribed pattern to securely share your code with Flatfile.  When you share code in this way Flatfile can much more quickly diagnose problems you are having and provide guidance.  Flatfile greatly values interaction like this because it helps us shape the future of the platform-sdk and other features.  We see your code, admire your ingenuity, and see where you're struggling then we shape the platform-sdk to ease those rough spots
+
+Steps
+- Clone the platform-sdk-starter
+` $ git clone git@github.com:FlatFilers/platform-sdk-starter.git`
+- Create your own private repo
+Navigate to https://github.com/new
+Fill out details as in the picture, take care to make the repo private and not check any other boxes.  The example repo name for this tutorial will be `private-platform-sdk-starter` and it lives at https://github.com/paddymul/private-platform-sdk-starter (check that your new repo isn't accessible from a non-logged in private browsing tab before proceeding)
+- Push to your new private repo
+``` 
+~ $ cd platform-sdk-starter
+~/platform-sdk-starter $ git remote add gh-private git@github.com:paddymul/private-platform-sdk-starter.git
+~/platform-sdk-starter $ git push gh-private main     # note gh-private
+```
+- Create your implementation branch
+Creating a separate branch makes for a more readable PR for collaboration
+```
+~/platform-sdk-starter $ git checkout -b feat/my-implmentation   #create your branch
+~/platform-sdk-starter $ echo >> src/index.ts    #add a newline to the end of the file for a change
+~/platform-sdk-starter $ git commit -am "my first commit to feat/my-implmentation"
+~/platform-sdk-starter $ git push gh-private feat/my-implmentation  #push your code to your private github repo
+```
+The last line will display the following info
+```
+
+~/platform-sdk-starter$ git push gh-private feat/my-implmentation
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 10 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 420 bytes | 420.00 KiB/s, done.
+Total 4 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.        
+remote: 
+remote: Create a pull request for 'feat/my-implmentation' on GitHub by visiting:        
+remote:      https://github.com/paddymul/private-platform-sdk-starter/pull/new/feat/my-implmentation        
+remote: 
+To github.com:paddymul/private-platform-sdk-starter.git
+ * [new branch]      feat/my-implmentation -> feat/my-implmentation
+
+```
+- Create your PR
+Go to the URL suggested from the command line
+https://github.com/paddymul/private-platform-sdk-starter/pull/new/feat/my-implmentation
+Picture
+Click create PR
+
+- invite flatfile collaborators
+This step allows us to see the code you have written to the repo
+Navigate to the settings for your new repo
+https://github.com/paddymul/private-platform-sdk-starter/settings
+Then navigate to the access pane 
+https://github.com/paddymul/private-platform-sdk-starter/settings/access
+at this point github will ask for two factor auth, fill it out.
+Picture
+
+Add the names of `bangarang` and `paddymul`
+
+- Notify Flatfile that you shared the PR with us
+
+
+- Example PR feedback
+
+
