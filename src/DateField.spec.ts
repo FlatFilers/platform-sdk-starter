@@ -74,5 +74,27 @@ describe('Cast Function tests ->', () => {
     expect(1).toBe(1)
   })
   
+  test('DateField syntax play', () => {
+    /*
+      what do we want options on DateField to look like
+
+      */
+    DateField({egress:"YY/MM/DD"})
+
+    // known strings?
+    DateField({egressShorthand:"iso"})
+    DateField({egress:"iso-with-tz"})
+
+    //what about parsing options
+    DateField({egressShorthand:"iso"})
+    DateField({egress:"iso-with-tz"})
+
+    // what about a strict option
+    DateField({parseOptions: {strict:true}})
+    DateField({parseOptions: {parseString: "YY/MM/DD"}}) // and reject other formats?
+    
+    expect(1).toBe(1)
+  })
+  
 
 })
