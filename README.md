@@ -575,6 +575,8 @@ Steps
 - Create your own private repo
 Navigate to https://github.com/new
 Fill out details as in the picture, take care to make the repo private and not check any other boxes.  The example repo name for this tutorial will be `private-platform-sdk-starter` and it lives at https://github.com/paddymul/private-platform-sdk-starter (check that your new repo isn't accessible from a non-logged in private browsing tab before proceeding)
+
+![Create a private repo](/assets/GH-create-private-repo.png)
 - Push to your new private repo
 ``` 
 ~ $ cd platform-sdk-starter
@@ -611,17 +613,19 @@ To github.com:paddymul/private-platform-sdk-starter.git
 - Create your PR
 Go to the URL suggested from the command line
 https://github.com/paddymul/private-platform-sdk-starter/pull/new/feat/my-implmentation
+![Create a private repo](/assets/GH-create-PR.png)
 Picture
 Click create PR
 
 - invite flatfile collaborators
 This step allows us to see the code you have written to the repo
 Navigate to the settings for your new repo
+
 https://github.com/paddymul/private-platform-sdk-starter/settings
 Then navigate to the access pane 
 https://github.com/paddymul/private-platform-sdk-starter/settings/access
 at this point github will ask for two factor auth, fill it out.
-Picture
+![Add a collaborator](/assets/GH-Add-a-collaborator-Rock.png)
 
 Add the names of `bangarang` and `paddymul`
 
