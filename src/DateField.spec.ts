@@ -29,21 +29,21 @@ describe('Cast Function tests ->', () => {
     assertDC('', null)
   })
 
-  // test('DateCast handles real dates', () => {
-  //   const dString = '2022-07-30'
-  //   const d = new Date(dString)
-  //   assertDC(dString, d)
-  // })
+  test('DateCast handles real dates', () => {
+    const dString = '2022-07-30'
+    const d = new Date(dString)
+    assertDC(dString, d)
+  })
 
-  // test('DateCast handles error cases', () => {  
-  //   assertThrow(
-  //     '2022-07-35',
-  //     "'2022-07-35' parsed to 'Invalid Date' which is invalid"
-  //   )
-  //   assertThrow('foo', "'foo' parsed to 'Invalid Date' which is invalid")
-  //   assertThrow(1 / 0, "Infinity parsed to 'Invalid Date' which is invalid")
+  test('DateCast handles error cases', () => {  
+    assertThrow(
+      '2022-07-35',
+      "'2022-07-35' parsed to 'Invalid Date' which is invalid"
+    )
+    assertThrow('foo', "'foo' parsed to 'Invalid Date' which is invalid")
+    assertThrow(1 / 0, "Infinity parsed to 'Invalid Date' which is invalid")
 
-  // })
+  })
 
   test('pandas date functions', () => {
     const dString = '2009-02-17T17:00:00.000Z'
