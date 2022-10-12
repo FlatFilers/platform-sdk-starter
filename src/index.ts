@@ -61,7 +61,7 @@ const Employees = new Sheet(
     readOnly: true,
     recordCompute: (record) => {
       const fullName = `{record.get('firstName')} {record.get('lastName')}`
-      record.set('fullhName', fullName)
+      record.set('fullName', fullName)
       return record
     },
     batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
