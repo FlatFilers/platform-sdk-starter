@@ -51,7 +51,11 @@ export const StringCastCompose = (otherFunc: (raw: string) => any) => {
 }
 
 const ChronoStringDateCast = (raw:string) => {
-  return chrono.parseDate(raw)
+  const parsed = chrono.parseDate(raw)
+  if (parsed === null) {
+    throw new Error(`'${raw}' parsed to 'null' which is invalid`)
+  }
+  return parsed
 }
 export const ChronoDateCast = StringCastCompose(ChronoStringDateCast)
 
