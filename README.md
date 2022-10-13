@@ -565,7 +565,7 @@ const results = await testSheet.testRecords(inputRows)
 expect(results).toMatchObject(expectedOutputRows)
 ```
 
-## Using git and github to collaborate with Flatfile
+## Using git and GitHub to collaborate with Flatfile
 
 The platform-sdk allows you to use git to manage your Flatfile config.  You can also use git to get feedback on your implementation from Flatfile engineers.  Using git can be tricky, we recommend you follow the prescribed pattern to securely share your code with Flatfile.  When you share code in this way Flatfile can much more quickly diagnose problems you are having and provide guidance.  Flatfile greatly values interaction like this because it helps us shape the future of the platform-sdk and other features.  We see your code, admire your ingenuity, and see where you're struggling then we shape the platform-sdk to ease those rough spots
 
@@ -580,7 +580,7 @@ Fill out details as in the picture, take care to make the repo private and not c
 
 ![Create a private repo](/assets/GH-create-private-repo.png)
 - Push to your new private repo
-``` 
+```bash 
 cd platform-sdk-starter
 git remote add gh-private git@github.com:paddymul/private-platform-sdk-starter.git  #replace with your own repo
 git remote remove origin # remove the original origin so we don't accidentally push there
