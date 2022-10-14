@@ -38,9 +38,9 @@ Here is an example of a fully functional Flatfile **Workbook** that we'll use in
 const Employees = new Sheet(
   'Employees',
   {
-    firstName: TextField({
-      required: true,
-      description: 'Given name',
+    firstName: LinkedField({
+      label: 'First Name',
+      sheet: BaseSheet,
     }),
     lastName: TextField(),
     fullName: TextField(),
@@ -95,6 +95,21 @@ const Employees = new Sheet(
     },
   }
 )
+
+const BaseSheet = new Sheet(
+  'BaseSheet',
+  {
+    firstName: TextField({
+      unique: true,
+      primary: true,
+    }),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+  },
+  {
+    previewFieldKey: 'middleName',
+  }
+)
 ...
 ```
 
@@ -121,6 +136,7 @@ Now, let's take a closer look at the example **Workbook** we just deployed, star
 3. `DateField`: a date
 4. `OptionField`: a field with a set of pre-defined values
 5. `BooleanField`: a true / false field
+5. `LinkedField`: a field that links two sheets together
 
 ### Field options
 
@@ -183,6 +199,35 @@ Here we provide a pre-defined list of values that this field can have.
 
 <!-- TODO Boolean Field? -->
 
+#### LinkedField
+
+```js
+firstName: LinkedField({
+    label: 'First Name',
+    sheet: BaseSheet,
+}),
+```
+
+Here we define which field is linked to another template, along with the sheet this field should be linked to.
+
+```js
+const BaseSheet = new Sheet(
+  'BaseSheet',
+  {
+    firstName: TextField({
+      unique: true,
+      primary: true,
+    }),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+  },
+  {
+    previewFieldKey: 'middleName',
+  }
+)
+```
+
+Here we define the sheet we are linking to, and on the sheet set the `previewFieldKey` option that will display on the original template. Note: `LinkedField` can currently only be implemented in Workspaces. 
 
 ### Sheet options
 
