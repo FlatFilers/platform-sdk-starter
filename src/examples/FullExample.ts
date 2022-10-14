@@ -9,14 +9,32 @@ import {
   NumberField,
   OptionField,
   Message,
+  LinkedField
 } from '@flatfile/configure'
+
+const BaseSheet = new Sheet(
+  'BaseSheet',
+  {
+    firstName: TextField({
+      unique: true,
+      primary: true,
+    }),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+  },
+  {
+    previewFieldKey: 'firstName',
+  }
+)
 
 const Employees = new Sheet(
   'Employees',
   {
-    firstName: TextField({
+    firstName: LinkedField({
+      label: 'First Name',
       required: true,
       description: 'Given name',
+      sheet: BaseSheet,
     }),
     lastName: TextField(),
     fullName: TextField(),
@@ -77,5 +95,6 @@ export default new Workbook({
   namespace: 'MyCompany',
   sheets: {
     Employees,
+    BaseSheet
   },
 })
