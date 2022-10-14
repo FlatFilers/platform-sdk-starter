@@ -1,7 +1,5 @@
 import {
   BooleanField,
-  DateField,
-  Message,
   NumberField,
   OptionField,
   Portal,
@@ -10,8 +8,8 @@ import {
   Workbook,
 } from '@flatfile/configure'
 
-import validateUrl from './hooks/url'
-import validatePhone from './hooks/phone'
+import customPhoneField from 'customPhoneField'
+import customUrlField from 'customUrlField'
 
 const People = new Sheet(
   'People',
@@ -25,11 +23,8 @@ const People = new Sheet(
     fullName: TextField({
       unique: true,
     }),
-    phone: TextField({
-      unique: true,
-      validate: (phone: string) => {
-        validatePhone(phone)
-      },
+    phone: customPhoneField({
+      label: 'Phone'
     }),
     title: TextField(),
     isActive: BooleanField(),
@@ -57,15 +52,12 @@ const Organizations = new Sheet(
     name: TextField({
       required: true,
     }),
-    website: TextField({
+    website: customUrlField({
       required: true,
     }),
-    linkedIn: TextField({
+    linkedIn: customUrlField({
       label: 'LinkedIn Profile',
-      description: 'Public LinkedIn company page',
-      validate: (linkedIn: string) => {
-        validateUrl(linkedIn)
-      },
+      description: 'Public LinkedIn company page'
     }),
     score: NumberField({ label: 'Set by batchRecordCompute' })
   },

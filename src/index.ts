@@ -1,94 +1,44 @@
+// A starting template to define your Workbook, Sheets and Portals
+// See examples in the /examples directory
+
 import {
-  BooleanField,
-  DateField,
-  Message,
-  NumberField,
-  OptionField,
+  // BooleanField,
+  // DateField,
+  // Message,
+  // NumberField,
+  // OptionField,
   Portal,
   Sheet,
   TextField,
   Workbook,
 } from '@flatfile/configure'
 
-import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
-import fetch from 'node-fetch'
-
-const Employees = new Sheet(
-  'Employees',
+// rename 'MySheet' to your sheet name
+const MySheet = new Sheet(
+  'MySheet',
   {
-    firstName: TextField({
+    // An example field
+    example: TextField({
       required: true,
-      description: 'Given name',
+      description: 'An example description',
     }),
-    lastName: TextField({
-      compute: (v: any) => {
-        return `Rock`
-      },
-    }),
-    fullName: TextField(),
-
-    stillEmployed: BooleanField(),
-    department: OptionField({
-      label: 'Department',
-      options: {
-        engineering: { label: 'Engineering' },
-        hr: 'People Ops',
-        sales: 'Revenue',
-      },
-    }),
-    fromHttp: TextField({ label: 'Set by batchRecordCompute' }),
-    salary: NumberField({
-      label: 'Salary',
-      description: 'Annual Salary in USD',
-      required: true,
-      validate: (salary: number) => {
-        const minSalary = 30_000
-        if (salary < minSalary) {
-          return [
-            new Message(
-              `${salary} is less than minimum wage ${minSalary}`,
-              'warn',
-              'validate'
-            ),
-          ]
-        }
-      },
-    }),
-    startDate: DateField()
+    // add additional fields here...
   },
   {
-    allowCustomFields: true,
-    readOnly: true,
-    recordCompute: (record) => {
-      const fullName = `{record.get('firstName')} {record.get('lastName')}`
-      record.set('fullName', fullName)
-      return record
-    },
-    batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
-      const response = await fetch('https://api.us.flatfile.io/health', {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-        },
-      })
-      const result = await response.json()
-      payload.records.map(async (record: FlatfileRecord) => {
-        record.set('fromHttp', result.info.postgres.status)
-      })
-    },
+    // add sheet options or Record Data Hooks
   }
 )
 
-const EmployeesPortal = new Portal({
-  name: 'EmployeesPortal',
-  sheet: 'Employees'
+const MyPortal = new Portal({
+  name: 'MyPortal',
+  sheet: 'MySheet'
 })
 
 export default new Workbook({
-  name: 'Employees',
-  namespace: 'employee',
+  name: 'MyWorkbook',
+  namespace: 'my-workbook',
   sheets: {
-    Employees,
+    MySheet,
   },
-  portals: [EmployeesPortal],
+  portals: [MyPortal],
 })
