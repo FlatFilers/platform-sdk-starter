@@ -40,6 +40,8 @@ const Employees = new Sheet(
   {
     firstName: LinkedField({
       label: 'First Name',
+      required: true,
+      description: 'Give Name',
       sheet: BaseSheet,
     }),
     lastName: TextField(),
@@ -107,7 +109,7 @@ const BaseSheet = new Sheet(
     lastName: TextField(),
   },
   {
-    previewFieldKey: 'middleName',
+    previewFieldKey: 'firstName',
   }
 )
 ...
@@ -222,7 +224,7 @@ const BaseSheet = new Sheet(
     lastName: TextField(),
   },
   {
-    previewFieldKey: 'middleName',
+    previewFieldKey: 'firstName',
   }
 )
 ```
