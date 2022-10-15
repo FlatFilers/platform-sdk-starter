@@ -1,2 +1,2 @@
 // TODO
-// Write a Field Hook to validate a URL string (ie: https,)
+// Write a TextField that will validate a URL string (ie: https,)

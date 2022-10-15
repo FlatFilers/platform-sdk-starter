@@ -1,2 +1,2 @@
 // TODO
-// Write a Field Hook to clean a phone number
+// Write a TextFiled that cleans and validates a phone number
