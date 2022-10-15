@@ -57,7 +57,7 @@ export default new Sheet(
       const lastName = fullName.split(' ').slice(-1).join(' ');
 
       record.set('firstName', firstName)
-      record.set('firstName', lastName)
+      record.set('lastName', lastName)
       
       return record
     }
