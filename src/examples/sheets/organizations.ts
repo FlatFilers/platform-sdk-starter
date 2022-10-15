@@ -1,17 +1,20 @@
+// example Sheet with how you might import custom and reuasable fields and recordCompute functions. 
+
 import {
   NumberField,
   Sheet,
   TextField,
 } from '@flatfile/configure'
 
-// Custom fields
-import { makeUrlField } from './fields/url'
-import { makeLinkedInField } from './fields/linked-in'
-import { makeCountryField } from './fields/country'
+// Examples of custom defined fields
+import makeUrlField from '../fields/url'
+import makeLinkedInField from '../fields/linked-in'
+import makeCountryField from '../fields/country'
 
-// Custom data hooks
-import { BatchVerifyUrls } from './data-hooks/batch-verify-urls'
-import { BatchRankRecords } from './data-hooks/batch-rank-records'
+// Examples of custom defined data hooks
+import joinFieldsRecordCompute from '../data-hooks/join-fields-record-compute'
+import splitFieldsRecordCompute from '../data-hooks/split-fields-record-compute'
+import rankBatchRecordsCompute from '../data-hooks/rank-batch-records-compute'
 
 export default new Sheet(
   'Organizations',
@@ -22,6 +25,16 @@ export default new Sheet(
     }),
     name: TextField({
       required: true,
+    }),
+    revenue: NumberField({
+      description: "Avg. Annual Revenue"
+    }),
+    industry: TextField({
+      description: "The industry"
+    }),
+    code: TextField({
+      label: 'Set by recordCompute',
+      description: "The internal code name for organization"
     }),
     country: makeCountryField(),
     website: makeUrlField({
@@ -38,28 +51,32 @@ export default new Sheet(
   {
     allowCustomFields: true,
     recordCompute: (record) => {
-      const fullName = `{record.get('firstName')} {record.get('lastName')}`
-      record.set('fullName', fullName)
-      return record
+      // example of how you might write and organize reuasable recordCompute functions. 
+      
+      // recieves original record and returns record with a value set to 'code' field
+      const recordWithCode = joinFieldsRecordCompute( 
+        record,
+        [record.get('id'), record.get('name').toLowerCase()],
+        '-',
+        'code' 
+      )
+
+      // recieves updated record (with 'code') and returns record with value set to 'fullname' field
+      const recordWithCodeAndFullName = splitFieldsRecordCompute( 
+        record,
+        'fullName',
+        ' ',
+        [record.get('firstName'), record.get('lastName')],
+      )
+
+      // the final record with values set on 'code' and 'fullName' fields
+      return recordWithCodeAndFullName
+
     },
     batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
 
-      let records = payload.records
-
-      // records sent to API call that will check each URL for a 200 status
-      // TODO - should this pass in and return the FlatfileRecords with mapped fields ?
-      records = BatchVerifyUrls(records, 'websiteIsLive')
-
-      // records sent API call that sets a rank for each record
-      // TODO - should this pass in and return the FlatfileRecords with mapped fields ?
-      records = BatchRankRecords(records, 'rank')
-
-      // map updated records
-      records.map((record) => {
-        record.set('websiteIsLive', record.websiteIsLive)
-        record.set('rank', record.rank)
-      })
-
+      // this custom batch function takes all records from import to compare and set a priority value to the 'rank' field 
+      return await rankBatchRecordsCompute(payload.records)
     },
   }
 )

@@ -1,4 +1,4 @@
-// this workbook example shows a simple sheet without in a Workbook
+// workbook javascript example with a simple sheet (no sheet options defined)
 
 import {
   BooleanField,

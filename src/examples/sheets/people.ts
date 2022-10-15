@@ -7,11 +7,11 @@ import {
 } from '@flatfile/configure'
 
 // Custom fields
-import { makePhoneField } from './fields/phone'
-import { makeLinkedInField } from './fields/linked-in'
+import makePhoneField from '../fields/phone'
+import makeLinkedInField from '../fields/linked-in'
 
 // Custom data hooks
-import { RecordSplitName } from './data-hooks/record-split-name'
+import splitFieldsRecordCompute from '../data-hooks/split-fields-record-compute'
 
 export default new Sheet(
   'People',
@@ -53,14 +53,14 @@ export default new Sheet(
   },
   {
     recordCompute: (record) => {
-      const fullName = record.get('fullName')
-      
-      const [firstName, lastName] = RecordSplitName(fullName)
+      // reuses a common function that can split a field into multiple fields. 
+      return splitFieldsRecordCompute( 
+        record,
+        'fullName',
+        ' ',
+        [record.get('firstName'),record.get('lastName')],
+      )
 
-      record.set('firstName', firstName)
-      record.set('lastName', lastName)
-      
-      return record
     }
   }
 )

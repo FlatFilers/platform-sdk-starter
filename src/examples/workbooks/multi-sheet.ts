@@ -1,12 +1,10 @@
-// this workbook example shows how to compose workbooks with multiple imported sheets
-// imported sheets make use of composoble field and record hook functions
-
+// workbook example shows how to structure with multiple imported sheets
 import { Portal, Workbook} from '@flatfile/configure'
 
 // Import sheets. You can define your own sheets to match your business use case
-import { Organizations } from './sheets/people'
-import { People } from './sheets/people'
-import { Notes } from './sheets/notes'
+import Organizations from '../sheets/organizations'
+import People from '../sheets/people'
+import Notes from '../sheets/notes'
 
 // Sheets - add imported sheets to array for the Workbook
 const sheets = {

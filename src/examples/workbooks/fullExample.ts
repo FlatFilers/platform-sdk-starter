@@ -1,4 +1,4 @@
-// this workbook example shows one way to define your entire Workbook in a single file
+// workbook as typescript example with sheet defined in a single file
 
 import {
   BooleanField,
@@ -60,7 +60,7 @@ const Employees = new Sheet(
   },
   {
     allowCustomFields: true,
-    recordCompute: (record) => {
+    recordCompute: (record: FlatfileRecord) => {
       const fullName = `{record.get('firstName')} {record.get('lastName')}`
       record.set('fullName', fullName)
       return record
@@ -73,7 +73,7 @@ const Employees = new Sheet(
         },
       })
       const result = await response.json()
-      payload.records.map(async (record: FlatfileRecord) => {
+      payload.records.map(record: FlatfileRecord => {
         record.set('fromHttp', result.info.postgres.status)
       })
     },
