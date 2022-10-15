@@ -1,5 +1,5 @@
 /**
- * This is function splits a string into two parts.
+ * This function splits a string into two parts.
  * Example "John A Smith" becomes "John A", "Smith"
  * @constructor
  * @param {string} name - A name you want to split into 2 parts.

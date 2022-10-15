@@ -3,6 +3,7 @@ import {
   OptionField,
   Sheet,
   TextField,
+  DateField,
 } from '@flatfile/configure'
 
 export default new Sheet(
@@ -14,10 +15,13 @@ export default new Sheet(
     }),
     note: TextField({
       required: true,
-      description: 'set by recordCompute',
+      description: 'The text body of the note',
     }),
-    createdOn: TextField({
-      description: 'set by recordCompute',
+    createdOn: DateField({
+      description: 'The date the note was created',
+    }),
+    updatedOn: DateField({
+      description: 'The date the note was last edited',
     }),
     label: OptionField({
       label: 'Type of note',
