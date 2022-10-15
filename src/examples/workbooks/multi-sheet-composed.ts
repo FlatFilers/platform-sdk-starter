@@ -6,7 +6,7 @@ import { Portal, Workbook} from '@flatfile/configure'
 // Import sheets. You can define your own sheets to match your business use case
 import { Organizations } from './sheets/people'
 import { People } from './sheets/people'
-import { Notes } from './sheets/people'
+import { Notes } from './sheets/notes'
 
 // Sheets - add imported sheets to array for the Workbook
 const sheets = {
