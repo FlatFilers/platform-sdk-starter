@@ -1,19 +1,19 @@
 // workbook example shows how to structure with multiple imported sheets
 import { Portal, Workbook} from '@flatfile/configure'
 
-// Import sheets. You can define your own sheets to match your business use case
+// Define your own sheets in seperate files for easier maintainability
 import Organizations from '../sheets/organizations'
 import People from '../sheets/people'
 import Notes from '../sheets/notes'
 
-// Sheets - add imported sheets to array for the Workbook
+// Sheets as object for Workbook
 const sheets = {
   Organizations,
   People,
   Notes
 }
 
-// Portal - add portals to an array for the Workbook
+// Portals as array for Workbook
 const portals = [
   new Portal({name: 'OrganizationsPortal', sheet: 'Organizations'}),
   new Portal({name: 'PeoplePortal', sheet: 'People'}),
