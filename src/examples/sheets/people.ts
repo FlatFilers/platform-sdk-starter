@@ -7,8 +7,8 @@ import {
 } from '@flatfile/configure'
 
 // Custom fields
-import { Phone } from './sheets/phone'
-import { LinkedIn } from './sheets/linked-in'
+import { makePhoneField } from './sheets/phone'
+import { makeLinkedInField } from './sheets/linked-in'
 
 // Custom data hooks
 import { RecordSplitName } from './data-hooks/record-split-name'
@@ -33,14 +33,14 @@ export default new Sheet(
     fullName: TextField({
       required: true,
     }),
-    homPhone: Phone({
+    homPhone: makePhoneField({
       label: 'Personal Phone'
     }),
-    workPhone: Phone({
+    workPhone: makePhoneField({
       label: 'Work Phone'
     }),
     title: TextField(),
-    linkedIn: LinkedIn(),
+    linkedIn: makeLinkedInField(),
     isActive: BooleanField(),
     department: OptionField({
       label: 'Role',

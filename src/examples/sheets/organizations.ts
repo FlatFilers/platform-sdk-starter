@@ -5,9 +5,9 @@ import {
 } from '@flatfile/configure'
 
 // Custom fields
-import { Url } from './fields/url'
-import { LinkedIn } from './sheets/linked-in'
-import { Countries } from './sheets/countries'
+import { makeUrlField } from './fields/url'
+import { makeLinkedInField } from './sheets/linked-in'
+import { makeCountryField } from './sheets/country'
 
 // Custom data hooks
 import { BatchVerifyUrls } from './data-hooks/batch-verify-urls'
@@ -22,12 +22,12 @@ export default new Sheet(
     name: TextField({
       required: true,
     }),
-    country: Countries(),
-    website: Url({
+    country: makeCountryField(),
+    website: makeUrlField({
       description: "Marketing Website",
       required: true,
     }),
-    linkedIn: LinkedIn(),
+    linkedIn: makeLinkedInField(),
     score: NumberField({ label: 'Set by batchRecordCompute' })
   },
   {
