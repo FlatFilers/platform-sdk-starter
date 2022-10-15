@@ -6,7 +6,7 @@ import {
 } from '@flatfile/configure'
 
 export default new Sheet(
-  'People',
+  'Notes',
   {
     personId: NumberField({
       required: true,
