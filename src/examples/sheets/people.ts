@@ -7,8 +7,8 @@ import {
 } from '@flatfile/configure'
 
 // Custom fields
-import { makePhoneField } from './sheets/phone'
-import { makeLinkedInField } from './sheets/linked-in'
+import { makePhoneField } from './fields/phone'
+import { makeLinkedInField } from './fields/linked-in'
 
 // Custom data hooks
 import { RecordSplitName } from './data-hooks/record-split-name'

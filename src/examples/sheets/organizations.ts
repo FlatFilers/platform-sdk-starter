@@ -6,8 +6,8 @@ import {
 
 // Custom fields
 import { makeUrlField } from './fields/url'
-import { makeLinkedInField } from './sheets/linked-in'
-import { makeCountryField } from './sheets/country'
+import { makeLinkedInField } from './fields/linked-in'
+import { makeCountryField } from './fields/country'
 
 // Custom data hooks
 import { BatchVerifyUrls } from './data-hooks/batch-verify-urls'
