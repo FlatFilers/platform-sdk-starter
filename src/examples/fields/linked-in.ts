@@ -1,2 +1,2 @@
 // TODO
-// Write a TextFiled that cleans and validates a public LinkedIn url
+// Write a TextField that cleans and validates a public LinkedIn url

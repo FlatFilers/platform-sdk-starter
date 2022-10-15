@@ -10,6 +10,9 @@ import {
 import { Phone } from './sheets/phone'
 import { LinkedIn } from './sheets/linked-in'
 
+// Custom data hooks
+import { RecordSplitName } from './data-hooks/record-split-name'
+
 export default new Sheet(
   'People',
   {
@@ -50,11 +53,9 @@ export default new Sheet(
   },
   {
     recordCompute: (record) => {
-      
       const fullName = record.get('fullName')
-
-      const firstName = fullName.split(' ').slice(0, -1).join(' ');
-      const lastName = fullName.split(' ').slice(-1).join(' ');
+      
+      const [firstName, lastName] = RecordSplitName(fullName)
 
       record.set('firstName', firstName)
       record.set('lastName', lastName)

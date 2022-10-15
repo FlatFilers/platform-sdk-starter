@@ -9,8 +9,8 @@ import { Url } from './fields/url'
 import { LinkedIn } from './sheets/linked-in'
 import { Countries } from './sheets/countries'
 
-// Custom record hooks
-import { VerifyUrls } from './record-hooks/verify-urls'
+// Custom data hooks
+import { BatchVerifyUrls } from './data-hooks/batch-verify-urls'
 
 export default new Sheet(
   'Organizations',
@@ -39,7 +39,7 @@ export default new Sheet(
     },
     batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
 
-      VerifyUrls(payload)
+      BatchVerifyUrls(payload)
 
     },
   }
