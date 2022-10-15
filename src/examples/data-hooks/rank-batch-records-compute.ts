@@ -1,7 +1,6 @@
 /**
  * This function compares all records from an import and sets a priority rank to each record
  * It is a fictional example to demonstrate logic that compares values across all records to determine a value on a record 
- * This could be also be a single API call to logic on your server
  * 
  * @constructor
  * @param {Array} records - an array of all records from an import
@@ -9,7 +8,6 @@
  export default function RankBatchRecordCompute(records: Array<object>): Array<object> {
   return calculateRankOnRecords(records)
  }
-
 
 
 /**

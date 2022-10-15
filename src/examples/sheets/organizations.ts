@@ -73,10 +73,10 @@ export default new Sheet(
       return recordWithCodeAndFullName
 
     },
-    batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
-
-      // this custom batch function takes all records from import to compare and set a priority value to the 'rank' field 
-      return await rankBatchRecordsCompute(payload.records)
+    batchRecordsCompute: (payload: FlatfileRecords<any>) => {
+      // an example function that compare all records of an import to assign a priority 'rank' to each record
+      // NOTE: a common pattern is sending a single API call to a server for batchRecordsCompute
+      return rankBatchRecordsCompute(payload.records)
     },
   }
 )

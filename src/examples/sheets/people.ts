@@ -41,6 +41,9 @@ export default new Sheet(
     }),
     title: TextField(),
     linkedIn: makeLinkedInField(),
+    linkedInValid: BooleanField({
+      description: 'set by batchRecordsCompute',
+    }),
     isActive: BooleanField(),
     department: OptionField({
       label: 'Role',
@@ -60,7 +63,18 @@ export default new Sheet(
         ' ',
         [record.get('firstName'),record.get('lastName')],
       )
-
-    }
+    },
+    batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
+      // An example of sending records to API endpoint to check and write a true/false value to 'linkedInValid' field
+      // a success response would be the post processed records
+      const response = await fetch('your-api-to-check-linkedin-urls', {
+        method: 'POST',
+        headers: { Accept: 'application/json',},
+        body: payload.records
+      })
+      if (response.ok) {
+        return response.json
+      }
+    },
   }
 )
