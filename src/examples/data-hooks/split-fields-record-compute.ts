@@ -6,6 +6,8 @@
  * @param {string} fieldToSplit - the field to split
  * @param {string} separator - what value is used to split the string (e.g, ' ', '-', ',').
  * @param {Array} fieldsToSet - an array of fields to set from a single field.
+ * 
+ * returns the record object with new field values set
  */
 export default function SplitFieldsRecordCompute(
   record: object, 
