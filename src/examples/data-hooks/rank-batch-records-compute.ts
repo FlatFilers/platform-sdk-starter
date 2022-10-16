@@ -1,6 +1,7 @@
 /**
- * This function compares all records from an import and sets a priority rank to each record
- * It is a fictional example to demonstrate logic that compares values across all records to determine a value on a record 
+ * An example function to demonstrate logic comparing values across all records to determine a value on each record
+ * This type of function would only run once as a BatchRecordCompute on the sheet after all records are initially imported
+ * 
  * 
  * @constructor
  * @param {Array} records - an array of all records from an import
@@ -11,7 +12,6 @@
 
 
 /**
- * TODO - CLEAN THESE UP
  * 
  * These functions represent some fictional business logic to determine a ranked score
  * Purpose is to help visualize what type of code belongs in a batchRecordCompute function

@@ -13,7 +13,7 @@ import makeCountryField from '../fields/country'
 
 // Examples of custom defined data hooks
 import joinFieldsRecordCompute from '../data-hooks/join-fields-record-compute'
-import splitFieldsRecordCompute from '../data-hooks/split-fields-record-compute'
+import splitFieldRecordCompute from '../data-hooks/split-field-record-compute'
 import rankBatchRecordsCompute from '../data-hooks/rank-batch-records-compute'
 
 export default new Sheet(
@@ -22,6 +22,22 @@ export default new Sheet(
     id: NumberField({
       required: true,
       unique: true
+    }),
+    identifier: NumberField({
+      required: true,
+      description: "A coded identifier in three parts (e.g: abc-123-zy)"
+    }),
+    identiferRoot: TextField({
+      label: 'Set by recordCompute',
+      description: "The internal code name for organization"
+    }),
+    identiferZone: TextField({
+      label: 'Set by recordCompute',
+      description: "The internal code name for organization"
+    }),
+    identifierRegion: TextField({
+      label: 'Set by recordCompute',
+      description: "The internal code name for organization"
     }),
     name: TextField({
       required: true,
@@ -51,26 +67,19 @@ export default new Sheet(
   {
     allowCustomFields: true,
     recordCompute: (record) => {
-      // example of how you might write and organize reuasable recordCompute functions. 
-      
-      // recieves original record and returns record with a value set to 'code' field
-      const recordWithCode = joinFieldsRecordCompute( 
-        record,
-        [record.get('id'), record.get('name').toLowerCase()],
-        '-',
-        'code' 
-      )
+        
+      // split value of an 'identifier' field into 3 parts
+      const [identiferRoot, identiferZone, identifierRegion] = splitFieldRecordCompute(record.get('identifier'), '-', 3) 
+  
+      // joins field values into a 'code' field with '-' seperator
+      const code = joinFieldsRecordCompute([record.get('id'), identiferRoot], '-')
 
-      // recieves updated record (with 'code') and returns record with value set to 'fullname' field
-      const recordWithCodeAndFullName = splitFieldsRecordCompute( 
-        record,
-        'fullName',
-        ' ',
-        [record.get('firstName'), record.get('lastName')],
-      )
-
-      // the final record with values set on 'code' and 'fullName' fields
-      return recordWithCodeAndFullName
+      // set the field values and return record
+      record.set('identiferRoot', identiferRoot)
+      record.set('identiferZone', identiferZone)
+      record.set('identifierRegion', identifierRegion)
+      record.set('code', code)
+      return record
 
     },
     batchRecordsCompute: (payload: FlatfileRecords<any>) => {

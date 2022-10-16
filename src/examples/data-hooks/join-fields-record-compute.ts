@@ -1,21 +1,29 @@
 /**
- * This typescript function splits a string into two parts.
- * Example an array of ["John", "Smith"] will become "John Smith"
+ * This is a simple example to encapuslate a javascript .join() function with a Typescript function
+ * 
+ * It's trivial, offers an easy demonstration of why Typsecript is prefered to help reduce code errors
+ * 
+ * Typescript is Javascript with some additional syntax to help enforce the input and output types (e.g: string, number, object)
+ *  
+ * Note: this function written in Javascript would look like
+ * 
+ * function joinFieldsRecordCompute(fieldsToJoin, separator) {
+ *   return fieldsToJoin.join(separator)
+ * }
+ * 
+ * Typescript helps enforce the type of inputs and outputs
+ *  
+ * function joinFieldsRecordCompute(fieldsToJoin: Array<string>, separator: string): string {
+ *    return fieldsToJoin.join(separator)
+ * }
+ * 
+ * A function to join fields into one with a seperator (e.g: ["John", "Smith"] becomes "John Smith")
  * @constructor
- * @param {Object} record - the record.
  * @param {Array} fieldsToJoin - an array of field values to join.
  * @param {string} separator - what value is used between joined string (e.g, ' ', '-', ',').
- * @param {string} fieldToSet - the field to set the joined string
  * 
  * returns the record object with new field value set
  */
- export default function joinFieldsRecordCompute(
-  record: object, 
-  fieldsToJoin: Array<string>, 
-  separator: string, 
-  fieldToSet: string
-): object {
-  const joinedFields = fieldsToJoin.join(separator)
-  record.set(fieldToSet, joinedFields)
-  return record
+ export default function joinFieldsRecordCompute(fieldsToJoin: Array<string>, separator: string): string {
+  return fieldsToJoin.join(separator)
 }

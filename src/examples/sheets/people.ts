@@ -11,7 +11,7 @@ import makePhoneField from '../fields/phone'
 import makeLinkedInField from '../fields/linked-in'
 
 // Custom data hooks
-import splitFieldsRecordCompute from '../data-hooks/split-fields-record-compute'
+import splitFieldRecordCompute from '../data-hooks/split-field-record-compute'
 
 export default new Sheet(
   'People',
@@ -56,13 +56,13 @@ export default new Sheet(
   },
   {
     recordCompute: (record) => {
-      // reuses a common function that can split a field into multiple fields. 
-      return splitFieldsRecordCompute( 
-        record,
-        'fullName',
-        ' ',
-        [record.get('firstName'),record.get('lastName')],
-      )
+      // reuses a function to split a field into multiple 
+      const [firstName, lastName] = splitFieldRecordCompute(record.get('fullName'), ' ', 2)
+
+      record.set('firstName', firstName)
+      record.set('lastName', lastName)
+      return record
+
     },
     batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
       // An example of sending records to API endpoint to check and write a true/false value to 'linkedInValid' field
