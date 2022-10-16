@@ -6,9 +6,8 @@
  * 
  * If you are, then you might be wondering about the `.ts` file extension (vs `.js`)
  * It's extra syntax on Javascript to help check for errors
- * Useful for ensuring input and output data types are correct throughout your program (e.g. boolean, string, object, array. etc) 
- * 
- *  
+ * Useful to ensure input and output data types are correct throughout your program (e.g. boolean, string, object, array, ...) 
+ *   
  * This function written in plain Javascript looks like
  * 
  * function joinFieldsRecordCompute(fieldsToJoin, separator) {
@@ -22,8 +21,7 @@
  * function joinFieldsRecordCompute(fieldsToJoin: Array<string>, separator: string): string {
  *    return fieldsToJoin.join(separator)
  * }
- * 
- * =================
+ * ===================================
  */ 
  
  /**

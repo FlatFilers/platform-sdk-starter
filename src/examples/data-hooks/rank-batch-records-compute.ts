@@ -7,7 +7,7 @@
  * 
 * If you are, then you might be wondering about the `.ts` file extension (vs `.js`)
  * It's extra syntax on Javascript to help check for errors
- * Useful for ensuring input and output data types are correct throughout your program (e.g. boolean, string, object, array. etc) 
+ * Useful to ensure input and output data types are correct throughout your program (e.g. boolean, string, object, array, ...) 
  * 
  * This example demonstrates the use of a 'type alias' to define the shape of input and output data for our main export function.
  * 
@@ -42,7 +42,7 @@
  * }
  * 
  * Read along through this example and notice how Typescript is just Javascript with some type checking.
- *  * =======
+ * ===================================
  */
 
  
