@@ -85,10 +85,9 @@ export default new Sheet(
       record.set('identifierRegion', identifierRegion)
       record.set('code', code)
       return record
-
     },
     batchRecordsCompute: (payload: FlatfileRecords<any>) => {
-      
+
       // example function compares inputs of all import records to assign a priority 'rank' to each record
       const rankedResults = rankBatchRecordsCompute(payload.records)
 
@@ -97,7 +96,6 @@ export default new Sheet(
         const rank = rankedResults.find((r: { id: any }) => r.id === record.id)
         record.set('rank', rank)
       })
-
     },
   }
 )
