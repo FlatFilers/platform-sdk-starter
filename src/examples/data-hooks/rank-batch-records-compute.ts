@@ -29,7 +29,7 @@ type RecordInput = {
 /**
  * @type {Array<RecordInput>} - an array of objects that match the type alias RecordInput
  */
-type RecordsInputs = [RecordInput]
+type RecordsInputs = Array<RecordInput>
 
 /**
  * @type {Object} - an output object with keys id and rank
@@ -42,24 +42,20 @@ type RecordOutput = {
 /**
  * @type {Array<RecordOutput>} - an array of objects that match the type alias RecordOutput
  */
-type RecordsOutputs = [RecordOutput]
+type RecordsOutputs = Array<RecordOutput>
 
 
 /**
- * @constructor
- * @param {RecordsInput} records - an array of all records from an import, using id, revenue, 
- * @return {RecordOutput} result is an array of record objects with id, rank
+ * @param {RecordsInput} records - input records array of objects that uses id, revenue, geoCode and industry
+ * @return {RecordOutput} returns array of record objects with id, rank
  */
  export default function RankBatchRecordCompute(records: RecordsInputs): RecordsOutputs {
   return calculateRecordsWithRank(records)
  }
 
-
 /**
- * 
- * These functions represent some fictional business logic to determine a ranked score
- * Purpose is to help visualize what type of code belongs in a batchRecordCompute function
- * 
+ * functions represent fictional business logic to determine a ranked score
+ * comparison against all records from an import
  */
 function calculateRecordsWithRank(records: RecordsInputs): RecordsOutputs {
   // 1. Set initial score to each record based on business rules

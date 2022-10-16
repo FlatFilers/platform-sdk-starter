@@ -1,9 +1,13 @@
 /**
- * This is a simple example to encapuslate a javascript .join() function with Typescript
+ * A simple example to encapuslate a javascript .join() function with Typescript
  * 
- * While trivial, it offers an easy demonstration of why Typsecript is prefered to help reduce code errors when working with data
+ * ====================================
+ * New to Typescript (.ts)?
  * 
- * Typescript is Javascript with some additional syntax to enforce input and output types (e.g: string, number, boolean, etc)
+ * If you are, then you might be wondering what about the `.ts` file extension (vs `.js`)
+ * It's some extra syntax on Javascript to help check for errors
+ * Useful for ensuring input and output data types are correct throughout your program (e.g. boolean, string, object, array. etc) 
+ * 
  *  
  * This function written in plain Javascript looks like
  * 
@@ -11,14 +15,18 @@
  *   return fieldsToJoin.join(separator)
  * }
  * 
- * Same function written in Typescript enforce the expected type of input and output
+ * ..but this might cause errors if you tried passing in a string (e.g. 'myField') to that first param
+ * 
+ * The same function written in Typescript enforces the expected type of input and output variables
  *  
  * function joinFieldsRecordCompute(fieldsToJoin: Array<string>, separator: string): string {
  *    return fieldsToJoin.join(separator)
  * }
  * 
- * For example, this fails if pass in a number or string for that FieldsToJoin input.
- * 
+ * =================
+ */ 
+ 
+ /**
  * A function to join fields into one with a seperator (e.g: ["John", "Smith"] becomes "John Smith")
  * @constructor
  * @param {Array<string>} fieldsToJoin - an array of field values to join.
