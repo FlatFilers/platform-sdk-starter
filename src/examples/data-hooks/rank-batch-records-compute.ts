@@ -124,7 +124,7 @@ function geoCodeScore(geoCode: string): number {
 
   if (getDistanceFromHQ <=  10) { return 10 }
   if (getDistanceFromHQ <= 100) { return 5 }
-  if (getDistanceFromHQ <- 1000) { return 2 }
+  if (getDistanceFromHQ <= 1000) { return 2 }
   return 0
 }
 

@@ -94,7 +94,7 @@ export default new Sheet(
 
       // map the priorty rank to each record
       records.map(function(record: FlatfileRecord<any>) {
-        const rank = rankedResults.find(r => r.id === record.id)
+        const rank = rankedResults.find((r: { id: any }) => r.id === record.id)
         record.set('rank', rank)
       })
 
