@@ -6,6 +6,11 @@ import {
   TextField,
 } from '@flatfile/configure'
 
+import {
+  FlatfileRecord,
+  FlatfileRecords
+} from '@flatfile/hooks'
+
 // Examples of custom defined fields
 import makeUrlField from '../fields/url'
 import makeLinkedInField from '../fields/linked-in'
@@ -66,7 +71,7 @@ export default new Sheet(
   },
   {
     allowCustomFields: true,
-    recordCompute: (record) => {
+    recordCompute: (record: FlatfileRecord<any>) => {
         
       // split value of an 'identifier' field into 3 parts
       const [identiferRoot, identiferZone, identifierRegion] = splitFieldRecordCompute(record.get('identifier'), '-', 3) 
@@ -82,10 +87,17 @@ export default new Sheet(
       return record
 
     },
-    batchRecordsCompute: (payload: FlatfileRecords<any>) => {
-      // an example function that compare all records of an import to assign a priority 'rank' to each record
-      // NOTE: a common pattern is sending a single API call to a server for batchRecordsCompute
-      return rankBatchRecordsCompute(payload.records)
+    batchRecordsCompute: (records: FlatfileRecords<any>) => {
+      
+      // example function compares inputs of all import records to assign a priority 'rank' to each record
+      const rankedResults = rankBatchRecordsCompute(records)
+
+      // map the priorty rank to each record
+      records.map(function(record: FlatfileRecord<any>) {
+        const rank = rankedResults.find(r => r.id === record.id)
+        record.set('rank', rank)
+      })
+
     },
   }
 )

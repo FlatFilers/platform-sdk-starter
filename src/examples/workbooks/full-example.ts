@@ -12,7 +12,11 @@ import {
   Workbook,
 } from '@flatfile/configure'
 
-import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
+import { 
+  FlatfileRecord, 
+  FlatfileRecords
+} from '@flatfile/hooks'
+
 import fetch from 'node-fetch'
 
 const Employees = new Sheet(
@@ -60,7 +64,7 @@ const Employees = new Sheet(
   },
   {
     allowCustomFields: true,
-    recordCompute: (record: FlatfileRecord) => {
+    recordCompute: (record: FlatfileRecord<any>) => {
       const fullName = `{record.get('firstName')} {record.get('lastName')}`
       record.set('fullName', fullName)
       return record
@@ -73,6 +77,7 @@ const Employees = new Sheet(
         },
       })
       const result = await response.json()
+      
       payload.records.map(record: FlatfileRecord => {
         record.set('fromHttp', result.info.postgres.status)
       })

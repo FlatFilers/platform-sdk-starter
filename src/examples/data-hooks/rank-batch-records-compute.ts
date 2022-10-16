@@ -2,12 +2,56 @@
  * An example function to demonstrate logic comparing values across all records to determine a value on each record
  * This type of function would only run once as a BatchRecordCompute on the sheet after all records are initially imported
  * 
+ * Additionally this file demonstrates Typescript syntax to define the expected type and shape of inputs and outputs with a Type alias
  * 
- * @constructor
- * @param {Array} records - an array of all records from an import
+ * 'RecordsInputs', 'RecordInput' help define the shape of input data
+ * 
+ * 'RecordsOutputs', 'RecordOutput' help define the shape of return data
+ * 
+ * Notice how the export function below uses these type aliases (vs. defining within the function)
+ * 
+ * function RankBatchRecordCompute(records: RecordsInputs): RecordsOutputs {
+ *   return calculateRecordsWithRank(records)
+ * }
+ * 
+ */ 
+
+/**
+ * @type {Object} - an input object with keys id, revenue, geoCode and industry
  */
- export default function RankBatchRecordCompute(records: Array<object>): Array<object> {
-  return calculateRankOnRecords(records)
+type RecordInput = { 
+  id: number,
+  revenue: number,
+  geoCode: string,
+  industry: string
+ }
+
+/**
+ * @type {Array<RecordInput>} - an array of objects that match the type alias RecordInput
+ */
+type RecordsInputs = [RecordInput]
+
+/**
+ * @type {Object} - an output object with keys id and rank
+ */
+type RecordOutput = { 
+  id: number,
+  rank: number
+ }
+
+/**
+ * @type {Array<RecordOutput>} - an array of objects that match the type alias RecordOutput
+ */
+type RecordsOutputs = [RecordOutput]
+
+
+/**
+ * @constructor
+ * @param {RecordsInput} records - an array of all records from an import, using id, revenue, 
+ * @return {RecordOutput} result is an array of record objects with id, rank
+ */
+ export default function RankBatchRecordCompute(records: RecordsInputs): RecordsOutputs {
+  return calculateRecordsWithRank(records)
  }
 
 
@@ -17,29 +61,28 @@
  * Purpose is to help visualize what type of code belongs in a batchRecordCompute function
  * 
  */
-function calculateRankOnRecords(records: Array<object>): Array<object> {
+function calculateRecordsWithRank(records: RecordsInputs): RecordsOutputs {
   // 1. Set initial score to each record based on business rules
-  const recordsWithBaseScore = records.map(record => {
-    const baseScore = getBaseScore(record.revenue, record.geoCode, record.industry)
-    return {...record, baseScore }
+  const recordsWithScore = records.map(record => {
+    const score = getScore(record.revenue, record.geoCode, record.industry)
+    return {id: record.id, score }
   })
 
-  // 2. Sort based on comparison of baseScores 
-  const sortedRecords = recordsWithBaseScore.sort(function(a, b){ 
-    return a.baseScore - b.baseScore
+  // 2. Sort array based on comparison of baseScores 
+  const sortedRecords = recordsWithScore.sort(function(a, b){ 
+    return a.score - b.score
   })
 
-  // 3. records with 'rank' based on sort index and remove temp baseScore
+  // 3. return record id and 'rank' based on sort index. Ommit temp score
   const recordsWithRank = sortedRecords.map((record, index) => {
-    delete record.baseScore
     const rank = index + 1
-    return {...record, rank}
+    return {id: record.id, rank}
   })
 
   return recordsWithRank
 }
 
-function getBaseScore(revenue: number, geoCode: number, industry: string): number {
+function getScore(revenue: number, geoCode: string, industry: string): number {
   return revenueScore(revenue) + geoCodeScore(geoCode) + geoIndustryScore(industry)
 }
 
@@ -50,7 +93,7 @@ function revenueScore(revenue: number): number {
   return 0
 }
 
-function geoCodeScore(geoCode: number): number {
+function geoCodeScore(geoCode: string): number {
   const getDistanceFromHQ = calculateDistanceFromHQ(geoCode)
 
   if (getDistanceFromHQ <=  10) { return 10 }
@@ -65,7 +108,7 @@ function geoIndustryScore(industry: string): number {
 }
 
 // This function might use a library to calculate distance of geoPoint from a base geocode
-function calculateDistanceFromHQ(_geoCode: number): number { 
+function calculateDistanceFromHQ(_geoCode: string): number { 
   //This randomizes a distance value for demonsration purposes (between 2000 max and 1 min).
   return Math.floor(Math.random() * (2000 - 1) + 1)
 }

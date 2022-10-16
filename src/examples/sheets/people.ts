@@ -6,6 +6,11 @@ import {
   TextField,
 } from '@flatfile/configure'
 
+import {
+  FlatfileRecord,
+  FlatfileRecords
+} from '@flatfile/hooks'
+
 // Custom fields
 import makePhoneField from '../fields/phone'
 import makeLinkedInField from '../fields/linked-in'
@@ -55,7 +60,7 @@ export default new Sheet(
     }),
   },
   {
-    recordCompute: (record) => {
+    recordCompute: (record: FlatfileRecord<any>) => {
       // reuses a function to split a field into multiple 
       const [firstName, lastName] = splitFieldRecordCompute(record.get('fullName'), ' ', 2)
 
