@@ -1,7 +1,7 @@
 /**
  * This is a simple example to encapuslate a javascript .join() function with a Typescript function
  * 
- * It's trivial, offers an easy demonstration of why Typsecript is prefered to help reduce code errors
+ * While trivial, it offers an easy demonstration of why Typsecript is prefered to help reduce code errors
  * 
  * Typescript is Javascript with some additional syntax to help enforce the input and output types (e.g: string, number, object)
  *  
