@@ -5,9 +5,7 @@
  * @param {string} fieldToSplit - field to split
  * @param {number} parts - the field to split
  * @param {string} separator - what value is used to split the string (e.g, ' ', '-', ',').
- * 
- * returns the record object with new field values set
- */
+*/
 export default function SplitFieldRecordCompute (
   fieldToSplit: string, separator: string, parts: number): Array<string> {
   

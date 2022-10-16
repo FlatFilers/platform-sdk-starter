@@ -21,8 +21,6 @@
  * @constructor
  * @param {Array} fieldsToJoin - an array of field values to join.
  * @param {string} separator - what value is used between joined string (e.g, ' ', '-', ',').
- * 
- * returns the record object with new field value set
  */
  export default function joinFieldsRecordCompute(fieldsToJoin: Array<string>, separator: string): string {
   return fieldsToJoin.join(separator)
