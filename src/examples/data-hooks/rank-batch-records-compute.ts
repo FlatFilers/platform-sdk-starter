@@ -2,20 +2,50 @@
  * An example function to demonstrate logic comparing values across all records to determine a value on each record
  * This type of function would only run once as a BatchRecordCompute on the sheet after all records are initially imported
  * 
- * Additionally this file demonstrates Typescript syntax to define the expected type and shape of inputs and outputs with a Type alias
+ * ====================================
+ * New to Typescript (.ts)?
  * 
- * 'RecordsInputs', 'RecordInput' help define the shape of input data
+* If you are, then you might be wondering about the `.ts` file extension (vs `.js`)
+ * It's extra syntax on Javascript to help check for errors
+ * Useful for ensuring input and output data types are correct throughout your program (e.g. boolean, string, object, array. etc) 
  * 
- * 'RecordsOutputs', 'RecordOutput' help define the shape of return data
+ * This example demonstrates the use of a 'type alias' to define the shape of input and output data for our main export function.
  * 
- * Notice how the export function below uses these type aliases (vs. defining within the function)
+ * Notice the definitions below that look like:
+ * 
+ * type RecordInput = { 
+ *   id: number,
+ *   revenue: number,
+ *   geoCode: string,
+ *   industry: string
+ * }
+ *
+ * type RecordsInputs = Array<RecordInput>
+ * 
+ * ...and similar ones for: RecordOutput and RecordsOutput
+ * 
+ * These are aliases that will be used in the main export function to help with readability
+ * 
+ * Like this:
  * 
  * function RankBatchRecordCompute(records: RecordsInputs): RecordsOutputs {
  *   return calculateRecordsWithRank(records)
  * }
  * 
- */ 
+ * without Type Aliases, we would define input and output types in the function... 
+ * which is a bit harder to read:
+ * 
+ * * function RankBatchRecordCompute(
+ *     records: Array<object: { id: number, revenue: number, geoCode: string, industry: string }
+ *   ): Array<object: { id: number, rank: number } {
+ *   return calculateRecordsWithRank(records)
+ * }
+ * 
+ * Read along through this example and notice how Typescript is just Javascript with some type checking.
+ *  * =======
+ */
 
+ 
 /**
  * @type {Object} - an input object with keys id, revenue, geoCode and industry
  */

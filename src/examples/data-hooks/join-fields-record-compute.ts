@@ -4,8 +4,8 @@
  * ====================================
  * New to Typescript (.ts)?
  * 
- * If you are, then you might be wondering what about the `.ts` file extension (vs `.js`)
- * It's some extra syntax on Javascript to help check for errors
+ * If you are, then you might be wondering about the `.ts` file extension (vs `.js`)
+ * It's extra syntax on Javascript to help check for errors
  * Useful for ensuring input and output data types are correct throughout your program (e.g. boolean, string, object, array. etc) 
  * 
  *  
