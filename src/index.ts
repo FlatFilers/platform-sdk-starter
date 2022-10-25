@@ -12,8 +12,7 @@ import {
 /* 
 Sheets 
 
-Replace this with your Sheet imports or definitions
-or, import sheets like
+Define your Sheet configuration and Fields here, or import them:
 
 import { YourSheet } from '/path-to-your-sheet/your-sheet.ts'
 */
