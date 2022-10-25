@@ -38,8 +38,8 @@ const BasicSheet = new Sheet(
 )
 
 const BasicSheetPortal = new Portal({
-  name: 'EmployeesPortal',
-  sheet: 'Employees'
+  name: 'BasicSheetPortal',
+  sheet: 'BasicSheet'
 })
 
 export default new Workbook({
