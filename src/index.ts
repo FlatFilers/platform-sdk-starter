@@ -20,7 +20,7 @@ import { YourSheet } from '/path-to-your-sheet/your-sheet.ts'
 const MySheet = new Sheet(
   'MySheet',
   {
-    exampleField: TextField({}),
+    exampleField: TextField(),
   },
 )
 
