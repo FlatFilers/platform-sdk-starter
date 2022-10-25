@@ -12,7 +12,6 @@ import {
 } from '@flatfile/hooks'
 
 // Custom fields
-import customUsaPhoneField from '../fields/usa-phone'
 import customLinkedInField from '../fields/linked-in'
 
 // Custom data hooks
@@ -38,10 +37,10 @@ export default new Sheet(
     fullName: TextField({
       required: true,
     }),
-    homPhone: customUsaPhoneField({
+    homPhone: TextField({
       label: 'Personal Phone'
     }),
-    workPhone: customUsaPhoneField({
+    workPhone: TextField({
       label: 'Work Phone'
     }),
     title: TextField(),
