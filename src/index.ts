@@ -26,8 +26,7 @@ const MySheet = new Sheet(
 /* 
 Portals 
 
-Replace with your Portal definitions
-or, import portals like 
+Define your Portals here, or import them:
 
 import { YourPortal } from '/path-to-your-portal/your-portal.ts'
 */
