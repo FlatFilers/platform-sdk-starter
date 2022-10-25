@@ -1,5 +1,5 @@
 // This is a scaffold for defining a Workbook with Sheets and Portals
-// Optionally - copy in a working example at /examples/FullExample.ts
+// See examples/FullExample.ts for a full, working example of a Workbook.
 
 import {
   Portal,
