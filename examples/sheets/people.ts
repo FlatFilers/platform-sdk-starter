@@ -12,8 +12,8 @@ import {
 } from '@flatfile/hooks'
 
 // Custom fields
-import makePhoneField from '../fields/phone'
-import makeLinkedInField from '../fields/linked-in'
+import customUsaPhoneField from '../fields/usa-phone'
+import customLinkedInField from '../fields/linked-in'
 
 // Custom data hooks
 import splitFieldRecordCompute from '../data-hooks/split-field-record-compute'
@@ -38,14 +38,14 @@ export default new Sheet(
     fullName: TextField({
       required: true,
     }),
-    homPhone: makePhoneField({
+    homPhone: customUsaPhoneField({
       label: 'Personal Phone'
     }),
-    workPhone: makePhoneField({
+    workPhone: customUsaPhoneField({
       label: 'Work Phone'
     }),
     title: TextField(),
-    linkedIn: makeLinkedInField(),
+    linkedIn: customLinkedInField(),
     linkedInValid: BooleanField({
       description: 'set by batchRecordsCompute',
     }),

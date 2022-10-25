@@ -12,9 +12,9 @@ import {
 } from '@flatfile/hooks'
 
 // Examples of custom defined fields
-import makeUrlField from '../fields/url'
-import makeLinkedInField from '../fields/linked-in'
-import makeCountryField from '../fields/country'
+import customUrlField from '../fields/url'
+import customLinkedInField from '../fields/linked-in'
+import customCountryField from '../fields/country'
 
 // Examples of custom defined data hooks
 import joinFieldsRecordCompute from '../data-hooks/join-fields-record-compute'
@@ -57,8 +57,8 @@ export default new Sheet(
       label: 'Set by recordCompute',
       description: "The internal code name for organization"
     }),
-    country: makeCountryField(),
-    website: makeUrlField({
+    country: customCountryField(),
+    website: customUrlField({
       description: "Marketing Website",
       required: true,
     }),
@@ -66,7 +66,7 @@ export default new Sheet(
        label: 'Set by batchRecordCompute',
        description: 'Validation to ensure webiste has a 200 http response'
     }),
-    linkedIn: makeLinkedInField(),
+    linkedIn: customLinkedInField(),
     score: NumberField({ label: 'Set by batchRecordCompute' })
   },
   {
