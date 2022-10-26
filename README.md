@@ -98,7 +98,7 @@ const Employees = new Sheet(
 ...
 ```
 
-[View full source code](src/examples/FullExample.ts)
+[View full source code](examples/FullExample.ts)
 
 The above code will generate a **Workbook** that looks like this:
 ![Sample Data upload](/assets/SampleImportErrors.png)
@@ -564,4 +564,3 @@ const expectedOutputRows = [
 const results = await testSheet.testRecords(inputRows)
 expect(results).toMatchObject(expectedOutputRows)
 ```
-
