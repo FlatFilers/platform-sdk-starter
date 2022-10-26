@@ -97,21 +97,6 @@ const Employees = new Sheet(
   }
 )
 
-const LinkedSheet = new Sheet(
-  'LinkedSheet',
-  {
-    email: LinkedField({
-      unique: true,
-      label: 'Email',
-      primary: true,
-      sheet: BaseSheet
-    }),
-    firstName: TextField(),
-    middleName: TextField('Middle'),
-    lastName: TextField(),
-  },
-)
-
 const BaseSheet = new Sheet(
   'BaseSheet',
   {
@@ -127,6 +112,22 @@ const BaseSheet = new Sheet(
     previewFieldKey: 'email',
   }
 )
+
+const LinkedSheet = new Sheet(
+  'LinkedSheet',
+  {
+    email: LinkedField({
+      unique: true,
+      label: 'Email',
+      primary: true,
+      sheet: BaseSheet
+    }),
+    firstName: TextField(),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+  },
+)
+
 ...
 ```
 
