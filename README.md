@@ -41,7 +41,7 @@ const Employees = new Sheet(
     firstName: LinkedField({
       label: 'First Name',
       required: true,
-      description: 'Give Name',
+      description: 'Given Name',
       sheet: BaseSheet,
     }),
     lastName: TextField(),
