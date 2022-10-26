@@ -38,11 +38,10 @@ Here is an example of a fully functional Flatfile **Workbook** that we'll use in
 const Employees = new Sheet(
   'Employees',
   {
-    firstName: LinkedField({
+    firstName: TextField({
       label: 'First Name',
       required: true,
-      description: 'Given Name',
-      sheet: BaseSheet,
+      description: 'Given Name'
     }),
     lastName: TextField(),
     fullName: TextField(),
@@ -98,6 +97,21 @@ const Employees = new Sheet(
   }
 )
 
+const LinkedSheet = new Sheet(
+  'LinkedSheet',
+  {
+    email: LinkedField({
+      unique: true,
+      label: 'Email',
+      primary: true,
+      sheet: BaseSheet
+    }),
+    firstName: TextField(),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+  },
+)
+
 const BaseSheet = new Sheet(
   'BaseSheet',
   {
@@ -107,9 +121,10 @@ const BaseSheet = new Sheet(
     }),
     middleName: TextField('Middle'),
     lastName: TextField(),
+    email: TextField()
   },
   {
-    previewFieldKey: 'firstName',
+    previewFieldKey: 'email',
   }
 )
 ...
@@ -204,7 +219,7 @@ Here we provide a pre-defined list of values that this field can have.
 #### LinkedField
 
 ```js
-firstName: LinkedField({
+email: LinkedField({
     label: 'First Name',
     sheet: BaseSheet,
 }),
@@ -222,14 +237,15 @@ const BaseSheet = new Sheet(
     }),
     middleName: TextField('Middle'),
     lastName: TextField(),
+    email: TextField()
   },
   {
-    previewFieldKey: 'firstName',
+    previewFieldKey: 'email',
   }
 )
 ```
 
-Here we define the sheet we are linking to, and on the sheet set the `previewFieldKey` option that will display on the original template. Note: `LinkedField` can currently only be implemented in Workspaces. 
+Here we define the sheet we are linking to, and on the sheet set the `previewFieldKey` option that will display on the original template. Note: `LinkedField` can currently only be implemented in Workspaces, which is why this example doesn't have a portal deployed for the LinkedSheet and BaseSheet sheets. 
 
 ### Sheet options
 
