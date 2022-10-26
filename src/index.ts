@@ -1,5 +1,5 @@
-// A template to define a Workbook with Sheets and Portals
-// See examples in /examples/workbooks
+// This is a scaffold for defining a Workbook with Sheets and Portals
+// See examples/FullExample.ts for a full, working example of a Workbook.
 
 import {
   Portal,
@@ -9,44 +9,39 @@ import {
 } from '@flatfile/configure'
 
 
-// Sheets 
-// import or define sheets.
+/* 
+Sheets 
 
-// Example import
-// import { Employees } from '/examples/sheets/employees'
+Define your Sheet configuration and Fields here, or import them:
 
-// Example defininition
-// const MySheet = new Sheet(
-//   'MySheet',
-//   {
-//     exampleField: TextField({}),
-//   },
-//   {
-//    // sheet options
-//   }
-// )
-
-// Replace this with your Sheet imports or definitions
+import { YourSheet } from '/path-to-your-sheet/your-sheet.ts'
+*/
 const MySheet = new Sheet(
   'MySheet',
   {
-    exampleField: TextField({}),
+    exampleField: TextField(),
   },
 )
 
-// Portal - Replace with your Portal 
-const portals = [
-  new Portal({
-    name: 'MyPortal',
-    sheet: 'MySheet'
-  })
-]
+/* 
+Portals 
 
-// Workbook  - Replace with your Workbooks export
+Define your Portals here, or import them:
+
+import { YourPortal } from '/path-to-your-portal/your-portal.ts'
+*/
+const MyPortal = new Portal({
+  name: 'MyPortal',
+  sheet: 'MySheet'
+})
+
+// Workbook  - Update to reference your Workbook with Sheet(s) and Portal(s)
 export default new Workbook({
   name: 'MyWorkbook',
   namespace: 'my-workbook',
-  portals,
+  portals: [
+    MyPortal
+  ],
   sheets: {
     MySheet,
   }
