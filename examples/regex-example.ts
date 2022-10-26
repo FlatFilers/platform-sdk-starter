@@ -2,8 +2,10 @@ import {
   Sheet,
   TextField,
   Workbook,
+  Message
 } from '@flatfile/configure'
 
+const logger = { info: console.log }
 
 const numexact5 = {
   regex: /(^$)|(^[0-9]{5}$)/,
@@ -40,84 +42,55 @@ const charmax10 = {
   message: 'Value must be 10 or fewer characters',
 }
 
-const FIELDS = {
-  supplierID: anmax50,
-  MBI: anmax11,
-  MemberZip: numexact5,
-  NPI: anmax15,
-  MemberAddress1: allcharmax50,
-  MemberAddress2: anmax50,
-  MemberAlias: anmax50,
-  MemberCity: lettersmax50,
-  Ending_DOS: charmax10,
-}
-
-const logger = { info: console.log }
-
-const fieldTypeVal = (record) => {
-  Object.keys(FIELDS).forEach((field) => {
-    const fieldRegex = FIELDS[field]['regex']
-    logger.info(FIELDS[field]['message'])
-    logger.info(fieldRegex.toString())
-    const fieldValue = record.get(field)
-    if (fieldRegex.test(fieldValue) === false) {
-      record.addError(field, FIELDS[field]['message'])
-      logger.info(FIELDS[field]['message'])
+const regexValidate = (regexMessage) => {
+  const retFunc = (val:string) => {
+    const regex = regexMessage.regex
+    const message = regexMessage.message
+    if (regex.test(val) === false) {
+      logger.info(regex.toString())
+      logger.info(message)
+      return [
+        new Message(message, 'error', 'validate')
+          ]
     }
-  })
+  }
+  return retFunc
 }
+
 
 export const SupplierMember = new Sheet(
   'SupplierMember',
   {
-
     supplierID: TextField({
       label: 'supplierID',
+      validate: regexValidate(anmax50)
     }),
 
     NPI: TextField({
-      label: 'NPI',
+      label: 'NPI', validate:regexValidate(anmax15)
     }),
 
     MBI: TextField({
-      label: 'MBI',
+      label: 'MBI', validate:regexValidate(anmax11)
     }),
 
-    MemberAddress1: TextField({
-      label: 'MemberAddress1',
-    }),
-
-    MemberAddress2: TextField({
-      label: 'MemberAddress2',
-    }),
+    MemberAddress1: TextField({label: 'MemberAddress1', validate: regexValidate(allcharmax50)}),
+    MemberAddress2: TextField({label: 'MemberAddress2', validate: regexValidate(anmax50)}),
 
     MemberZip: TextField({
       label: 'MemberZip',
       description: 'Member Zip Code',
-    }),
-
-
-    MemberAlias: TextField({
-      label: 'MemberAlias',
-    }),
-
-    MemberCity: TextField({
-      label: 'MemberCity',
-    }),
-
+      validate:regexValidate(numexact5)}),
+    MemberAlias: TextField({label: 'MemberAlias', validate:regexValidate(anmax50)}),
+    MemberCity: TextField({label: 'MemberCity', validate:regexValidate(lettersmax50)}),
     Ending_DOS: TextField({
       label: 'EndDOS',
       description: 'Last Date of service you want retrieved for this request',
+      validate:regexValidate(charmax10)
     }),
   },
-  
-  {
-    recordCompute(record, logger) {
-      fieldTypeVal(record)
-    },
-  }
+  {}
 )
-
 
 export default new Workbook({
   name: 'Default',
