@@ -39,8 +39,9 @@ const Employees = new Sheet(
   'Employees',
   {
     firstName: TextField({
+      label: 'First Name',
       required: true,
-      description: 'Given name',
+      description: 'Given Name'
     }),
     lastName: TextField(),
     fullName: TextField(),
@@ -95,6 +96,38 @@ const Employees = new Sheet(
     },
   }
 )
+
+const BaseSheet = new Sheet(
+  'BaseSheet',
+  {
+    firstName: TextField(),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+    email: TextField({
+      unique: true,
+      primary: true
+    })
+  },
+  {
+    previewFieldKey: 'email',
+  }
+)
+
+const LinkedSheet = new Sheet(
+  'LinkedSheet',
+  {
+    email: LinkedField({
+      unique: true,
+      label: 'Email',
+      primary: true,
+      sheet: BaseSheet
+    }),
+    firstName: TextField(),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+  },
+)
+
 ...
 ```
 
@@ -121,6 +154,7 @@ Now, let's take a closer look at the example **Workbook** we just deployed, star
 3. `DateField`: a date
 4. `OptionField`: a field with a set of pre-defined values
 5. `BooleanField`: a true / false field
+5. `LinkedField`: a field that links two sheets together
 
 ### Field options
 
@@ -183,6 +217,36 @@ Here we provide a pre-defined list of values that this field can have.
 
 <!-- TODO Boolean Field? -->
 
+#### LinkedField
+
+```js
+email: LinkedField({
+    label: 'First Name',
+    sheet: BaseSheet,
+}),
+```
+
+Here we define which field is linked to another template, along with the sheet this field should be linked to.
+
+```js
+const BaseSheet = new Sheet(
+  'BaseSheet',
+  {
+    firstName: TextField({
+      unique: true,
+      primary: true,
+    }),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+    email: TextField()
+  },
+  {
+    previewFieldKey: 'email',
+  }
+)
+```
+
+Here we define the sheet we are linking to, and on the sheet set the `previewFieldKey` option that will display on the original template. Note: `LinkedField` can currently only be implemented in Workspaces, which is why this example doesn't have a portal deployed for the LinkedSheet and BaseSheet sheets. 
 
 ### Sheet options
 
