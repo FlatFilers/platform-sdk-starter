@@ -100,13 +100,13 @@ const Employees = new Sheet(
 const BaseSheet = new Sheet(
   'BaseSheet',
   {
-    firstName: TextField({
-      unique: true,
-      primary: true,
-    }),
+    firstName: TextField(),
     middleName: TextField('Middle'),
     lastName: TextField(),
-    email: TextField()
+    email: TextField({
+      unique: true,
+      primary: true
+    })
   },
   {
     previewFieldKey: 'email',
