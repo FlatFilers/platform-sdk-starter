@@ -27,6 +27,7 @@
     "devDependencies": {
         "@flatfile/configure": "^0.4.1",
         "@flatfile/hooks": "^1.2.0",
+        "node-fetch": "^3.2.10",
         "@types/jest": "^28.1.4",
         "@types/lodash": "^4.14.186",
         "@typescript-eslint/parser": "^5.31.0",
