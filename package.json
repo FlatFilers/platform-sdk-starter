@@ -32,7 +32,7 @@
         "@typescript-eslint/parser": "^5.31.0",
         "eslint": "^8.19.0",
         "eslint-config-prettier": "^8.5.0",
-        "flatfile": "*",
+        "flatfile": "^3.1.0",
         "jest": "^28.1.2",
         "lodash": "^4.17.21",
         "prettier": "^2.7.1",
