@@ -54,6 +54,7 @@ const Employees = new Sheet(
         hr: 'People Ops',
         sales: 'Revenue',
       },
+      matchStrategy: 'exact',
     }),
     fromHttp: TextField({ label: 'Set by batchRecordCompute' }),
     salary: NumberField({
@@ -120,7 +121,8 @@ const LinkedSheet = new Sheet(
       unique: true,
       label: 'Email',
       primary: true,
-      sheet: BaseSheet
+      sheet: BaseSheet,
+      upsert: false,
     }),
     firstName: TextField(),
     middleName: TextField('Middle'),
@@ -208,10 +210,11 @@ department: OptionField({
     hr: 'People Ops',
     sales: 'Revenue',
   },
+  matchStrategy: 'exact',
 }),
 ```
 
-Here we provide a pre-defined list of values that this field can have.
+Here we provide a pre-defined list of values that this field can have. We have also included the `matchStrategy` flag, which determines whether Flatfile should only accept exact matches when automatically matching your OptionField options, or whether Flatfile should also use [historical matches and fuzzy matches](https://support.flatfile.com/hc/en-us/articles/8579991586324-Matching) while automatically matching your options. If this is not set, your OptionField will use historical and fuzzy matches to automatically match options for this field.
 <!-- TODO what does `label` do? -->
 
 
@@ -223,10 +226,11 @@ Here we provide a pre-defined list of values that this field can have.
 email: LinkedField({
     label: 'First Name',
     sheet: BaseSheet,
+    upsert: false
 }),
 ```
 
-Here we define which field is linked to another template, along with the sheet this field should be linked to.
+Here we define which field is linked to another template, along with the sheet this field should be linked to. We have also set `upsert: false` which disables the default upsert behavior and will display an error on this sheet if a value imported in the LinkedField does not exist on the parent sheet. For more information about our Relational Data feature, visit our [Relational Data Guide](https://support.flatfile.com/hc/en-us/articles/8606584859284-Relational-Data).
 
 ```js
 const BaseSheet = new Sheet(
