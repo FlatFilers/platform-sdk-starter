@@ -20,6 +20,29 @@ describe('Cast Function tests ->', () => {
       expect(ChronoDateCast(raw)).toStrictEqual(output)
     }
 
+  
+  test('DateField syntax play', () => {
+
+      //what do we want options on DateField to look like
+
+    DateField({egress:"YY/MM/DD"})
+
+    // known strings?
+    DateField({egressShorthand:"iso"})
+    DateField({egress:"iso-with-tz"})
+
+    //what about parsing options
+    DateField({egressShorthand:"iso"})
+    DateField({egress:"iso-with-tz"})
+
+    // what about a strict option
+    DateField({parseOptions: {strict:true}})
+    DateField({parseOptions: {parseString: "YY/MM/DD"}}) // and reject other formats?
+    
+    expect(1).toBe(1)
+  })
+  
+
 
   test('DateCast handles null cases', () => {
     // eventually I want this 2500 test file from pandas to be our goal for DWIM date parsing
@@ -55,6 +78,11 @@ describe('Cast Function tests ->', () => {
 
   })
 
+  test('instantiate DateField', () => {
+    const d = DateField()
+    console.log(d)
+    expect(1).toBe(1)
+  })
   test('pandas date functions', () => {
     assertDC("02/17/2009", new Date('2009-02-17T17:00:00.000Z')) //"MM/DD/YY" #Month-Day-Year with leading zeros
     assertDC("18/02/2009", new Date('2009-02-18T17:00:00.000Z')) //"DD/MM/YY" #Day-Month-Year with leading zeros (
@@ -67,34 +95,5 @@ describe('Cast Function tests ->', () => {
     assertDC("25Feb2009", new Date('2009-02-25T17:00:00.000Z')) // "DDMonYY" #Day-Month abbreviation-Year with leading zeros
 
   })
-
-  test('instantiate DateField', () => {
-    const d = DateField()
-    console.log(d)
-    expect(1).toBe(1)
-  })
-  
-  test('DateField syntax play', () => {
-    /*
-      what do we want options on DateField to look like
-
-      */
-    DateField({egress:"YY/MM/DD"})
-
-    // known strings?
-    DateField({egressShorthand:"iso"})
-    DateField({egress:"iso-with-tz"})
-
-    //what about parsing options
-    DateField({egressShorthand:"iso"})
-    DateField({egress:"iso-with-tz"})
-
-    // what about a strict option
-    DateField({parseOptions: {strict:true}})
-    DateField({parseOptions: {parseString: "YY/MM/DD"}}) // and reject other formats?
-    
-    expect(1).toBe(1)
-  })
-  
 
 })
