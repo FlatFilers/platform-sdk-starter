@@ -1,31 +1,71 @@
-import fetch from 'node-fetch'
-
-import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
 import {
-  Sheet,
-  Workbook,
-  TextField,
   BooleanField,
+  DateField,
+  Message,
   NumberField,
   OptionField,
-  Message,
+  Portal,
+  Sheet,
+  TextField,
+  Workbook,
+  LinkedField
 } from '@flatfile/configure'
+
+import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
+import fetch from 'node-fetch'
+
+const BaseSheet = new Sheet(
+  'BaseSheet',
+  {
+    firstName: TextField({
+      primary: true,
+    }),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+    email: TextField({
+      unique: true,
+    })
+  },
+  {
+    previewFieldKey: 'email',
+  }
+)
+
+const LinkedSheet = new Sheet(
+  'LinkedSheet',
+  {
+    email: LinkedField({
+      unique: true,
+      label: 'Email',
+      primary: true,
+      sheet: BaseSheet
+    }),
+    firstName: TextField(),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+  },
+)
 
 const Employees = new Sheet(
   'Employees',
   {
     firstName: TextField({
+      label: 'First Name',
       required: true,
       description: 'Given name',
     }),
-    lastName: TextField(),
+    lastName: TextField({
+      compute: (v: any) => {
+        return `Rock`
+      },
+    }),
     fullName: TextField(),
 
     stillEmployed: BooleanField(),
     department: OptionField({
       label: 'Department',
       options: {
-        engineering: 'Engineering',
+        engineering: { label: 'Engineering' },
         hr: 'People Ops',
         sales: 'Revenue',
       },
@@ -48,13 +88,14 @@ const Employees = new Sheet(
         }
       },
     }),
+    startDate: DateField()
   },
   {
     allowCustomFields: true,
     readOnly: true,
     recordCompute: (record) => {
-      const fullName = `{record.get('firstName')} {record.get('lastName')}`
-      record.set('fullhName', fullName)
+      const fullName = `${record.get('firstName')} ${record.get('lastName')}`
+      record.set('fullName', fullName)
       return record
     },
     batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
@@ -66,16 +107,24 @@ const Employees = new Sheet(
       })
       const result = await response.json()
       payload.records.map(async (record: FlatfileRecord) => {
-        await record.set('fromHttp', result.info.postgres.status)
+        record.set('fromHttp', result.info.postgres.status)
       })
     },
   }
 )
 
+const EmployeesPortal = new Portal({
+  name: 'EmployeesPortal',
+  sheet: 'Employees'
+})
+
 export default new Workbook({
-  name: 'Migration stage1',
-  namespace: 'MyCompany',
+  name: 'Employees',
+  namespace: 'employee',
   sheets: {
     Employees,
+    BaseSheet,
+    LinkedSheet
   },
+  portals: [EmployeesPortal],
 })
