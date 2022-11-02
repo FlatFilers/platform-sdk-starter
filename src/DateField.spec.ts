@@ -20,7 +20,7 @@ describe('Cast Function tests ->', () => {
       expect(ChronoDateCast(raw)).toStrictEqual(output)
     }
 
-  
+  /*
   test('DateField syntax play', () => {
 
       //what do we want options on DateField to look like
@@ -95,5 +95,10 @@ describe('Cast Function tests ->', () => {
     assertDC("25Feb2009", new Date('2009-02-25T17:00:00.000Z')) // "DDMonYY" #Day-Month abbreviation-Year with leading zeros
 
   })
+  */
+  test('js dropin replacement', () => {
+    expect(ChronoDateCast("02/17/2009")).toStrictEqual(new Date("02/17/2009"))
+  })
+
 
 })
