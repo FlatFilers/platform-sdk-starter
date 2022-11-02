@@ -39,8 +39,9 @@ const Employees = new Sheet(
   'Employees',
   {
     firstName: TextField({
+      label: 'First Name',
       required: true,
-      description: 'Given name',
+      description: 'Given Name'
     }),
     lastName: TextField(),
     fullName: TextField(),
@@ -53,6 +54,7 @@ const Employees = new Sheet(
         hr: 'People Ops',
         sales: 'Revenue',
       },
+      matchStrategy: 'exact',
     }),
     fromHttp: TextField({ label: 'Set by batchRecordCompute' }),
     salary: NumberField({
@@ -95,10 +97,43 @@ const Employees = new Sheet(
     },
   }
 )
+
+const BaseSheet = new Sheet(
+  'BaseSheet',
+  {
+    firstName: TextField(),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+    email: TextField({
+      unique: true,
+      primary: true
+    })
+  },
+  {
+    previewFieldKey: 'email',
+  }
+)
+
+const LinkedSheet = new Sheet(
+  'LinkedSheet',
+  {
+    email: LinkedField({
+      unique: true,
+      label: 'Email',
+      primary: true,
+      sheet: BaseSheet,
+      upsert: false,
+    }),
+    firstName: TextField(),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+  },
+)
+
 ...
 ```
 
-[View full source code](src/examples/FullExample.ts)
+[View full source code](examples/FullExample.ts)
 
 The above code will generate a **Workbook** that looks like this:
 ![Sample Data upload](/assets/SampleImportErrors.png)
@@ -121,6 +156,7 @@ Now, let's take a closer look at the example **Workbook** we just deployed, star
 3. `DateField`: a date
 4. `OptionField`: a field with a set of pre-defined values
 5. `BooleanField`: a true / false field
+5. `LinkedField`: a field that links two sheets together
 
 ### Field options
 
@@ -174,15 +210,47 @@ department: OptionField({
     hr: 'People Ops',
     sales: 'Revenue',
   },
+  matchStrategy: 'exact',
 }),
 ```
 
-Here we provide a pre-defined list of values that this field can have.
+Here we provide a pre-defined list of values that this field can have. We have also included the `matchStrategy` flag, which determines whether Flatfile should only accept exact matches when automatically matching your OptionField options, or whether Flatfile should also use [historical matches and fuzzy matches](https://support.flatfile.com/hc/en-us/articles/8579991586324-Matching) while automatically matching your options. If this is not set, your OptionField will use historical and fuzzy matches to automatically match options for this field.
 <!-- TODO what does `label` do? -->
 
 
 <!-- TODO Boolean Field? -->
 
+#### LinkedField
+
+```js
+email: LinkedField({
+    label: 'First Name',
+    sheet: BaseSheet,
+    upsert: false
+}),
+```
+
+Here we define which field is linked to another template, along with the sheet this field should be linked to. We have also set `upsert: false` which disables the default upsert behavior and will display an error on this sheet if a value imported in the LinkedField does not exist on the parent sheet. For more information about our Relational Data feature, visit our [Relational Data Guide](https://support.flatfile.com/hc/en-us/articles/8606584859284-Relational-Data).
+
+```js
+const BaseSheet = new Sheet(
+  'BaseSheet',
+  {
+    firstName: TextField({
+      unique: true,
+      primary: true,
+    }),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+    email: TextField()
+  },
+  {
+    previewFieldKey: 'email',
+  }
+)
+```
+
+Here we define the sheet we are linking to, and on the sheet set the `previewFieldKey` option that will display on the original template. Note: `LinkedField` can currently only be implemented in Workspaces, which is why this example doesn't have a portal deployed for the LinkedSheet and BaseSheet sheets. 
 
 ### Sheet options
 
@@ -457,6 +525,30 @@ The default value for this field
 `compute` takes the type specified by the field and returns the type specified by the field.
 #### `validate`
 `validate` takes the type specified by the field and returns validation messages.  This is the most commonly used field hook.
+
+
+#### Other Field Options
+##### Description
+Long form description that appears in the UI upon hover of the field name.
+##### Annotations
+Annotations are automatically filled in messages that the platform sdk provides when `default` or `compute` changes a value. Following independent options set as an object - `{}`
+###### default
+If set to `true` insertions of the `default` value will be annotated with an info message of `defaultMessage`
+###### defaultMessage
+The message to use when a `default` value is inserted.  If none specified, defaults to 'This field was automatically given a default value of'
+###### compute
+If set to `true` instances where `compute` changes the value of a field will be annotated with an info message of `computeMessage`
+###### computeMessage
+The message to use when a `compute` changes a value.  if none specified, defaults to 'This value was automatically reformatted - original data:'
+##### stageVisibility
+controls what parts of mapping/review/export a field occurs in
+###### mapping
+When set to `false` this field will not appear for matching in the mapping stage.
+###### review
+This field will not appear in the review stage
+###### export
+This field will not be exported.
+
 
 
 ### SheetOptions
