@@ -252,6 +252,26 @@ const BaseSheet = new Sheet(
 
 Here we define the sheet we are linking to, and on the sheet set the `previewFieldKey` option that will display on the original template. Note: `LinkedField` can currently only be implemented in Workspaces, which is why this example doesn't have a portal deployed for the LinkedSheet and BaseSheet sheets. 
 
+Base sheet -  uploaded data
+| firstName | email             |
+| Paddy     | paddy@flatfile.io |
+| Elisa     | elisa@flatfile.io |
+
+
+LinkTable - uploaded data
+
+| title    | email             |
+| engineer | paddy@flatfile.io |
+| Support  | elisa@flatfile.io |
+
+LinkTable displays as this in the review stage
+| title    | email |
+| engineer | Paddy |
+| Support  | Elisa |
+
+
+Link table exports as ???
+
 ### Sheet options
 
 Next, let's look at the options that we've set on the sheet itself:
