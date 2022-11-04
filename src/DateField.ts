@@ -53,14 +53,19 @@ export const StringCastCompose = (otherFunc: (raw: string) => any) => {
 const ChronoStringDateCast = (raw:string) => {
   //const parsed = chrono.parseDate(raw)
   //const parsed = chrono.parse(raw )
-  const parsed = chrono.strict.parseDate(raw)
+  //const parsed = chrono.strict.parseDate(raw, )
+  const parsedResult = chrono.strict.parse(raw)
+
   //const parsedDebug = chrono.strict.parse(raw)
   //console.dir(parsedDebug)
-  if (parsed === null) {
+  if (parsedResult === null) {
     throw new Error(`'${raw}' parsed to 'null' which is invalid`)
   }
-
-  return parsed
+  //folloiwng code necessary for JS compatability
+  const d = parsedResult[0].date()
+  console.log(d.getHours())
+  d.setHours(0)
+  return d
 }
 export const ChronoDateCast = StringCastCompose(ChronoStringDateCast)
 
