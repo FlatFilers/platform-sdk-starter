@@ -2,12 +2,12 @@
 // See examples/FullExample.ts for a full, working example of a Workbook.
 
 import {
+  DateField,
   Portal,
   Sheet,
   TextField,
   Workbook,
 } from '@flatfile/configure'
-
 
 /* 
 Sheets 
@@ -21,7 +21,7 @@ const MySheet = new Sheet(
   {
     firstName: TextField(),
     lastName: TextField(),
-    email: TextField()
+    dob: DateField()
   },
 )
 
