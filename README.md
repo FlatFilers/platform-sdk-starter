@@ -4,8 +4,6 @@ The platform SDK starter is a way to configure your Flatfile Workbook in code.
 
 Visit [the Guides](https://flatfile.com/docs/guides/) to learn more about using Flatfile and the Platform SDK Starter.
 
-This readme is intended to provide convienient object reference definitions.
-
 ## Getting Started
 
 Visit [CLI quickstart](https://flatfile.com/docs/get-started/quickstart/) and follow instructions to sign up for a Flatfile account and run this code locally.
