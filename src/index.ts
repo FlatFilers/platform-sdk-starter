@@ -2,7 +2,7 @@
 // See examples/FullExample.ts for a full, working example of a Workbook.
 
 import {
-  DateField,
+  NumberField,
   Portal,
   Sheet,
   TextField,
@@ -21,7 +21,7 @@ const MySheet = new Sheet(
   {
     firstName: TextField(),
     lastName: TextField(),
-    dob: DateField()
+    age: NumberField()
   },
 )
 
