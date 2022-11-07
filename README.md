@@ -412,7 +412,7 @@ When releasing pieces to the SDK our thought process is guided by the following 
   - This is a good use for field `compute`. This function will be idempotent (running it over and over on the same input produces the same output and state)
 - **How can check the type and size of an url and return an error if the linked file is > 5mb or not an image?**
   - Currently this is best accomplished with a text field named `s3_url` that will match to the URL provided in the upload, and a row `compute` that stores the size of the download to `s3_url_size`, `s3_url_size` should have an `validate` of less than 5mb.
-  - In the near future this will be handled with a computed filed that takes `s3_url` as an input and outputs `s3_url_size`.
+  - In the near future this will be handled with a computed field that takes `s3_url` as an input and outputs `s3_url_size`.
   - In the longer term this will be handled by a `SmartURLCapture` field that stores URLs to a synced s3 bucket and provides metadata about the download including size. The `validate` will run on the size property of the `SmartURLCapture` field
 - **Using a domain name (www.flatfile.com) field, how can I call the clearbit API and populate another field with an image url to their logo?**
   - Currently this is best accomplished via a row `compute`.
@@ -443,7 +443,7 @@ A `Field` object represents a column of data in a `Sheet`.  They are similar to 
 ### Data Hook®
 Data Hooks® are the Flatfile copyrighted term for code that runs on `Field`s and `Sheet`s to transform and validate data.
 ### Field Hook
-Field hooks are Data Hook®s that run on individual fields.  There are three field-level hooks:
+Field hooks are Data Hook®s that run on individual fields.
 ### Workbook
 A Workbook is a collection of Sheets.  The Sheets of a Workbook can be optionally linked together via `ForeignKey`.  A Workbook is similar to a database schema.
 
