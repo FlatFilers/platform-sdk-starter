@@ -34,42 +34,20 @@ describe('Workbook tests ->', () => {
   })
 
   test('Convert to spanish number word works', async () => {
-    const inputRow = { numField: '1'}
+    const inputRow = { numField: 'un'}
     const expectedOutputRow = { numField: 'un'}
     const res = await testSheet.testRecord(inputRow)
     expect(res).toMatchObject(expectedOutputRow)
+
+    const res2 = await testSheet.testRecord({ numField: 'two'})
+    expect(res).toMatchObject({ numField: 'dos' })
   })
 
-
-
-
-// describe('Cast Function tests ->', () => {
-//   const makeCastAssert = (castFn: any) => {
-//     const assertFn = (raw: any, output: any): void => {
-//       expect(castFn(raw)).toBe(output)
-//     }
-//     return assertFn
-//   }
-//   const makeCastAssertException = (castFn: any) => {
-//     const assertFn = (raw: any, error: string): void => {
-//       expect(() => {
-//         castFn(raw)
-//       }).toThrow(error)
-//     }
-//     return assertFn
-//   }
-
-//   test('SubstitutionCast works ', () => {
-
-
-//     const assertNC = makeCastAssert(SpanishNum)
-//     const assertThrow = makeCastAssertException(SpanishNum)
-
-//     assertNC('1', 'un')
-//     assertNC('two', 'dos')
-//     assertThrow(
-//       'not a number',
-//       "Couldn't convert 'not a number' to a spanish number"
-//     )
-//   })
+  // test('see how an error is handled ', async () => {
+  //   // hold off for Paddy to fix
+  //   const inputRow = { numField: 'not a number'}
+  //   const expectedOutputRow = { numField: 'sadf'}
+  //   const res = await testSheet.testRecord(inputRow)
+  //   expect(res).toMatchObject(expectedOutputRow)
+  // })
 })
