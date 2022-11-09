@@ -33,6 +33,13 @@ describe('Workbook tests ->', () => {
     expect(res).toMatchObject(expectedOutputRow)
   })
 
+  test('Convert to spanish number word works', async () => {
+    const inputRow = { numField: '1'}
+    const expectedOutputRow = { numField: 'un'}
+    const res = await testSheet.testRecord(inputRow)
+    expect(res).toMatchObject(expectedOutputRow)
+  })
+
 
 
 
