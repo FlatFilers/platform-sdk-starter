@@ -1,7 +1,14 @@
 import { makeInterpreter, NestedIns } from '@flatfile/expression-lang'
-import { TRecordStageLevel, Message } from '@flatfile/configure'
+import { Message } from '@flatfile/configure'
 import { FlatfileRecord } from '@flatfile/hooks'
 import * as _ from 'lodash'
+
+export type TRecordStageLevel =
+  | 'compute'
+  | 'validate'
+  | 'apply'
+  | 'other'
+
 
 //I would love message to be able to accept some type of format string
 const error = (message: string, stage: TRecordStageLevel = 'validate') => {
@@ -34,7 +41,8 @@ const groupConstraintRow = (
     if (Array.isArray(messagesToApply)) {
       appliccableRows.map((record: FlatfileRecord) => {
         messagesToApply.map((m) => {
-          record.pushInfoMessage(origField, m.message, m.level, m.stage)
+	  //@ts-ignore
+          record.pushInfoMessage(origField, m.message, m.level, 'validate')
         })
       })
     }

@@ -26,7 +26,7 @@ describe('VExpression Tests ->', () => {
   })
 
   test('Implicit Greater Than test', () => {
-    const valFunc = When(ImplicitGreaterThan(5), Error('val greater than 5'))
+    const valFunc = ValidateWhen(ImplicitGreaterThan(5), Error('val greater than 5'))
     expect(valFunc(3)).toStrictEqual([])
     expect(valFunc(7)).toMatchObject([
       { level: 'error', message: 'val greater than 5' },
