@@ -36,11 +36,12 @@ let's take the above example and put it in a test Sheet
 ```
 const SimpleSheet = new Sheet(
   'SimpleSheet',
-  {age: NumberField({validate: VWhen(LessThan(Val(), 21), Error("too young to drink"))},
+  {age: NumberField({validate: ErrorWhen(LessThan(Val(), 21), "too young to drink")},
 )
 ```
 
-note, when used in a `validate` function, `ValidateVWhen` instead of `When` must be used.  `ValidateWhen` returns a function that accepts a value and calls the validate function on the expression, making `Val()` a valid way of accessing the argument for `validate`.
+
+note, when used in a `validate` function, there are special MessageConditionals `ErrorWhen`,`ErrorUnless`, `WarnWhen`, `WarnUnless`, `InfoWhen`, `InfoUnless` that should be used.  `ErrorWhen` returns a function that accepts a value and calls the validate function on the expression, making `Val()` a valid way of accessing the argument for `validate`.
 
 # GroupByField
 ```
