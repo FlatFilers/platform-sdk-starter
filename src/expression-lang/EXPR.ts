@@ -61,6 +61,8 @@ export const Match = (matchSpec: any, recordGrouping: any) => [
   recordGrouping,
 ]
 export const ImplicitGreaterThan = (comparand: any) => ['>', Val(), comparand]
+export const ImplicitLessThan = (comparand: any) => ['>', Val(), comparand]
+
 export const GroupConstraintItem = (
   rowFilterExpr: NestedIns,
   actionExpr: NestedIns,
@@ -80,16 +82,47 @@ export const GroupConstraintItem = (
 export const Debug = (expr: NestedIns) => ['debug', expr]
 
 const simpleInterpret = makeInterpreter({error})
+
 export const ValidateWhen = (predicate: any, expr: any) => {
   return (val: any) => {
     return simpleInterpret(['when', predicate, expr], { val: val })
   }
 }
-export const ValidateUnless = (predicate: any, expr: any) => {
+
+export const ErrorWhen = (predicate: any, errString: string) => {
   return (val: any) => {
-    return simpleInterpret(['when', ['not', predicate], expr], { val: val })
+    return simpleInterpret(['when', predicate, ['error', errString]], { val: val })
+  }
+}
+
+export const ErrorUnless = (predicate: any, errString: string) => {
+  return (val: any) => {
+    return simpleInterpret(['when', ['not', predicate], ['error', errString]], { val: val })
   }
 }
 
 
+export const WarnWhen = (predicate: any, errString: string) => {
+  return (val: any) => {
+    return simpleInterpret(['when', predicate, ['warn', errString]], { val: val })
+  }
+}
+
+export const WarnUnless = (predicate: any, errString: string) => {
+  return (val: any) => {
+    return simpleInterpret(['unless', ['not', predicate], ['warn', errString]], { val: val })
+  }
+}
+
+export const InfoWhen = (predicate: any, errString: string) => {
+  return (val: any) => {
+    return simpleInterpret(['when', predicate, ['info', errString]], { val: val })
+  }
+}
+
+export const InfoUnless = (predicate: any, errString: string) => {
+  return (val: any) => {
+    return simpleInterpret(['when', ['not',  predicate], ['info', errString]], { val: val })
+  }
+}
 
