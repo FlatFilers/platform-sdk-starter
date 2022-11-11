@@ -40,7 +40,7 @@ const SimpleSheet = new Sheet(
 )
 ```
 
-note, when used in a `validate` function, `VWhen` instead of `EWhen` must be used.  `VWhen` returns a function that accepts a value and calls the validate function on the expression, making `Val()` a valid way of accessing the argument for `validate`.
+note, when used in a `validate` function, `ValidateVWhen` instead of `When` must be used.  `ValidateWhen` returns a function that accepts a value and calls the validate function on the expression, making `Val()` a valid way of accessing the argument for `validate`.
 
 # GroupByField
 ```
@@ -92,14 +92,14 @@ note we use `When` here to differentiate from `ValidateWhen`.  Still not sure ho
 
 for the first argument
 ```
-	    [Group(), EWhen(Equal(Count(Match({'rowType':'header'}), Group())), 0), 
+	    [Group(), When(Equal(Count(Match({'rowType':'header'}), Group())), 0), 
 		                               Error("At least 1 rowType='header' required")],
 ```
 this will match each row in Group with `rowType`=`'header'` and count them.  if the count is 0, add an Error message of "header required".
 
 
 ```
-        [Group(), EWhen(Equal(Count(Match({'rowType':'item'}), MatchResult())), 0), 
+        [Group(), When(Equal(Count(Match({'rowType':'item'}), MatchResult())), 0), 
 		                               Error("At least 1 rowType='item' required")],
 ```
 the second argument does much the same for rowType.  note `MatchResult()` which is the same as the condition used as the first argument of the array

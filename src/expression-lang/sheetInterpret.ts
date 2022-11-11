@@ -11,7 +11,7 @@ export type TRecordStageLevel =
 
 
 //I would love message to be able to accept some type of format string
-const error = (message: string, stage: TRecordStageLevel = 'validate') => {
+export const error = (message: string, stage: TRecordStageLevel = 'validate') => {
   // I don't like returning a list here, not sure where to deal with scalar/list
   return [new Message(message, 'error', stage)]
 }

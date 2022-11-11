@@ -1,4 +1,5 @@
 import { makeInterpreter, NestedIns } from '@flatfile/expression-lang'
+import { error } from './sheetInterpret'
 export const Add = (...args: any) => ['+', ...args]
 export const Subtract = (...args: any) => ['-', ...args]
 export const Mult = (...args: any) => ['*', ...args]
@@ -74,9 +75,11 @@ export const GroupConstraintItem = (
     group,
   ]
 }
+
+
 export const Debug = (expr: NestedIns) => ['debug', expr]
 
-const simpleInterpret = makeInterpreter({})
+const simpleInterpret = makeInterpreter({error})
 export const ValidateWhen = (predicate: any, expr: any) => {
   return (val: any) => {
     return simpleInterpret(['when', predicate, expr], { val: val })
