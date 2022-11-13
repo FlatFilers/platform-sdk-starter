@@ -3,41 +3,27 @@ import { Field,  FieldHookDefaults, FullBaseFieldOptions } from '@flatfile/confi
 import { SchemaILField } from '@flatfile/schema'
 
 
-const ChronoStringDateCast = (raw:string) => {
-  //const parsed = chrono.parseDate(raw)
-  //const parsed = chrono.parse(raw )
-  //const parsed = chrono.strict.parseDate(raw, )
-  const parsedResult = chrono.strict.parse(raw)
 
-  //const parsedDebug = chrono.strict.parse(raw)
-  //console.dir(parsedDebug)
-  if (parsedResult === null) {
-    throw new Error(`'${raw}' parsed to 'null' which is invalid`)
-  }
-  if (parsedResult === undefined) {
-    throw new Error(`'${raw}' parsed to undefined which is invalid`)
-  }
-  //folloiwng code necessary for JS compatability
 
-  const firstResult = parsedResult[0]
-  if (firstResult === null || firstResult === undefined) {
-    throw new Error(`'${raw}' returned no parse results`)
+export const getCurrencyCast = (currencySymbol: string) => {
+  const BaseCurrencyCast = (raw: string): number | null => {
+    const strippedStr = raw.replace(',', '').replace(currencySymbol, '')
+    const num = Number(strippedStr)
+    if (isFinite(num)) {
+      return num
+    } else {
+      throw new Error(`'${raw}' parsed to '${num}' which is non-finite`)
+    }
   }
-
-  const d = firstResult.date()
-  //console.log(d.getHours())
-  d.setHours(0)
-  return d
+  return StringCastCompose(BaseCurrencyCast)
 }
-
-export const ChronoDateCast = StringCastCompose(ChronoStringDateCast)
 
 
 type O = Record<string, any>
 type T = number
 type PartialBaseFieldsAndOptions = Partial<FullBaseFieldOptions<T, O>> & {fString?:string}
 
-export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
+export const CurrencyField = (options?: string | PartialBaseFieldsAndOptions) => {
     // if labelOptions is a string, then it is the label
   let passedOptions:PartialBaseFieldsAndOptions 
   if (options === undefined) {
@@ -67,7 +53,7 @@ export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
     const fullOpts = {
       ...GenericDefaults,
       ...FieldHookDefaults<T>(),
-      cast:ChronoDateCast, 
+      cast:getCurrencyCast('$'),
       ...passedOptions,
       stageVisibility,
       annotations,
