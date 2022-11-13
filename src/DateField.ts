@@ -62,9 +62,18 @@ const ChronoStringDateCast = (raw:string) => {
   if (parsedResult === null) {
     throw new Error(`'${raw}' parsed to 'null' which is invalid`)
   }
+  if (parsedResult === undefined) {
+    throw new Error(`'${raw}' parsed to undefined which is invalid`)
+  }
   //folloiwng code necessary for JS compatability
-  const d = parsedResult[0].date()
-  console.log(d.getHours())
+
+  const firstResult = parsedResult[0]
+  if (firstResult === null || firstResult === undefined) {
+    throw new Error(`'${raw}' returned no parse results`)
+  }
+
+  const d = firstResult.date()
+  //console.log(d.getHours())
   d.setHours(0)
   return d
 }

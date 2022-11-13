@@ -41,7 +41,7 @@ describe('Cast Function tests ->', () => {
     
     expect(1).toBe(1)
   })
-  
+  */
 
 
   test('DateCast handles null cases', () => {
@@ -65,24 +65,25 @@ describe('Cast Function tests ->', () => {
   test('DateCast handles invalid dates as errors', () => {  
     assertThrow(
       '2022-07-35',
-      "'2022-07-35' parsed to 'null' which is invalid"
+      "'2022-07-35' returned no parse results"
     )
   })
   
   test('DateCast handles random strings as errors', () => {  
-    assertThrow('foo', "'foo' parsed to 'null' which is invalid")
+    assertThrow('foo', "'foo' returned no parse results")
   })
 
   test('DateCast handles infinity as an error', () => {  
-    assertThrow(1 / 0, "'Infinity' parsed to 'null' which is invalid")
+    assertThrow(1 / 0, "'Infinity' returned no parse results")
 
   })
 
   test('instantiate DateField', () => {
     const d = DateField()
-    console.log(d)
+//    console.log(d)
     expect(1).toBe(1)
   })
+  
   test('pandas date functions', () => {
     assertDC("02/17/2009", new Date('2009-02-17T17:00:00.000Z')) //"MM/DD/YY" #Month-Day-Year with leading zeros
     assertDC("18/02/2009", new Date('2009-02-18T17:00:00.000Z')) //"DD/MM/YY" #Day-Month-Year with leading zeros (
@@ -95,7 +96,7 @@ describe('Cast Function tests ->', () => {
     assertDC("25Feb2009", new Date('2009-02-25T17:00:00.000Z')) // "DDMonYY" #Day-Month abbreviation-Year with leading zeros
 
   })
-  */
+
   test('js dropin replacement', () => {
     expect(ChronoDateCast("02/17/2009")).toStrictEqual(new Date("02/17/2009"))
   })
