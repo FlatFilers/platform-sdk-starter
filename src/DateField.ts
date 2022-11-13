@@ -1,4 +1,5 @@
 import * as chrono from 'chrono-node'
+import { format } from 'date-fns'
 //import { Field, GenericDefaults, SchemaILField, FieldHookDefaults, FullBaseFieldOptions } from '@flatfile/configure/stdlib/CastFunctions'
 import { Field, GenericFieldOptions, FieldHookDefaults, FullBaseFieldOptions } from '@flatfile/configure'
 import { SchemaILField } from '@flatfile/schema'
@@ -72,7 +73,8 @@ export const ChronoDateCast = StringCastCompose(ChronoStringDateCast)
 
 type O = Record<string, any>
 type T = Date
-type PartialBaseFieldsAndOptions = Partial<FullBaseFieldOptions<T, O>>
+type PartialBaseFieldsAndOptions = Partial<FullBaseFieldOptions<T, O>> & {fString?:string}
+
 export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
     // if labelOptions is a string, then it is the label
   let passedOptions:PartialBaseFieldsAndOptions 
@@ -108,6 +110,9 @@ export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
       stageVisibility,
       annotations,
     }
+
+  let fString = (passedOptions.fString) ? passedOptions.fString : "yyyy-MM-dd'T'HH:mm:ss'Z'"
+  fullOpts.egressFormat = (val:Date):string => format(val, fString)
 
   const field = new Field<T, O>(fullOpts as FullBaseFieldOptions<T, O>)
   return field
