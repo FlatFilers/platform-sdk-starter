@@ -85,12 +85,6 @@ export const Debug = (expr: NestedIns) => ['debug', expr]
 
 const simpleInterpret = makeInterpreter({error, warn, info, debug})
 
-export const ValidateWhen = (predicate: any, expr: any) => {
-  return (val: any) => {
-    return simpleInterpret(['when', predicate, expr], { val: val })
-  }
-}
-
 export const ErrorWhen = (predicate: any, errString: string) => {
   return (val: any) => {
     return simpleInterpret(['when', predicate, ['error', errString]], { val: val }) as Message[]
@@ -99,32 +93,32 @@ export const ErrorWhen = (predicate: any, errString: string) => {
 
 export const ErrorUnless = (predicate: any, errString: string) => {
   return (val: any) => {
-    return simpleInterpret(['when', ['not', predicate], ['error', errString]], { val: val })
+    return simpleInterpret(['when', ['not', predicate], ['error', errString]], { val: val }) as Message[]
   }
 }
 
 
 export const WarnWhen = (predicate: any, errString: string) => {
   return (val: any) => {
-    return simpleInterpret(['when', predicate, ['warn', errString]], { val: val })
+    return simpleInterpret(['when', predicate, ['warn', errString]], { val: val }) as Message[]
   }
 }
 
 export const WarnUnless = (predicate: any, errString: string) => {
   return (val: any) => {
-    return simpleInterpret(['unless', ['not', predicate], ['warn', errString]], { val: val })
+    return simpleInterpret(['unless', ['not', predicate], ['warn', errString]], { val: val }) as Message[]
   }
 }
 
 export const InfoWhen = (predicate: any, errString: string) => {
   return (val: any) => {
-    return simpleInterpret(['when', predicate, ['info', errString]], { val: val })
+    return simpleInterpret(['when', predicate, ['info', errString]], { val: val }) as Message[]
   }
 }
 
 export const InfoUnless = (predicate: any, errString: string) => {
   return (val: any) => {
-    return simpleInterpret(['when', ['not',  predicate], ['info', errString]], { val: val })
+    return simpleInterpret(['when', ['not',  predicate], ['info', errString]], { val: val }) as Message[]
   }
 }
 
