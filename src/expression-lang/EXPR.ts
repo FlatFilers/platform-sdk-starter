@@ -1,5 +1,7 @@
 import { makeInterpreter, NestedIns } from '@flatfile/expression-lang'
-import { error } from './sheetInterpret'
+import { error, warn, info, debug } from './sheetInterpret'
+import { Message } from '@flatfile/configure'
+
 export const Add = (...args: any) => ['+', ...args]
 export const Subtract = (...args: any) => ['-', ...args]
 export const Mult = (...args: any) => ['*', ...args]
@@ -81,7 +83,7 @@ export const GroupConstraintItem = (
 
 export const Debug = (expr: NestedIns) => ['debug', expr]
 
-const simpleInterpret = makeInterpreter({error})
+const simpleInterpret = makeInterpreter({error, warn, info, debug})
 
 export const ValidateWhen = (predicate: any, expr: any) => {
   return (val: any) => {
@@ -91,7 +93,7 @@ export const ValidateWhen = (predicate: any, expr: any) => {
 
 export const ErrorWhen = (predicate: any, errString: string) => {
   return (val: any) => {
-    return simpleInterpret(['when', predicate, ['error', errString]], { val: val })
+    return simpleInterpret(['when', predicate, ['error', errString]], { val: val }) as Message[]
   }
 }
 

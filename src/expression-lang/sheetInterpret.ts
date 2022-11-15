@@ -15,6 +15,13 @@ export const error = (message: string, stage: TRecordStageLevel = 'validate') =>
   // I don't like returning a list here, not sure where to deal with scalar/list
   return [new Message(message, 'error', stage)]
 }
+export const warn = (message: string, stage: TRecordStageLevel = 'validate') => {
+  return [new Message(message, 'warn', stage)]
+}
+export const info = (message: string, stage: TRecordStageLevel = 'validate') => {
+  return [new Message(message, 'info', stage)]
+}
+
 
 const match = (matchSpec: object, records: FlatfileRecord[]) => {
   return _.filter(records, (rec: FlatfileRecord) =>
