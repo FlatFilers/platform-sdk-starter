@@ -1,8 +1,8 @@
+import { FlatfileRecord } from '@flatfile/hooks'
 import { Sheet, TextField, Workbook, SubstitutionCast } from '@flatfile/configure'
 import { SheetTester, matchSingleMessage } from '../src/utils/testing/SheetTester'
 
 /*
-K.
 
 1. Conditionally Null - Set field to null + throw warning if another field has a certain value
 Field A: select either -> "Apples" or "Oranges" or "Bananas"
@@ -19,22 +19,43 @@ Is there a way we can standardize this to avoid tons of nested conditionals in o
 
 
 
+const SetValWhen = (
+	haystackField: string, needleValues: string | string[], targetField: string, val: any) => {
+	return (record: FlatfileRecord) => {
+		const [a, b] = [record.get(haystackField), record.get(targetField)]
+		let searchVals: string[];
+		if (Array.isArray(needleValues)) {
+			searchVals = needleValues
+		} else {
+			searchVals = [needleValues]
+		}
+		//@ts-ignore
+		if (searchVals.includes(a)) {
+			record.set(targetField, val)
+			record.addWarning(targetField, `cleared '${targetField}', was ${b}`)
+		}
+		return record
+	}
+}
+
+const RCChain = (...funcs:any) => {
+  return (record: FlatfileRecord) => {
+    for (const func of funcs) {
+      func(record)
+    }
+  }
+}
+
+
 // note sheet must have same name as key in workbook it is shared as
 const ConditionallyNullSheet = new Sheet(
   'ConditionallyNullSheet',
   {a: TextField(),
    b: TextField()},
   {
-  recordCompute: (record) => {
-    const [a,b] = [record.get('a'), record.get('b')]
-    if(a === "b_must_be_null") {
-
-      record.set("b", null)
-      record.addWarning('b', `cleared 'b', was ${b}`)
-    }
-
-    return record
-    },
+     recordCompute: RCChain(
+       SetValWhen('a', 'b_must_be_null', 'b', null),
+       SetValWhen('a', 'b_to_10', 'b', 10))
    }
   
 )
@@ -58,7 +79,6 @@ describe('Workbook tests ->', () => {
     const res2 = await testSheet.testMessage(inputRow)
 
     //use the match functions like
-    //console.log(res2)
     expect(matchSingleMessage(res2, 'b', "cleared 'b', was 8", 'warn')).toBeTruthy()
 
 
@@ -70,6 +90,14 @@ describe('Workbook tests ->', () => {
     const inputRow = { a:'anything_else', b:8 }
     // we expect this output row
     const expectedOutputRow = { a:'anything_else', b:8 }
+    const res = await testSheet.testRecord(inputRow)
+    expect(res).toMatchObject(expectedOutputRow)
+  })
+  test('test set  to 10 ', async () => {
+    // for this inputRow
+    const inputRow = { a:'b_to_10', b:10 }
+    // we expect this output row
+    const expectedOutputRow = { a:'b_to_10', b:10 }
     const res = await testSheet.testRecord(inputRow)
     expect(res).toMatchObject(expectedOutputRow)
   })
