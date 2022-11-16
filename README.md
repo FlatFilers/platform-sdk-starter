@@ -1,32 +1,15 @@
 
-# Platform SDK Quickstart
-Use this quickstart guide to get up and running with Flatfile. You'll learn how to get your access keys, configure your environment, and deploy an example project for importing employee data.
+# Platform SDK Starter
+The platform SDK starter is a way to configure your Flatfile Workbook in code.
 
-### NOTE: Upgrading from Beta?
+Visit [the Guides](https://flatfile.com/docs/guides/) to learn more about using Flatfile and the Platform SDK Starter.
 
-Be sure to run ```npm update```
+## Getting Started
 
-*If running into update issues, then remove ```package-lock.json``` and ```node_modules``` to reinstall*
-
-### 1. Establish Access
-
-After you create your account in Flatfile, we create a **Team ID**, an **Access Key ID**, and a **Secret Access Key** for you. You will need this information to configure your environment.
-
-1. [Sign up](https://api.flatfile.io/auth/github) or [Sign in](app.flatfile.com) to Flatfile.
-2. [Locate](https://support.flatfile.com/hc/en-us/articles/8410988807828) your Flatfile **Team ID** and write it down.
-3. [Generate](https://docs.flatfile.com/docs/api-reference/#managing-access-keys)  an **Access Key ID** and **Secret Access Key**.
+Visit [CLI quickstart](https://flatfile.com/docs/get-started/quickstart/) and follow instructions to sign up for a Flatfile account and run this code locally.
 
 
-### 2. Configure your environment
-
-1. Create a `.env` file in the project root using the `.env.example` file as a template.
-2. Add the **Access Key ID** to your `.env` file as the `FLATFILE_ACCESS_KEY_ID` variable
-4. Add the **Secret Access Key** to your `.env` file as the `FLATFILE_SECRET` variable
-6. Add the **Team ID** to your `.env` file as the `FLATFILE_TEAM_ID` variable
-7. Add the **Environment** you want to deploy to in your `.env` file as the `FLATFILE_ENV` variable. It defaults to 'test'. (You can add 'prod' when you're ready to deploy to production.)
-
-
-### 3. Introduction to Workbooks
+### 1. Introduction to Workbooks
 
 <!-- TODO what are workbooks? -->
 
@@ -39,8 +22,9 @@ const Employees = new Sheet(
   'Employees',
   {
     firstName: TextField({
+      label: 'First Name',
       required: true,
-      description: 'Given name',
+      description: 'Given Name'
     }),
     lastName: TextField(),
     fullName: TextField(),
@@ -53,6 +37,7 @@ const Employees = new Sheet(
         hr: 'People Ops',
         sales: 'Revenue',
       },
+      matchStrategy: 'exact',
     }),
     fromHttp: TextField({ label: 'Set by batchRecordCompute' }),
     salary: NumberField({
@@ -95,6 +80,39 @@ const Employees = new Sheet(
     },
   }
 )
+
+const BaseSheet = new Sheet(
+  'BaseSheet',
+  {
+    firstName: TextField(),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+    email: TextField({
+      unique: true,
+      primary: true
+    })
+  },
+  {
+    previewFieldKey: 'email',
+  }
+)
+
+const LinkedSheet = new Sheet(
+  'LinkedSheet',
+  {
+    email: LinkedField({
+      unique: true,
+      label: 'Email',
+      primary: true,
+      sheet: BaseSheet,
+      upsert: false,
+    }),
+    firstName: TextField(),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+  },
+)
+
 ...
 ```
 
@@ -104,7 +122,7 @@ The above code will generate a **Workbook** that looks like this:
 ![Sample Data upload](/assets/SampleImportErrors.png)
 
 
-### 4. Deploy the Schema
+### 2. Deploy the Schema
 
 Follow these steps to deploy a **Workbook** and view it in your **Dashboard**. Because your secret keys are being used, Flatfile will know to create your first **Workspace** in the correct place.
 
@@ -121,6 +139,7 @@ Now, let's take a closer look at the example **Workbook** we just deployed, star
 3. `DateField`: a date
 4. `OptionField`: a field with a set of pre-defined values
 5. `BooleanField`: a true / false field
+5. `LinkedField`: a field that links two sheets together
 
 ### Field options
 
@@ -174,15 +193,47 @@ department: OptionField({
     hr: 'People Ops',
     sales: 'Revenue',
   },
+  matchStrategy: 'exact',
 }),
 ```
 
-Here we provide a pre-defined list of values that this field can have.
+Here we provide a pre-defined list of values that this field can have. We have also included the `matchStrategy` flag, which determines whether Flatfile should only accept exact matches when automatically matching your OptionField options, or whether Flatfile should also use [historical matches and fuzzy matches](https://support.flatfile.com/hc/en-us/articles/8579991586324-Matching) while automatically matching your options. If this is not set, your OptionField will use historical and fuzzy matches to automatically match options for this field.
 <!-- TODO what does `label` do? -->
 
 
 <!-- TODO Boolean Field? -->
 
+#### LinkedField
+
+```js
+email: LinkedField({
+    label: 'First Name',
+    sheet: BaseSheet,
+    upsert: false
+}),
+```
+
+Here we define which field is linked to another template, along with the sheet this field should be linked to. We have also set `upsert: false` which disables the default upsert behavior and will display an error on this sheet if a value imported in the LinkedField does not exist on the parent sheet. For more information about our Relational Data feature, visit our [Relational Data Guide](https://support.flatfile.com/hc/en-us/articles/8606584859284-Relational-Data).
+
+```js
+const BaseSheet = new Sheet(
+  'BaseSheet',
+  {
+    firstName: TextField({
+      unique: true,
+      primary: true,
+    }),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+    email: TextField()
+  },
+  {
+    previewFieldKey: 'email',
+  }
+)
+```
+
+Here we define the sheet we are linking to, and on the sheet set the `previewFieldKey` option that will display on the original template. Note: `LinkedField` can currently only be implemented in Workspaces, which is why this example doesn't have a portal deployed for the LinkedSheet and BaseSheet sheets. 
 
 ### Sheet options
 
@@ -258,7 +309,7 @@ batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
 
 `batchRecordsCompute` is a **Data Hook** which runs after all `recordCompute` calls have finished and receives the full list of processed rows, at which point you can perform bulk operations on them. This is a good place to put slower operations that benefit from batching, such as external HTTP requests. In this example, we fetch a single value from an API and write it to each record.
 
-### 5. Get into the details
+### 3. Get into the details
 
 #### Knowing which hooks to use
 
@@ -284,7 +335,7 @@ compute:(v:string) => {return v.toLocaleLowerCase()}
 is a good function, since `compute("ASDF") === compute('asdf') === 'asdf'`.
 <!-- TODO provide an example of a bad function -->
 
-### 6. Test your stuff
+### 4. Test your stuff
 
 We are big believers in Test Driven Development at Flatfile. Well written tests help you reason about the behavior of complex systems.
 
@@ -294,7 +345,7 @@ Running tests on a **Sheet** or **Workbook** is much faster than deploying to Fl
 
 Stay tuned for future releases where we will add even more capabilities to our testing system.
 
-### 7. Advanced Topics
+### 5. Advanced Topics
 
 #### Concepts
 
@@ -344,7 +395,7 @@ When releasing pieces to the SDK our thought process is guided by the following 
   - This is a good use for field `compute`. This function will be idempotent (running it over and over on the same input produces the same output and state)
 - **How can check the type and size of an url and return an error if the linked file is > 5mb or not an image?**
   - Currently this is best accomplished with a text field named `s3_url` that will match to the URL provided in the upload, and a row `compute` that stores the size of the download to `s3_url_size`, `s3_url_size` should have an `validate` of less than 5mb.
-  - In the near future this will be handled with a computed filed that takes `s3_url` as an input and outputs `s3_url_size`.
+  - In the near future this will be handled with a computed field that takes `s3_url` as an input and outputs `s3_url_size`.
   - In the longer term this will be handled by a `SmartURLCapture` field that stores URLs to a synced s3 bucket and provides metadata about the download including size. The `validate` will run on the size property of the `SmartURLCapture` field
 - **Using a domain name (www.flatfile.com) field, how can I call the clearbit API and populate another field with an image url to their logo?**
   - Currently this is best accomplished via a row `compute`.
@@ -375,7 +426,7 @@ A `Field` object represents a column of data in a `Sheet`.  They are similar to 
 ### Data Hook®
 Data Hooks® are the Flatfile copyrighted term for code that runs on `Field`s and `Sheet`s to transform and validate data.
 ### Field Hook
-Field hooks are Data Hook®s that run on individual fields.  There are three field-level hooks:
+Field hooks are Data Hook®s that run on individual fields.
 ### Workbook
 A Workbook is a collection of Sheets.  The Sheets of a Workbook can be optionally linked together via `ForeignKey`.  A Workbook is similar to a database schema.
 

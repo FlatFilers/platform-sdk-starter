@@ -2,12 +2,12 @@
 // See examples/FullExample.ts for a full, working example of a Workbook.
 
 import {
+  NumberField,
   Portal,
   Sheet,
   TextField,
   Workbook,
 } from '@flatfile/configure'
-
 
 /* 
 Sheets 
@@ -19,7 +19,9 @@ import { YourSheet } from '/path-to-your-sheet/your-sheet.ts'
 const MySheet = new Sheet(
   'MySheet',
   {
-    exampleField: TextField(),
+    firstName: TextField(),
+    lastName: TextField(),
+    age: NumberField()
   },
 )
 

@@ -8,15 +8,49 @@ import {
   Sheet,
   TextField,
   Workbook,
+  LinkedField
 } from '@flatfile/configure'
 
 import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
 import fetch from 'node-fetch'
 
+const BaseSheet = new Sheet(
+  'BaseSheet',
+  {
+    firstName: TextField({
+      primary: true,
+    }),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+    email: TextField({
+      unique: true,
+    })
+  },
+  {
+    previewFieldKey: 'email',
+  }
+)
+
+const LinkedSheet = new Sheet(
+  'LinkedSheet',
+  {
+    email: LinkedField({
+      unique: true,
+      label: 'Email',
+      primary: true,
+      sheet: BaseSheet
+    }),
+    firstName: TextField(),
+    middleName: TextField('Middle'),
+    lastName: TextField(),
+  },
+)
+
 const Employees = new Sheet(
   'Employees',
   {
     firstName: TextField({
+      label: 'First Name',
       required: true,
       description: 'Given name',
     }),
@@ -60,7 +94,7 @@ const Employees = new Sheet(
     allowCustomFields: true,
     readOnly: true,
     recordCompute: (record) => {
-      const fullName = `{record.get('firstName')} {record.get('lastName')}`
+      const fullName = `${record.get('firstName')} ${record.get('lastName')}`
       record.set('fullName', fullName)
       return record
     },
@@ -89,6 +123,8 @@ export default new Workbook({
   namespace: 'employee',
   sheets: {
     Employees,
+    BaseSheet,
+    LinkedSheet
   },
   portals: [EmployeesPortal],
 })
