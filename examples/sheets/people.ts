@@ -6,13 +6,10 @@ import {
   TextField,
 } from '@flatfile/configure'
 
-import {
-  FlatfileRecord,
-  FlatfileRecords
-} from '@flatfile/hooks'
+import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
 
 // Custom fields
-import customLinkedInField from '../fields/linked-in'
+import customUrlField from '../fields/url'
 
 // Custom data hooks
 import splitFieldRecordCompute from '../data-hooks/split-field-record-compute'
@@ -22,7 +19,7 @@ export default new Sheet(
   {
     id: NumberField({
       required: true,
-      unique: true
+      unique: true,
     }),
     organizationId: NumberField({
       required: true,
@@ -38,13 +35,13 @@ export default new Sheet(
       required: true,
     }),
     homPhone: TextField({
-      label: 'Personal Phone'
+      label: 'Personal Phone',
     }),
     workPhone: TextField({
-      label: 'Work Phone'
+      label: 'Work Phone',
     }),
     title: TextField(),
-    linkedIn: customLinkedInField(),
+    linkedIn: customUrlField(),
     linkedInValid: BooleanField({
       description: 'set by batchRecordsCompute',
     }),
@@ -60,26 +57,43 @@ export default new Sheet(
   },
   {
     recordCompute: (record: FlatfileRecord<any>) => {
-      // reuses a function to split a field into multiple 
-      const [firstName, lastName] = splitFieldRecordCompute(record.get('fullName'), ' ', 2)
+      // reuses a function to split a field into multiple
+      const [firstName, lastName] = splitFieldRecordCompute(
+        record.get('fullName') as string,
+        ' ',
+        2
+      )
 
       record.set('firstName', firstName)
       record.set('lastName', lastName)
       return record
-
     },
     batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
-      // Example sends records to an API endpoint to check and write a true/false value to 'linkedInValid' field
-      // This might be a longer running process - and you'll want to listen to event when it's finished
-      // upon a success response, post processed records would be returned
+      // Sends records to an imaginary API endpoint that validates linkedIn urls
+      // and writes the valid / invalid status to the record
+      const urlsToValidate = await payload.records.map(
+        async (record: FlatfileRecord) => {
+          return record.get('linkedIn')
+        }
+      )
       const response = await fetch('your-api-to-check-linkedin-urls', {
         method: 'POST',
-        headers: { Accept: 'application/json',},
-        body: payload.records
+        headers: { Accept: 'application/json' },
+        body: JSON.stringify(urlsToValidate),
       })
+      // Suppose response has the format:
+      // {
+      //    'https://linkedin.com/valid-url': 'valid',
+      //    'https://linkedin.com/invalid-url': 'invalid',
+      //    ...
+      // }
       if (response.ok) {
-        // TODO - make this realistic
-        return response.json
+        const result = await response.json()
+        payload.records.map(async (record: FlatfileRecord) => {
+          const linkedInValid =
+            result[record.get('linkedIn') as string] === 'valid'
+          record.set('linkedInValid', linkedInValid)
+        })
       }
     },
   }

@@ -53,14 +53,9 @@ export default new Sheet(
       description: 'Marketing website',
       required: true,
     }),
-    websiteIsLive: TextField({
-      label: 'Set by batchRecordCompute',
-      description: 'Validation to ensure webiste has a 200 http response',
-    }),
     linkedIn: customUrlField({
       label: 'LinkedIn profile',
     }),
-    score: NumberField({ label: 'Set by batchRecordCompute' }),
   },
   {
     allowCustomFields: true,
