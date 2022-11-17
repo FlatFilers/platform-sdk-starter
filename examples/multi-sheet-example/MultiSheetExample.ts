@@ -22,8 +22,8 @@ const portals = [
 
 // Workbook
 export default new Workbook({
-  name: 'MyWorkbook',
-  namespace: 'my-workbook',
+  name: 'MultiSheetWorkbook',
+  namespace: 'multi-sheet-workbook',
   portals,
   sheets,
 })
