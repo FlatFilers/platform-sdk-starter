@@ -1,3 +1,7 @@
+/**
+ * Example workbook for importing employees
+ * Test with the sample file at examples/imports/employees.csv
+ */
 import {
   BooleanField,
   DateField,

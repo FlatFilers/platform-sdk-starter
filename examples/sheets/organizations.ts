@@ -4,13 +4,12 @@ import { NumberField, Sheet, TextField } from '@flatfile/configure'
 
 import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
 
-// Examples of custom defined fields
+// Example of custom defined fields
 import customUrlField from '../fields/url'
-import customCountryField from '../fields/country'
 
 // Examples of custom defined data hooks
-import joinFieldsRecordCompute from '../data-hooks/join-fields-record-compute'
-import splitFieldRecordCompute from '../data-hooks/split-field-record-compute'
+import joinFieldsRecordCompute from '../hooks/join-fields-record-compute'
+import splitFieldRecordCompute from '../hooks/split-field-record-compute'
 
 export default new Sheet(
   'Organizations',
@@ -48,7 +47,6 @@ export default new Sheet(
       label: 'Set by recordCompute',
       description: 'The internal code name for organization',
     }),
-    country: customCountryField(),
     website: customUrlField({
       description: 'Marketing website',
       required: true,

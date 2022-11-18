@@ -2,9 +2,9 @@
 import { Portal, Workbook } from '@flatfile/configure'
 
 // Define your own sheets in seperate files for easier maintainability
-import Organizations from './sheets/organizations'
-import People from './sheets/people'
-import Notes from './sheets/notes'
+import Organizations from '../sheets/organizations'
+import People from '../sheets/people'
+import Notes from '../sheets/notes'
 
 // Sheets as object for Workbook
 const sheets = {

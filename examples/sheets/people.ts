@@ -12,7 +12,7 @@ import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
 import customUrlField from '../fields/url'
 
 // Custom data hooks
-import splitFieldRecordCompute from '../data-hooks/split-field-record-compute'
+import splitFieldRecordCompute from '../hooks/split-field-record-compute'
 
 export default new Sheet(
   'People',
