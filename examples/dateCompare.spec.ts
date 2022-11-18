@@ -2,32 +2,43 @@ import { FlatfileRecord } from '@flatfile/hooks'
 import { Sheet, TextField, Workbook } from '@flatfile/configure'
 import { SheetTester, matchSingleMessage } from '../src/utils/testing/SheetTester'
 
-const RequiredWhen = (
-	switchField: string, switchVals: string | string[], targetField: string) => {
+const compareDate = (operand: '>' | '<' | '=', firstField: string, secondField: string, message: string) => {
 	return (record: FlatfileRecord) => {
-		const [a, b] = [record.get(switchField), record.get(targetField)]
-		let searchVals: string[];
-		if (Array.isArray(switchVals)) {
-			searchVals = switchVals
-		} else {
-			searchVals = [switchVals]
+		const [a, b] = [record.get(firstField), record.get(secondField)]
+	  if (a === null || b === null) {
+	    return
+	  }
+		let conditionMet: boolean = false
+		if (operand === '>') {
+			if (a > b) {
+				conditionMet = true
+			}
 		}
-		//@ts-ignore
-		if (searchVals.includes(a)) {
-		  if(b === null) {
-		    record.addWarning(targetField, ` '${targetField}' required`)
-		  }
+		if (operand === '<') {
+			if (a < b) {
+				conditionMet = true
+			}
 		}
-		return record
+		if (operand === '=') {
+			if (a === b) {
+				conditionMet = true
+			}
+		}
+
+		if (conditionMet) {
+			record.addError(firstField, message);
+			record.addError(secondField, message);
+		}
 	}
 }
 
-const RequiredWhenSheet = new Sheet(
-  'RequiredWhenSheet',
+
+const DateSheet = new Sheet(
+  'DateSheet',
   {a: TextField(),
    b: TextField()},
   {
-     recordCompute: RequiredWhen('a', 'b_is_required', 'b')
+     recordCompute: compareDate('>', 'a', 'b',  "date b cannot be before date a")
    }
 )
 
@@ -35,7 +46,7 @@ const TestWorkbook = new Workbook({
   name: `Test Workbook`,
   namespace: 'test',
   // saving SubSheet to workbook under key SubSheet
-  sheets: { RequiredWhenSheet},
+  sheets: { DateSheet },
 })
 
 /*
@@ -51,30 +62,26 @@ Expected behavior:
 
 describe('Workbook tests ->', () => {
 
-  const rqTestSheet = new SheetTester(TestWorkbook, 'RequiredWhenSheet')
-  test('RequiredWhen test1', async () => {
+  const rqTestSheet = new SheetTester(TestWorkbook, 'DateSheet')
+  test('dateCompare test1', async () => {
     // for this inputRow
     // testing to see whether a is before b
     // expected to error here
     const inputRow = { a:'2022-07-30', b:'2022-06-30' }
     const messages = await rqTestSheet.testMessage(inputRow)
 
-    //use the match functions like
+    // WARNING, DANGER, the only reason these dates are properly comparing is that they are YYYY-MM-DD whihc alphabetically sortsNN
     expect(matchSingleMessage(messages, 'b', "date b cannot be before date a", 'error')).toBeTruthy()
     expect(matchSingleMessage(messages, 'a', "date b cannot be before date a", 'error')).toBeTruthy()
   })
 
-  test('RequiredWhen test2', async () => {
-    // for this inputRow
-    const inputRow = { a:'b_is_required', b:null }
-    // we expect this output row
-    const expectedOutputRow = { a:'b_is_required', b:null }
-    const res = await rqTestSheet.testRecord(inputRow)
-    const res2 = await rqTestSheet.testMessage(inputRow)
+  test('dateCompare test1', async () => {
+    /*  
 
-    //use the match functions like
-    expect(matchSingleMessage(res2, 'b', "'b' required")).toBeTruthy()
+	make sure a string of 'paddy' doesn't parse as a date and throws an error
+	make sure that 07/03/1987 if parses to a data is converted to 1987-03-07 
 
-    expect(res).toMatchObject(expectedOutputRow)
+	
+     */
   })
 })
