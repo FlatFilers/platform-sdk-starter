@@ -52,10 +52,7 @@ export const StringCastCompose = (otherFunc: (raw: string) => any) => {
 }
 
 const ChronoStringDateCast = (raw:string) => {
-  //const parsed = chrono.parseDate(raw)
-  //const parsed = chrono.parse(raw )
-  //const parsed = chrono.strict.parseDate(raw, )
-  const parsedResult = chrono.strict.parse(raw)
+  const parsedResult = chrono.strict.parse(raw, undefined)
 
   //const parsedDebug = chrono.strict.parse(raw)
   //console.dir(parsedDebug)
@@ -73,10 +70,16 @@ const ChronoStringDateCast = (raw:string) => {
   }
 
   const d = firstResult.date()
-  //console.log(d.getHours())
-  d.setHours(0)
+  console.log("firstResult", firstResult)
+  console.log("firstResult", firstResult.start.isCertain('hour'))
+  if (firstResult.start.isCertain('hour') === false) {
+    // how to remove any implied parts of a date, especially
+    // timezones... which seem to default to the local timezone
+    d.setHours(0)
+  }
   return d
 }
+
 export const ChronoDateCast = StringCastCompose(ChronoStringDateCast)
 
 

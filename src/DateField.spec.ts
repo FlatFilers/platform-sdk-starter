@@ -1,4 +1,6 @@
+import * as chrono from 'chrono-node'
 import { ChronoDateCast, DateField } from './DateField'
+
 describe('Cast Function tests ->', () => {
   const makeCastAssert = (castFn: any) => {
     const assertFn = (raw: any, output: any): void => {
@@ -80,12 +82,11 @@ describe('Cast Function tests ->', () => {
 
   test('instantiate DateField', () => {
     const d = DateField()
-//    console.log(d)
     expect(1).toBe(1)
   })
   
   test('pandas date functions', () => {
-    assertDC("02/17/2009", new Date('2009-02-17T05:00:00.000Z')) //"MM/DD/YY" #Month-Day-Year with leading zeros
+    assertDC("02/17/2009", new Date('2009-02-17T00:00:00.000Z')) //"MM/DD/YY" #Month-Day-Year with leading zeros
     assertDC("18/02/2009", new Date('2009-02-18T05:00:00.000Z')) //"DD/MM/YY" #Day-Month-Year with leading zeros (
     assertDC("2009/02/19", new Date('2009-02-19T05:00:00.000Z')) //"YY/MM/DD" #Year-Month-Day with leading zeros
     assertDC("February 20, 2009", new Date('2009-02-20T05:00:00.000Z')) //"Month D, Yr" Month name-Day-Year with no leading zeros
@@ -103,3 +104,43 @@ describe('Cast Function tests ->', () => {
 
 
 })
+
+// describe('Chrono play  ->', () => {
+//   test('js dropin replacement', () => {
+
+//     const parsedResult = chrono.strict.parse("02/17/2009")
+//     const pr = parsedResult[0]
+//     console.log(pr.start)
+//     console.log(pr.start.isCertain('hour'))
+//     // pr.start.imply("hours", 0)
+//     // console.log(pr.start)
+//   })
+// })
+
+
+// const ChronoStringDateCast = (raw:string) => {
+  
+
+//   //const parsedDebug = chrono.strict.parse(raw)
+//   //console.dir(parsedDebug)
+//   if (parsedResult === null) {
+//     throw new Error(`'${raw}' parsed to 'null' which is invalid`)
+//   }
+//   if (parsedResult === undefined) {
+//     throw new Error(`'${raw}' parsed to undefined which is invalid`)
+//   }
+//   //folloiwng code necessary for JS compatability
+
+//   const firstResult = parsedResult[0]
+//   if (firstResult === null || firstResult === undefined) {
+//     throw new Error(`'${raw}' returned no parse results`)
+//   }
+
+//   const d = firstResult.date()
+//   //console.log(d.getHours())
+//   d.setHours(0)
+//   return d
+// }
+
+//   })
+// })y
