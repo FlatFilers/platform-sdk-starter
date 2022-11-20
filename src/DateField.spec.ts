@@ -102,6 +102,7 @@ describe('Cast Function tests ->', () => {
   
 
   test('pandas date functions', () => {
+    // doublecheck that pandas does the exact same thing
     assertDC("02/17/2009", /*--*/ new Date('2009-02-17T00:00:00.000Z')) //"MM/DD/YY" #Month-Day-Year with leading zeros
     assertDC("18/02/2009", /*--*/ new Date('2009-02-18T00:00:00.000Z')) //"DD/MM/YY" #Day-Month-Year with leading zeros (
     assertDC("2009/02/19", /*--*/ new Date('2009-02-19T00:00:00.000Z')) //"YY/MM/DD" #Year-Month-Day with leading zeros
