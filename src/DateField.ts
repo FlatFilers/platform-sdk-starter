@@ -70,18 +70,22 @@ const ChronoStringDateCast = (raw:string) => {
   }
 
   const d = firstResult.date()
-  console.log("firstResult", firstResult)
-  console.log("firstResult", firstResult.start.isCertain('hour'))
+  // console.log("firstResult", firstResult)
+  // console.log("firstResult", firstResult.start.isCertain('hour'))
+  const tzHours = d.getTimezoneOffset() / 60
   if (firstResult.start.isCertain('hour') === false) {
     // how to remove any implied parts of a date, especially
     // timezones... which seem to default to the local timezone
-    d.setHours(-1 * (d.getTimezoneOffset() / 60))
+    //by default chrono sets a time of 12,  this code works, but I'm not sure why
+    d.setHours(-1 * tzHours)
     //d.setHours(-5)
 
     //you can call `d.getTimezonOffset()` but you can't set it
     
     //  I think I might be onto  something  here
     // a.setHours(a.getHours() - (a.getTimezoneOffset()/60)) 
+  } else {
+    d.setHours(d.getHours() - tzHours)
   }
   return d
 }

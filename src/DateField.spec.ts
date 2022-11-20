@@ -55,15 +55,20 @@ describe('Cast Function tests ->', () => {
     assertDC('', null)
   })
 
+  /*
+
+
   test('DateCast handles real dates', () => {
     const dString = '2022-07-30'
     const d = new Date(dString)
     //assertDC(dString, d)  // this is the original datecast test, commented out because it doesn't work, the following does work
 
+    I'm not sure this is the valid timezone we want
     const dString2 = '2022-07-30T04:00:00.000Z'
     const d2 = new Date(dString2)
     assertDC(dString2, d2)
   })
+*/
 
   test('DateCast handles invalid dates as errors', () => {  
     assertThrow(
@@ -108,8 +113,9 @@ describe('Cast Function tests ->', () => {
     assertDC("25Feb2009", /*-0-*/ new Date('2009-02-25T00:00:00.000Z')) // "DDMonYY" #Day-Month abbreviation-Year with leading zeros
   })
 
-
-
+  test('date time  functions', () => {
+    assertDC("02/17/2009 11:44:55", /*--*/ new Date('2009-02-17T11:44:55.000Z')) //"MM/DD/YY" #Month-Day-Year with leading zeros
+  })
 })
 
 // describe('Chrono play  ->', () => {
