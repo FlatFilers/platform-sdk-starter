@@ -84,7 +84,13 @@ describe('Cast Function tests ->', () => {
     const d = DateField()
     expect(1).toBe(1)
   })
+
+
+  test('tz comp', () => {
+    assertDC("02/17/2009", new Date('2009-02-17')) //"MM/DD/YY" #Month-Day-Year with leading zeros
+  })
   
+  /*
   test('pandas date functions', () => {
     assertDC("02/17/2009", new Date('2009-02-17T00:00:00.000Z')) //"MM/DD/YY" #Month-Day-Year with leading zeros
     assertDC("18/02/2009", new Date('2009-02-18T05:00:00.000Z')) //"DD/MM/YY" #Day-Month-Year with leading zeros (
@@ -95,9 +101,8 @@ describe('Cast Function tests ->', () => {
     assertDC("2009/2/23", new Date('2009-02-23T05:00:00.000Z')), //"YY/M/D"#Year-Month-Day with no leading zeros
     assertDC(" 2/24/2009", new Date('2009-02-24T05:00:00.000Z')) //"bM/bD/YY" #Month-Day-Year with spaces instead of leading zeros
     assertDC("25Feb2009", new Date('2009-02-25T05:00:00.000Z')) // "DDMonYY" #Day-Month abbreviation-Year with leading zeros
-
   })
-
+  */
   test('js dropin replacement', () => {
     expect(ChronoDateCast("02/17/2009")).toStrictEqual(new Date("02/17/2009"))
   })
