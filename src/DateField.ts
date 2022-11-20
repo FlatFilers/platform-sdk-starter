@@ -75,7 +75,8 @@ const ChronoStringDateCast = (raw:string) => {
   if (firstResult.start.isCertain('hour') === false) {
     // how to remove any implied parts of a date, especially
     // timezones... which seem to default to the local timezone
-    d.setHours(0)
+    d.setHours(-1 * (d.getTimezoneOffset() / 60))
+    //d.setHours(-5)
 
     //you can call `d.getTimezonOffset()` but you can't set it
     

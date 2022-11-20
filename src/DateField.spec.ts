@@ -46,45 +46,49 @@ describe('Cast Function tests ->', () => {
   */
 
 
-  test('DateCast handles null cases', () => {
-    // eventually I want this 2500 test file from pandas to be our goal for DWIM date parsing
-    // https://github.com/pandas-dev/pandas/blob/main/pandas/tests/tools/test_to_datetime.py
-    assertDC(undefined, null)
-    assertDC(null, null)
-    assertDC('', null)
-  })
+  // test('DateCast handles null cases', () => {
+  //   // eventually I want this 2500 test file from pandas to be our goal for DWIM date parsing
+  //   // https://github.com/pandas-dev/pandas/blob/main/pandas/tests/tools/test_to_datetime.py
+  //   assertDC(undefined, null)
+  //   assertDC(null, null)
+  //   assertDC('', null)
+  // })
 
-  test('DateCast handles real dates', () => {
-    const dString = '2022-07-30'
-    const d = new Date(dString)
-    //assertDC(dString, d)  // this is the original datecast test, commented out because it doesn't work, the following does work
+  // test('DateCast handles real dates', () => {
+  //   const dString = '2022-07-30'
+  //   const d = new Date(dString)
+  //   //assertDC(dString, d)  // this is the original datecast test, commented out because it doesn't work, the following does work
 
-    const dString2 = '2022-07-30T04:00:00.000Z'
-    const d2 = new Date(dString2)
-    assertDC(dString2, d2)
-  })
+  //   const dString2 = '2022-07-30T04:00:00.000Z'
+  //   const d2 = new Date(dString2)
+  //   assertDC(dString2, d2)
+  // })
 
-  test('DateCast handles invalid dates as errors', () => {  
-    assertThrow(
-      '2022-07-35',
-      "'2022-07-35' returned no parse results"
-    )
-  })
+  // test('DateCast handles invalid dates as errors', () => {  
+  //   assertThrow(
+  //     '2022-07-35',
+  //     "'2022-07-35' returned no parse results"
+  //   )
+  // })
   
-  test('DateCast handles random strings as errors', () => {  
-    assertThrow('foo', "'foo' returned no parse results")
-  })
+  // test('DateCast handles random strings as errors', () => {  
+  //   assertThrow('foo', "'foo' returned no parse results")
+  // })
 
-  test('DateCast handles infinity as an error', () => {  
-    assertThrow(1 / 0, "'Infinity' returned no parse results")
+  // test('DateCast handles infinity as an error', () => {  
+  //   assertThrow(1 / 0, "'Infinity' returned no parse results")
 
-  })
+  // })
 
-  test('instantiate DateField', () => {
-    const d = DateField()
-    expect(1).toBe(1)
-  })
+  // test('instantiate DateField', () => {
+  //   const d = DateField()
+  //   expect(1).toBe(1)
+  // })
 
+
+  // test('js dropin replacement', () => {
+  //   expect(ChronoDateCast("02/17/2009")).toStrictEqual(new Date("02/17/2009"))
+  // })
 
   test('tz comp', () => {
     assertDC("02/17/2009", new Date('2009-02-17')) //"MM/DD/YY" #Month-Day-Year with leading zeros
@@ -103,9 +107,6 @@ describe('Cast Function tests ->', () => {
     assertDC("25Feb2009", new Date('2009-02-25T05:00:00.000Z')) // "DDMonYY" #Day-Month abbreviation-Year with leading zeros
   })
   */
-  test('js dropin replacement', () => {
-    expect(ChronoDateCast("02/17/2009")).toStrictEqual(new Date("02/17/2009"))
-  })
 
 
 })
