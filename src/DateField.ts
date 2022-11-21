@@ -140,3 +140,5 @@ export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
   return field
 }
 
+
+export const SmartDateField = DateField

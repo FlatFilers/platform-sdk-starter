@@ -1,5 +1,7 @@
 import * as chrono from 'chrono-node'
-import { ChronoDateCast, DateField } from './DateField'
+import { SmartDateField } from './DateField'
+import { FlatfileRecord } from '@flatfile/hooks'
+import { TextField } from '@flatfile/configure'
 
 describe('SampleGroupBy sum ->', () => {
 
@@ -18,16 +20,23 @@ const CompSets = [
   { expResult: "No Error", before: "February 20, 2009", after: "25Feb2009"},
   { expResult: "No Error", before: " 2/8/2009", /*---*/ after: " 8/2/2009"},
 ];
-    
-//   { 
-//   { 
-//   { 
 
-// describe('SampleGroupBy sum ->', () => {
-//   const TestSchema = new WorkbookTester(
-//     {
-//       a: SmartDateField(), 
-//       b: SmartDateField()
-//     },
-//     {}
 
+describe('Smaple Sheet ->', () => {
+  test('true date comparison', () => {
+    const TestSchema = new WorkbookTester(
+      {
+	before: SmartDateField({required:true}),
+	after: SmartDateField({required:true}),
+	expResult: TextField({required:true}),
+      },
+      {
+	recordCompute: (record: FlatfileRecord) => {
+	  const [before, after] = [record.get('before'), record.get('after')]
+	  if ((before && after) && !(before > after)) {
+	    record.addError(['before', 'after'], "field 'before' must be a date before 'after'")
+	  }
+	}
+      })
+  })
+})
