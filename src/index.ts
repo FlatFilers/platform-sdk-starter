@@ -16,7 +16,7 @@ import {
 /**
  * Sheets
  * Define your Sheet configuration and Fields here, or import them:
- * import { YourSheet } from '/path-to-your-sheet/your-sheet.ts'
+ * import { YourSheet } from './path-to-your-sheet/your-sheet.ts'
  */
 const MySheet = new Sheet('MySheet', {
   firstName: TextField(),

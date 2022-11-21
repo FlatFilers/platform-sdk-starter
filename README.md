@@ -115,7 +115,7 @@ const LinkedSheet = new Sheet(
 ...
 ```
 
-[View full source code](examples/full-example/FullExample.ts)
+[View full source code](examples/workbooks/FullExample.ts)
 
 The above code will generate a **Workbook** that looks like this:
 ![Sample Data upload](/assets/SampleImportErrors.png)
