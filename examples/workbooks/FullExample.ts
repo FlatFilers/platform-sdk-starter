@@ -1,6 +1,6 @@
 /**
  * Example workbook for importing employees
- * Test with the sample file at examples/imports/employees.csv
+ * Test with the sample file at examples/sample-uploads/employees.csv
  */
 import {
   BooleanField,
