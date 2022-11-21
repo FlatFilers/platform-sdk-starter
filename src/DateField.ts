@@ -1,5 +1,5 @@
 import * as chrono from 'chrono-node'
-import { zonedTimeToUtc, format } from 'date-fns-tz'
+import { utcToZonedTime, format } from 'date-fns-tz'
 //import { Field, GenericDefaults, SchemaILField, FieldHookDefaults, FullBaseFieldOptions } from '@flatfile/configure/stdlib/CastFunctions'
 import { Field, GenericFieldOptions, FieldHookDefaults, FullBaseFieldOptions } from '@flatfile/configure'
 import { SchemaILField } from '@flatfile/schema'
@@ -93,10 +93,18 @@ const ChronoStringDateCast = (raw:string) => {
 
 
 
-
 const zFormat = (val:Date, fString:string):string => {
   const prevailingTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  const utcDate = zonedTimeToUtc(val, prevailingTimezone)
+  const d = new Date()
+  const tzHours = d.getTimezoneOffset() / 60
+  const val2 = new Date(val)
+  val2.setHours(val2.getHours() + tzHours)
+  //console.log("tzString", tzString, (typeof tzString))
+  //console.log("prevailingTimezone", prevailingTimezone)
+  //const utcDate = zonedTimeToUtc(val, prevailingTimezone)
+  //const utcDate = zonedTimeToUtc(val, tzString)
+  //const utcDate = zonedTimeToUtc(val, '08' )
+  const utcDate = utcToZonedTime(val2, prevailingTimezone)
   return format(utcDate, fString)
 }
 
@@ -144,15 +152,15 @@ export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
       annotations,
     }
 
-  //let fString = (passedOptions.fString) ? passedOptions.fString : "yyyy-MM-dd'T'HH:mm:ss'Z'"
-  let fString = (passedOptions.fString) ? passedOptions.fString : "yyyy-MM-dd"
+  let fString = (passedOptions.fString) ? passedOptions.fString : "yyyy-MM-dd'T'HH:mm:ss'Z'"
+  //let fString = (passedOptions.fString) ? passedOptions.fString : "yyyy-MM-dd"
 
   fullOpts.egressFormat = (val:Date|string):string => {
     if (typeof val === 'string') {
       return val
     }
     try {
-      return format(val, fString)
+      return zFormat(val, fString)
     } catch (e:any) {
       console.log(`error formatting ${val} typeof ${typeof val}`)
       console.log(e)

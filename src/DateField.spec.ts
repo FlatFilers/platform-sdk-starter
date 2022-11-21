@@ -9,13 +9,16 @@ const zFormat = (val:Date, fString:string):string => {
 
   const d = new Date()
   const tzHours = d.getTimezoneOffset() / 60
+  
   const tzString =  (1 * (tzHours +1)).toString()
+  const val2 = new Date(val)
+  val2.setHours(val2.getHours() + tzHours)
   console.log("tzString", tzString, (typeof tzString))
   //console.log("prevailingTimezone", prevailingTimezone)
   //const utcDate = zonedTimeToUtc(val, prevailingTimezone)
   //const utcDate = zonedTimeToUtc(val, tzString)
   //const utcDate = zonedTimeToUtc(val, '08' )
-  const utcDate = utcToZonedTime(val, prevailingTimezone)
+  const utcDate = utcToZonedTime(val2, prevailingTimezone)
   return format(utcDate, fString)
 }
 

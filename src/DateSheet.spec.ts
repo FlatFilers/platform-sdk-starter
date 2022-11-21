@@ -9,10 +9,9 @@ const SimpleDateSheet = new Sheet(
   'SimpleDateSheet',
   {d: SmartDateField({required:true,
 		      compute: (v:Date) => {
-			console.log(v.getHours())
+			//console.log(v.getHours())
 			return v
-		      }
-
+		      },
 		     })})
 
 const DateBook= new Workbook({name:'DateBook', namespace:'test', sheets:{SimpleDateSheet}})
