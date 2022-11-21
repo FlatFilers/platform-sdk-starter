@@ -134,8 +134,17 @@ export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
     }
 
   let fString = (passedOptions.fString) ? passedOptions.fString : "yyyy-MM-dd'T'HH:mm:ss'Z'"
-  fullOpts.egressFormat = (val:Date):string => format(val, fString)
-
+  fullOpts.egressFormat = (val:Date):string => {
+    try {
+      return format(val, fString)
+    } catch (e:any) {
+      console.log(`error formatting ${val} typeof ${typeof val}`)
+      console.log(e)
+      //@ts-ignore 
+      return NaN
+    }
+    
+  }
   const field = new Field<T, O>(fullOpts as FullBaseFieldOptions<T, O>)
   return field
 }
