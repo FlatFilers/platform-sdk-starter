@@ -1,5 +1,5 @@
 import * as chrono from 'chrono-node'
-import { format } from 'date-fns'
+import { zonedTimeToUtc, format } from 'date-fns-tz'
 //import { Field, GenericDefaults, SchemaILField, FieldHookDefaults, FullBaseFieldOptions } from '@flatfile/configure/stdlib/CastFunctions'
 import { Field, GenericFieldOptions, FieldHookDefaults, FullBaseFieldOptions } from '@flatfile/configure'
 import { SchemaILField } from '@flatfile/schema'
@@ -90,6 +90,17 @@ const ChronoStringDateCast = (raw:string) => {
   return d
 }
 
+
+
+
+
+const zFormat = (val:Date, fString:string):string => {
+  const prevailingTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const utcDate = zonedTimeToUtc(val, prevailingTimezone)
+  return format(utcDate, fString)
+}
+
+
 export const ChronoDateCast = StringCastCompose(ChronoStringDateCast)
 
 
@@ -133,8 +144,13 @@ export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
       annotations,
     }
 
-  let fString = (passedOptions.fString) ? passedOptions.fString : "yyyy-MM-dd'T'HH:mm:ss'Z'"
-  fullOpts.egressFormat = (val:Date):string => {
+  //let fString = (passedOptions.fString) ? passedOptions.fString : "yyyy-MM-dd'T'HH:mm:ss'Z'"
+  let fString = (passedOptions.fString) ? passedOptions.fString : "yyyy-MM-dd"
+
+  fullOpts.egressFormat = (val:Date|string):string => {
+    if (typeof val === 'string') {
+      return val
+    }
     try {
       return format(val, fString)
     } catch (e:any) {
@@ -145,6 +161,7 @@ export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
     }
     
   }
+
   const field = new Field<T, O>(fullOpts as FullBaseFieldOptions<T, O>)
   return field
 }

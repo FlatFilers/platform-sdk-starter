@@ -7,7 +7,13 @@ import { SheetTester } from './utils/testing/SheetTester'
 
 const SimpleDateSheet = new Sheet(
   'SimpleDateSheet',
-  {d: SmartDateField({required:true})})
+  {d: SmartDateField({required:true,
+		      compute: (v:Date) => {
+			console.log(v.getHours())
+			return v
+		      }
+
+		     })})
 
 const DateBook= new Workbook({name:'DateBook', namespace:'test', sheets:{SimpleDateSheet}})
 
@@ -15,7 +21,7 @@ const DateBook= new Workbook({name:'DateBook', namespace:'test', sheets:{SimpleD
 describe('Simple Date Sheet ->', () => {
   const testSheet = new SheetTester(DateBook, 'SimpleDateSheet')
   test('date conversion', async () => {
-    const results = await testSheet.testMessages({'d':"02/17/2009"})
+    const results = await testSheet.testRecord({'d':"02/17/2009"})
     console.log(results)
 
   })
