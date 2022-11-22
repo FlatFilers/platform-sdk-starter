@@ -78,7 +78,7 @@ describe('SampleGroupBy sum ->', () => {
   })
 })
 
-/*
+
 const PeopleSheet = new Sheet('People', 
     {
       job: TextField(), 
@@ -92,35 +92,21 @@ const PeopleSheet = new Sheet('People',
 	 'name',
 	 ['variable', 'group']]),
 })
-
+const PeopleBook = new Workbook({name: 't', namespace: 't', sheets: {PeopleSheet}})
 
 describe('SampleGroupBy groupConstraint ->', () => {
-  const TestSchema = new WorkbookTester(
-    {
-      job: TextField(), 
-      age: NumberField(),
-      age_sum: GroupByField(
-        ['job'],
-	['groupConstraintRow',
-	 ['quote', ['variable', 'group']],
-	 ['quote', ['when', ['not', ['>', ['count', ['match', {job:'kid'}, ['variable', 'group']]], 0 ]],
-		    ['error', 'No Kids']]],
-	 'name',
-	 ['variable', 'group']]),
-    },
-    {}
-  )
+  const testSheet = new SheetTester(PeopleBook, 'PeopleSheet')
   test('GroupByField works properly with sum - multiple rows', async () => {
-    //await TestSchema.checkRows(grps,
-    const res = await TestSchema.runRowResult(grps)
-    expect(res[0].info[0]).toMatchObject({
+    const res = await testSheet.testMessages(grps)
+    expect(res[0][0]).toMatchObject({
         field: 'name',
         message: 'No Kids',
     })
-    expect(res[2].info).toStrictEqual([])
+    expect(res[2]).toStrictEqual([])
   })
 })
 
+/*
 describe('SampleGroupBy groupConstraint and Comp ->', () => {
   const TestSchema = new WorkbookTester(
     {
