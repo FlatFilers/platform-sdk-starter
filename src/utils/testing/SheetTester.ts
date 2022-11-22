@@ -7,6 +7,7 @@ const localSheetCompute = (
   sheet: Sheet<any>,
   records: FlatfileRecords<any>
 ) => {
+  
   const possibleSheetCompute = sheet.getSheetCompute()
   if (possibleSheetCompute === undefined) {
     return records
@@ -24,12 +25,14 @@ const localSheetCompute = (
 export class SheetTester {
   public workbook
   public sheetName
+  private rawSheetName
   private testSession: IPayload
   constructor(
     public readonly passedWorkbook: Workbook,
     public readonly passedSheetName: string
   ) {
     this.sheetName = `${passedWorkbook.options.namespace}/${passedSheetName}`
+    this.rawSheetName = passedSheetName
     this.workbook = passedWorkbook
     this.testSession = {
       schemaSlug: '',
@@ -70,7 +73,7 @@ export class SheetTester {
 
     await this.workbook.processRecords(inputRecords, session)
 
-    const sheet = this.workbook.options.sheets[this.sheetName]
+    const sheet = this.workbook.options.sheets[this.rawSheetName]
     return localSheetCompute(sheet, inputRecords)
     //return inputRecords
   }

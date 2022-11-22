@@ -1,6 +1,7 @@
 import { makeInterpreter, NestedIns } from '@flatfile/expression-lang'
 import { Message } from '@flatfile/configure'
-import { FlatfileRecord } from '@flatfile/hooks'
+import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
+import { Sheet } from '@flatfile/configure'
 import * as _ from 'lodash'
 
 export type TRecordStageLevel =
@@ -28,6 +29,42 @@ const match = (matchSpec: object, records: FlatfileRecord[]) => {
     _.isMatch(rec.originalValue, matchSpec)
   )
 }
+
+
+
+
+const groupByCompute = (
+  gbArgs: any,
+  sheet: Sheet<any>,
+  records: FlatfileRecords<any>
+) => {
+  const { groupBy, expression, destination } = gbArgs
+  const recs = records.records
+  const groups: Record<string, FlatfileRecord[]> = _.groupBy(recs, (rec) =>
+    rec.get(groupBy)
+  )
+
+  _.forEach(groups, (group: FlatfileRecord[], gbKey) => {
+    const res = simpleInterpret(expression, { sheet, group })
+    for (const rec of group) {
+      //@ts-ignore
+      rec.set(destination, res)
+    }
+  })
+  return records
+}
+
+
+const sumField = (records: FlatfileRecord<any>[], field: string) =>  {
+    //@ts-ignore
+    const allVals = records.map((rec) => rec.get(field))
+    const presentVals =   _.remove(allVals)
+    //@ts-ignore
+    const numberVals = presentVals.map((val:string|number) => parseFloat(val))
+    const sum_ = numberVals.reduce((a,b) => a+b)
+    return sum_
+}
+
 
 const groupConstraintRow = (
   rowFilterExpr: NestedIns,
@@ -57,14 +94,21 @@ const groupConstraintRow = (
   return appliccableRows
 }
 
+
 export const debug = (expr: NestedIns) => {
   console.log('debug', expr)
   return expr
 }
 
+const do_ = (...exprs: any) => exprs[exprs.length -1]
+
+//@ts-ignore
+const simpleInterpret = makeInterpreter({sumField, groupConstraintRow, error, match, 'do': do_})
+
 export const sheetInterpret = makeInterpreter({
   error,
   match,
+  groupByCompute,
   groupConstraintRow,
   debug,
 })

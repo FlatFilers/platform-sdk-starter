@@ -11,32 +11,25 @@ const CountSheet = new Sheet(
       ['category'],
       ['count', ['variable', 'group']]
     )})
+const CountBook = new Workbook({name: 't', namespace: 't', sheets: {CountSheet}})
 
 describe('SampleGroupByField ->', () => {
-  const TestSchema = new WorkbookTester(
-    {
-      category: TextField({}),
-      count_of_instances: GroupByField(
-        ['category'],
-        ['count', ['variable', 'group']]
-      ),
-      //    Count(Group())
-    },
-    {}
-  )
+  const testSheet = new SheetTester(CountBook, 'CountSheet')
   test('GroupByField works properly with count', async () => {
-    await TestSchema.checkRowResult({
-      rawData: { category: 'apple_', count_of_instances: '_' },
-      expectedOutput: { category: 'apple_', count_of_instances: 1 },
+    const res = await testSheet.testRecord({category: 'apple_', count_of_instances: '_' })
+    expect(res).toStrictEqual({ category: 'apple_', count_of_instances: 1 })
     })
-  })
+
   test('GroupByField works properly with count - multiple rows', async () => {
-    await TestSchema.checkRows(
+    const res = await testSheet.testRecords(
       [
         { category: 'apple_', count_of_instances: '_' },
         { category: 'orange', count_of_instances: '_' },
         { category: 'apple_', count_of_instances: '_' },
-      ],
+      ])
+
+    expect(res).toStrictEqual(
+    
       [
         { category: 'apple_', count_of_instances: 2 },
         { category: 'orange', count_of_instances: 1 },
@@ -45,6 +38,8 @@ describe('SampleGroupByField ->', () => {
     )
   })
 })
+
+/*
 
 
 
@@ -161,3 +156,4 @@ describe('SampleGroupBy groupConstraint and Comp ->', () => {
  })
 })
 
+*/
