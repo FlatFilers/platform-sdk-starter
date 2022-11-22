@@ -80,6 +80,9 @@ export const GroupConstraintItem = (
   ]
 }
 
+export const SumField = (grp:any, field:string) => ['sumField', grp, field]
+export const Do = (...exprs:any[]) => ['do', ...exprs]
+
 
 export const Debug = (expr: NestedIns) => ['debug', expr]
 
