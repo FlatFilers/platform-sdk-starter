@@ -106,38 +106,43 @@ describe('SampleGroupBy groupConstraint ->', () => {
   })
 })
 
-/*
-describe('SampleGroupBy groupConstraint and Comp ->', () => {
-  const TestSchema = new WorkbookTester(
-    {
-      job: TextField(), 
-      age: NumberField(),
-      age_sum: GroupByField(
-        ['job'],
-	['do',
-	['groupConstraintRow',
-	 ['quote', ['variable', 'group']],
-	 ['quote', ['when', ['not', ['>', ['count', ['match', {job:'kid'}, ['variable', 'group']]], 0 ]],
+const BothSheet =  new Sheet(
+  'BothSheet',
+  {
+    job: TextField(), 
+    age: NumberField(),
+    age_sum: GroupByField(
+      ['job'],
+      ['do',
+       ['groupConstraintRow',
+	['quote', ['variable', 'group']],
+	['quote', ['when', ['not', ['>', ['count', ['match', {job:'kid'}, ['variable', 'group']]], 0 ]],
 		    ['error', 'No Kids']]],
-	 'name',
-	 ['variable', 'group']],
-         ['sumField', ['variable', 'group'], 'age']]	 
-	),
-    },
-    {}
-  )
-  test('GroupByField works properly with groupconstraint and sum - multiple rows', async () => {
+	'name',
+	['variable', 'group']],
+       ['sumField', ['variable', 'group'], 'age']]	 
+    ),
+  }
+)
+
+const BothBook = new Workbook({name: 't', namespace: 't', sheets: {BothSheet}})
+
+describe('SampleGroupBy groupConstraint and Comp ->', () => {
+  const testSheet = new SheetTester(BothBook, 'BothSheet')
+  test('GroupByField works properly with groupconstraint and sum - messages', async () => {
     //await TestSchema.checkRows(grps,
-    const res = await TestSchema.runRowResult(grps)
+    const res = await testSheet.testMessages(grps)
     // console.log(res[0].info)
     // console.log(res[2].info)
-    expect(res[0].info[0]).toMatchObject({
+    expect(res[0][0]).toMatchObject({
         field: 'name',
         message: 'No Kids',
     })
-    expect(res[2].info).toStrictEqual([])
- 
-    await TestSchema.checkRows(grps, 
+    expect(res[2]).toStrictEqual([])
+  })
+    test('GroupByField works properly with groupconstraint and sum - rows', async () => {
+    const res = await testSheet.testRecords(grps)
+    expect(res).toStrictEqual(
       [{ name: 'Paddy', age: 40, job: 'eng', weight: 190, eyeColor: 'green', age_sum: 40 },
        { name: 'Cliff', age: 86, job: 'ret', weight: 160, eyeColor: 'gray_', age_sum: 163 }, 
        { name: 'Odin_', age: 3., job: 'kid', weight: 30., eyeColor: 'blue_', age_sum: 11 }, 
@@ -146,6 +151,3 @@ describe('SampleGroupBy groupConstraint and Comp ->', () => {
     )
  })
 })
-
-
-*/
