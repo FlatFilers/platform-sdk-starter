@@ -144,4 +144,22 @@ describe('GroupConstraint Tests ->', () => {
       message: 'No Kids',
     })
   })
+  test('GroupConstraintItem outputs properly',  () => {
+    expect(GroupConstraintItem(
+      Group(),
+      Unless(
+	GreaterThan(
+	  Count(Match({job:'kid'}, Group())),
+	  0),
+	Error('No Kids')),
+      'name',
+      Group()))
+      .toStrictEqual(
+	['groupConstraintRow',
+	 ['quote', ['variable', 'group']],
+	 ['quote', ['when', ['not', ['>', ['count', ['match', {job:'kid'}, ['variable', 'group']]], 0 ]],
+		    ['error', 'No Kids']]],
+	 'name',
+	 ['variable', 'group']])
+  })
 })

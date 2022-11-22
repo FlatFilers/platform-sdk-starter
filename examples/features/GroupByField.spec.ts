@@ -51,11 +51,11 @@ describe('SampleGroupByField ->', () => {
 
 
 const grps = [
-  { name: 'Paddy', age: 40, job: 'eng', weight: 190, eyeColor: 'green', age_sum: '0' },
-  { name: 'Cliff', age: 86, job: 'ret', weight: 160, eyeColor: 'gray_', age_sum: '0' }, 
-  { name: 'Odin_', age: 3., job: 'kid', weight: 30., eyeColor: 'blue_', age_sum: '0' }, 
-  { name: 'Kay__', age: 77, job: 'ret', weight: 160, eyeColor: 'green', age_sum: '0' },
-  { name: 'Sarah', age: 8., job: 'kid', weight: 60., eyeColor: 'green', age_sum: '0' }]
+  { name: 'Paddy', age: 40, job: 'eng', weight: 190, eye_color: 'green', age_sum: '0' },
+  { name: 'Cliff', age: 86, job: 'ret', weight: 160, eye_color: 'gray_', age_sum: '0' }, 
+  { name: 'Odin_', age: 3., job: 'kid', weight: 30., eye_color: 'blue_', age_sum: '0' }, 
+  { name: 'Kay__', age: 77, job: 'ret', weight: 160, eye_color: 'green', age_sum: '0' },
+  { name: 'Sarah', age: 8., job: 'kid', weight: 60., eye_color: 'green', age_sum: '0' }]
 
 
 const JobAgeSheet = new Sheet(
@@ -71,11 +71,11 @@ const JobAgeSheet = new Sheet(
 )
 
 const SumResults = [
-  { name: 'Paddy', age: 40, job: 'eng', weight: 190, eyeColor: 'green', age_sum: 40 },
-  { name: 'Cliff', age: 86, job: 'ret', weight: 160, eyeColor: 'gray_', age_sum: 163 }, 
-  { name: 'Odin_', age: 3., job: 'kid', weight: 30., eyeColor: 'blue_', age_sum: 11 }, 
-  { name: 'Kay__', age: 77, job: 'ret', weight: 160, eyeColor: 'green', age_sum: 163 },
-  { name: 'Sarah', age: 8., job: 'kid', weight: 60., eyeColor: 'green', age_sum: 11 }]
+  { name: 'Paddy', age: 40, job: 'eng', weight: 190, eye_color: 'green', age_sum: 40 },
+  { name: 'Cliff', age: 86, job: 'ret', weight: 160, eye_color: 'gray_', age_sum: 163 }, 
+  { name: 'Odin_', age: 3., job: 'kid', weight: 30., eye_color: 'blue_', age_sum: 11 }, 
+  { name: 'Kay__', age: 77, job: 'ret', weight: 160, eye_color: 'green', age_sum: 163 },
+  { name: 'Sarah', age: 8., job: 'kid', weight: 60., eye_color: 'green', age_sum: 11 }]
 
 
 const JABook = new Workbook({name: 't', namespace: 't', sheets: {JobAgeSheet}})
@@ -100,9 +100,9 @@ const PeopleSheet = new Sheet('People',
 	  Group(),
 	  Unless(
 	    GreaterThan(
-	      Count(Match({job:'kid'}, Group())),
+	      Count(Match({eye_color: 'blue_'}, Group())),
 	      0),
-	    Error('No Kids')),
+	    Error('No Blue eyes')),
 	  'name',
 	  Group()))
 	
@@ -111,31 +111,13 @@ const PeopleBook = new Workbook({name: 't', namespace: 't', sheets: {PeopleSheet
 
 describe('SampleGroupBy groupConstraint ->', () => {
 
-  test('GroupConstraintItem outputs properly',  () => {
-    expect(GroupConstraintItem(
-	  Group(),
-	  Unless(
-	    GreaterThan(
-	      Count(Match({job:'kid'}, Group())),
-	      0),
-	    Error('No Kids')),
-	  'name',
-      Group()))
-      .toStrictEqual(
-	['groupConstraintRow',
-	 ['quote', ['variable', 'group']],
-	 ['quote', ['when', ['not', ['>', ['count', ['match', {job:'kid'}, ['variable', 'group']]], 0 ]],
-		    ['error', 'No Kids']]],
-	 'name',
-	 ['variable', 'group']])
-  })
       
   const testSheet = new SheetTester(PeopleBook, 'PeopleSheet')
   test('GroupByField works properly with sum - multiple rows', async () => {
     const res = await testSheet.testMessages(grps)
     expect(res[0][0]).toMatchObject({
         field: 'name',
-        message: 'No Kids',
+        message: 'No Blue eyes',
     })
     expect(res[2]).toStrictEqual([])
   })
@@ -153,9 +135,9 @@ const BothSheet =  new Sheet(
 	  Group(),
 	  Unless(
 	    GreaterThan(
-	      Count(Match({job:'kid'}, Group())),
+	      Count(Match({eye_color: 'blue_'}, Group())),
 	      0),
-	    Error('No Kids')),
+	    Error('No Blue eyes')),
 	  'name',
 	  Group()),
 	SumField(Group(), 'age'))
@@ -171,7 +153,7 @@ describe('SampleGroupBy groupConstraint and Comp ->', () => {
     const res = await testSheet.testMessages(grps)
     expect(res[0][0]).toMatchObject({
         field: 'name',
-        message: 'No Kids',
+        message: 'No Blue eyes',
     })
     expect(res[2]).toStrictEqual([])
   })
