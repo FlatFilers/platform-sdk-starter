@@ -39,7 +39,7 @@ describe('SampleGroupByField ->', () => {
   })
 })
 
-/*
+
 
 
 
@@ -50,8 +50,9 @@ const grps = [
   { name: 'Kay__', age: 77, job: 'ret', weight: 160, eyeColor: 'green', age_sum: '0' },
   { name: 'Sarah', age: 8., job: 'kid', weight: 60., eyeColor: 'green', age_sum: '0' }]
 
-describe('SampleGroupBy sum ->', () => {
-  const TestSchema = new WorkbookTester(
+
+const JobAgeSheet = new Sheet(
+  'JobAgeSheet',
     {
       job: TextField(), 
       age: NumberField(),
@@ -59,11 +60,15 @@ describe('SampleGroupBy sum ->', () => {
         ['job'],
         ['sumField', ['variable', 'group'], 'age']
       ),
-    },
-    {}
-  )
+  }
+)
+const JABook = new Workbook({name: 't', namespace: 't', sheets: {JobAgeSheet}})
+
+describe('SampleGroupBy sum ->', () => {
+  const testSheet = new SheetTester(JABook, 'JobAgeSheet')
   test('GroupByField works properly with sum - multiple rows', async () => {
-    await TestSchema.checkRows(grps, 
+    const res = await testSheet.testRecords(grps)
+    expect(res).toStrictEqual(
       [{ name: 'Paddy', age: 40, job: 'eng', weight: 190, eyeColor: 'green', age_sum: 40 },
        { name: 'Cliff', age: 86, job: 'ret', weight: 160, eyeColor: 'gray_', age_sum: 163 }, 
        { name: 'Odin_', age: 3., job: 'kid', weight: 30., eyeColor: 'blue_', age_sum: 11 }, 
@@ -73,7 +78,7 @@ describe('SampleGroupBy sum ->', () => {
   })
 })
 
-
+/*
 const PeopleSheet = new Sheet('People', 
     {
       job: TextField(), 
@@ -155,5 +160,6 @@ describe('SampleGroupBy groupConstraint and Comp ->', () => {
     )
  })
 })
+
 
 */
