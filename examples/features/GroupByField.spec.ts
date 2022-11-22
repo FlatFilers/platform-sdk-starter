@@ -130,6 +130,9 @@ const BothSheet =  new Sheet(
     age: NumberField(),
     age_sum: GroupByField(
       ['job'],
+      // NOTE THE USE OF DO HERE...
+      // Do allows multiple expressions to be executed and the result
+      // of the last one is returned... in this case "SumField"
       Do(
        GroupConstraintItem(
 	  Group(),
