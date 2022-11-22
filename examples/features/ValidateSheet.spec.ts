@@ -26,12 +26,6 @@ describe('Workbook tests ->', () => {
     // we expect this output row
     const res = await testSheet.testMessage(inputRow)
     expect(matchSingleMessage(res, 'numField', 'more than 5', 'error')).toBeTruthy()
-    // console.log("res", res)
-    // console.log("matchMessages", matchMessages(res, 'numField'))
-    //console.log("matchSingleMessage", 
-		
-    //call the expectation here
-    //expect(res).toMatchObject(expectedOutputRow)
   })
 
 })
