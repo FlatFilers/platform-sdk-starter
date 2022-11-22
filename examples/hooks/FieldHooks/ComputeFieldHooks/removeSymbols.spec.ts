@@ -1,8 +1,8 @@
 import { TextField, Sheet, Workbook } from '@flatfile/configure'
-import { SheetTester } from '../../../src/utils/testing/SheetTester'
+import { SheetTester } from '../../../../src/utils/testing/SheetTester'
 
 //This hook checks for and removes special characters in a string using RegEx.
-const removeSymbolsCompute = new Sheet('removeSymbolsCompute', {
+const removeSymbolsSheet = new Sheet('removeSymbolsSheet', {
   //set up your field
   zipCode: TextField({
     //define a compute hook
@@ -16,12 +16,12 @@ const removeSymbolsCompute = new Sheet('removeSymbolsCompute', {
 const TestWorkbook = new Workbook({
   name: 'Test Workbook',
   namespace: 'Test',
-  sheets: { removeSymbolsCompute },
+  sheets: { removeSymbolsSheet },
 })
 
 describe('Workbook tests ->', () => {
   // here we use Sheet tester
-  const testSheet = new SheetTester(TestWorkbook, 'removeSymbolsCompute')
+  const testSheet = new SheetTester(TestWorkbook, 'removeSymbolsSheet')
   test('Remove Extra Symbols', async () => {
     // for this inputRow
     const inputRow = { zipCode: '234**23' }
