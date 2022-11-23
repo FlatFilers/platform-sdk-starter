@@ -54,8 +54,6 @@ export const StringCastCompose = (otherFunc: (raw: string) => any) => {
 const ChronoStringDateCast = (raw:string) => {
   const parsedResult = chrono.strict.parse(raw, undefined)
 
-  //const parsedDebug = chrono.strict.parse(raw)
-  //console.dir(parsedDebug)
   if (parsedResult === null) {
     throw new Error(`'${raw}' parsed to 'null' which is invalid`)
   }
@@ -83,15 +81,12 @@ const ChronoStringDateCast = (raw:string) => {
     //by default chrono sets a time of 12,  this code works, but I'm not sure why
     d.setHours(-1 * tzHours)
   } else if ((hourCertain === true)  && (tzCertain === false)) {
-    console.log("firstResult", firstResult)    
+    //console.log("firstResult", firstResult)    
     d.setHours(d.getHours() - tzHours)
-    //throw Error(`Don't know how to cast hourCertain === true && tzCertain === false for ${raw }`)
   }
   else if (tzCertain === false) {
     d.setHours(d.getHours() - tzHours)
   }
-    // hourCertain === true && tzCertain === true
-    
   return d
 }
 
