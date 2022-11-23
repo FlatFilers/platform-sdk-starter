@@ -90,7 +90,8 @@ const ChronoStringDateCast = (raw:string) => {
     // a.setHours(a.getHours() - (a.getTimezoneOffset()/60)) 
   } else if ((hourCertain === true)  && (tzCertain === false)) {
     console.log("firstResult", firstResult)    
-    throw Error(`Don't know how to cast hourCertain === true && tzCertain === false for ${raw }`)
+    d.setHours(d.getHours() - tzHours)
+    //throw Error(`Don't know how to cast hourCertain === true && tzCertain === false for ${raw }`)
   }
   else if (tzCertain === false) {
     d.setHours(d.getHours() - tzHours)
