@@ -149,9 +149,11 @@ describe('Cast Function tests ->', () => {
     assertDC(" 2/24/2009", /*--*/ new Date('2009-02-24T00:00:00.000Z')) //"bM/bD/YY" #Month-Day-Year with spaces instead of leading zeros
     assertDC("25Feb2009", /*-0-*/ new Date('2009-02-25T00:00:00.000Z')) // "DDMonYY" #Day-Month abbreviation-Year with leading zeros
 
+    assertDC('2009-02-26T00:00:00.000Z', /*--*/ new Date('2009-02-26T00:00:00.000Z'))
     assertDC(" 2/8/2009", /*--*/ new Date('2009-02-08T00:00:00.000Z')) //"bM/bD/YY" #Month-Day-Year with spaces instead of leading zeros
 
     assertDC(" 8/2/2009", /*--*/ new Date('2009-08-02T00:00:00.000Z')) //"bM/bD/YY" #Month-Day-Year with spaces instead of leading zeros
+
   })
 
   test('date time  functions', () => {

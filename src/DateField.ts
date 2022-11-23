@@ -82,12 +82,6 @@ const ChronoStringDateCast = (raw:string) => {
     // timezones... which seem to default to the local timezone
     //by default chrono sets a time of 12,  this code works, but I'm not sure why
     d.setHours(-1 * tzHours)
-    //d.setHours(-5)
-
-    //you can call `d.getTimezonOffset()` but you can't set it
-    
-    //  I think I might be onto  something  here
-    // a.setHours(a.getHours() - (a.getTimezoneOffset()/60)) 
   } else if ((hourCertain === true)  && (tzCertain === false)) {
     console.log("firstResult", firstResult)    
     d.setHours(d.getHours() - tzHours)
@@ -109,14 +103,7 @@ const zFormat = (val:Date, fString:string):string => {
   const d = new Date()
   const tzHours = d.getTimezoneOffset() / 60
   const val2 = new Date(val)
-  //val2.setHours(val2.getHours() - tzHours)
   val2.setHours( tzHours)
-
-  //console.log("tzString", tzString, (typeof tzString))
-  //console.log("prevailingTimezone", prevailingTimezone)
-  //const utcDate = zonedTimeToUtc(val, prevailingTimezone)
-  //const utcDate = zonedTimeToUtc(val, tzString)
-  //const utcDate = zonedTimeToUtc(val, '08' )
   const utcDate = utcToZonedTime(val2, prevailingTimezone)
   return format(utcDate, fString)
 }
