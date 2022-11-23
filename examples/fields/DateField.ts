@@ -85,8 +85,12 @@ const ChronoStringDateCast = (raw:string) => {
     // back out the timezone offset from the hours stored on d
     d.setHours(d.getHours() - tzHours)
   }
-  else if (tzCertain === false) {
-    d.setHours(d.getHours() - tzHours)
+  else if (hourCertain === true && tzCertain === true ) {
+    //I don't know how this parsing result would be possible we should
+    //probably resort to 00:00:00 GMT, but to be extra strict, until
+    //we have more information, we'll throw an error
+    //d.setHours(-1 * tzHours)
+    throw new Error(`Don't know how to parse for hourCertain === true && tzCertain === true for ${raw}`)
   }
   return d
 }
