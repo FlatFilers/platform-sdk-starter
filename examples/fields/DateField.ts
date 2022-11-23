@@ -52,6 +52,7 @@ export const StringCastCompose = (otherFunc: (raw: string) => any) => {
 }
 
 const ChronoStringDateCast = (raw:string) => {
+  // use chrono.strict so that we dont get dates from strings like 'tomorrow', 'two weeks later'
   const parsedResult = chrono.strict.parse(raw, undefined)
 
   if (parsedResult === null) {
@@ -60,28 +61,28 @@ const ChronoStringDateCast = (raw:string) => {
   if (parsedResult === undefined) {
     throw new Error(`'${raw}' parsed to undefined which is invalid`)
   }
-  //folloiwng code necessary for JS compatability
 
   const firstResult = parsedResult[0]
   if (firstResult === null || firstResult === undefined) {
     throw new Error(`'${raw}' returned no parse results`)
   }
-
   const d = firstResult.date()
 
   // console.log("firstResult", firstResult.start.isCertain('timezoneOffset'))
   const tzCertain = firstResult.start.isCertain('timezoneOffset')
   const hourCertain = firstResult.start.isCertain('hour')
   
-  // console.log("firstResult", firstResult.start.isCertain('hour'))
   const tzHours = d.getTimezoneOffset() / 60
+
+  // we want all dates to end up in the UTC timezone, and when we
+  // don't have an exact time, default to 00:00:00
   if (hourCertain === false && tzCertain === false) {
-    // how to remove any implied parts of a date, especially
-    // timezones... which seem to default to the local timezone
-    //by default chrono sets a time of 12,  this code works, but I'm not sure why
+    //js dates are local TZ by default, we need to work around that
+    //in this case, set the hour to offset the timezone offset, that will bring the time 00:00:00 GMT
     d.setHours(-1 * tzHours)
   } else if ((hourCertain === true)  && (tzCertain === false)) {
-    //console.log("firstResult", firstResult)    
+    // if chrono was able to determine the hour, but not the timezone,
+    // back out the timezone offset from the hours stored on d
     d.setHours(d.getHours() - tzHours)
   }
   else if (tzCertain === false) {
