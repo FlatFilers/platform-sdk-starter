@@ -1,5 +1,5 @@
 import * as chrono from 'chrono-node'
-import { utcToZonedTime, format } from 'date-fns-tz'
+import { utcToZonedTime, format, formatInTimeZone } from 'date-fns-tz'
 //import { Field, GenericDefaults, SchemaILField, FieldHookDefaults, FullBaseFieldOptions } from '@flatfile/configure/stdlib/CastFunctions'
 import { Field, GenericFieldOptions, FieldHookDefaults, FullBaseFieldOptions } from '@flatfile/configure'
 import { SchemaILField } from '@flatfile/schema'
@@ -70,10 +70,14 @@ const ChronoStringDateCast = (raw:string) => {
   }
 
   const d = firstResult.date()
-  // console.log("firstResult", firstResult)
+
+  // console.log("firstResult", firstResult.start.isCertain('timezoneOffset'))
+  const tzCertain = firstResult.start.isCertain('timezoneOffset')
+  const hourCertain = firstResult.start.isCertain('hour')
+  
   // console.log("firstResult", firstResult.start.isCertain('hour'))
   const tzHours = d.getTimezoneOffset() / 60
-  if (firstResult.start.isCertain('hour') === false) {
+  if (hourCertain === false && tzCertain === false) {
     // how to remove any implied parts of a date, especially
     // timezones... which seem to default to the local timezone
     //by default chrono sets a time of 12,  this code works, but I'm not sure why
@@ -84,9 +88,15 @@ const ChronoStringDateCast = (raw:string) => {
     
     //  I think I might be onto  something  here
     // a.setHours(a.getHours() - (a.getTimezoneOffset()/60)) 
-  } else {
+  } else if ((hourCertain === true)  && (tzCertain === false)) {
+    console.log("firstResult", firstResult)    
+    throw Error(`Don't know how to cast hourCertain === true && tzCertain === false for ${raw }`)
+  }
+  else if (tzCertain === false) {
     d.setHours(d.getHours() - tzHours)
   }
+    // hourCertain === true && tzCertain === true
+    
   return d
 }
 
@@ -98,7 +108,9 @@ const zFormat = (val:Date, fString:string):string => {
   const d = new Date()
   const tzHours = d.getTimezoneOffset() / 60
   const val2 = new Date(val)
-  val2.setHours(val2.getHours() + tzHours)
+  //val2.setHours(val2.getHours() - tzHours)
+  val2.setHours( tzHours)
+
   //console.log("tzString", tzString, (typeof tzString))
   //console.log("prevailingTimezone", prevailingTimezone)
   //const utcDate = zonedTimeToUtc(val, prevailingTimezone)
