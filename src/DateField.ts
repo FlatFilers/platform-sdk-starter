@@ -98,12 +98,22 @@ const ChronoStringDateCast = (raw:string) => {
 
 
 
-const zFormat = (val:Date, fString:string):string => {
+// const zFormat = (val:Date, fString:string):string => {
+//   const prevailingTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+//   const d = new Date()
+//   const tzHours = d.getTimezoneOffset() / 60
+//   const val2 = new Date(val)
+//   val2.setHours( tzHours)
+//   const utcDate = utcToZonedTime(val2, prevailingTimezone)
+//   return format(utcDate, fString)
+// }
+
+export const zFormat = (val:Date, fString:string):string => {
   const prevailingTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const d = new Date()
   const tzHours = d.getTimezoneOffset() / 60
   const val2 = new Date(val)
-  val2.setHours( tzHours)
+  val2.setHours(val2.getHours() + tzHours)
   const utcDate = utcToZonedTime(val2, prevailingTimezone)
   return format(utcDate, fString)
 }
@@ -152,7 +162,7 @@ export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
       annotations,
     }
 
-  let fString = (passedOptions.fString) ? passedOptions.fString : "yyyy-MM-dd'T'HH:mm:ss'Z'"
+  let fString = (passedOptions.fString) ? passedOptions.fString : "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
   //let fString = (passedOptions.fString) ? passedOptions.fString : "yyyy-MM-dd"
 
   fullOpts.egressFormat = (val:Date|string):string => {
