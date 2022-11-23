@@ -686,9 +686,3 @@ const expectedOutputRows = [
 const results = await testSheet.testRecords(inputRows)
 expect(results).toMatchObject(expectedOutputRows)
 ```
-
-
-# Deploying the examples
-```
-npx flatfile publish ./src/examples/DateSheet.ts
-```
