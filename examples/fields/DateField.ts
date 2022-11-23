@@ -55,12 +55,12 @@ const ChronoStringDateCast = (raw:string) => {
   // use chrono.strict so that we dont get dates from strings like 'tomorrow', 'two weeks later'
   const parsedResult = chrono.strict.parse(raw, undefined)
 
-  if (parsedResult === null) {
-    throw new Error(`'${raw}' parsed to 'null' which is invalid`)
-  }
-  if (parsedResult === undefined) {
-    throw new Error(`'${raw}' parsed to undefined which is invalid`)
-  }
+  // if (parsedResult === null) {
+  //   throw new Error(`'${raw}' parsed to 'null' which is invalid`)
+  // }
+  // if (parsedResult === undefined) {
+  //   throw new Error(`'${raw}' parsed to undefined which is invalid`)
+  // }
 
   const firstResult = parsedResult[0]
   if (firstResult === null || firstResult === undefined) {
@@ -68,10 +68,8 @@ const ChronoStringDateCast = (raw:string) => {
   }
   const d = firstResult.date()
 
-  // console.log("firstResult", firstResult.start.isCertain('timezoneOffset'))
   const tzCertain = firstResult.start.isCertain('timezoneOffset')
   const hourCertain = firstResult.start.isCertain('hour')
-  
   const tzHours = d.getTimezoneOffset() / 60
 
   // we want all dates to end up in the UTC timezone, and when we
