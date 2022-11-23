@@ -95,19 +95,6 @@ const ChronoStringDateCast = (raw:string) => {
   return d
 }
 
-
-
-
-// const zFormat = (val:Date, fString:string):string => {
-//   const prevailingTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-//   const d = new Date()
-//   const tzHours = d.getTimezoneOffset() / 60
-//   const val2 = new Date(val)
-//   val2.setHours( tzHours)
-//   const utcDate = utcToZonedTime(val2, prevailingTimezone)
-//   return format(utcDate, fString)
-// }
-
 export const zFormat = (val:Date, fString:string):string => {
   const prevailingTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const d = new Date()
