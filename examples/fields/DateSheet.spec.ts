@@ -1,7 +1,7 @@
 import { SmartDateField } from './DateField'
 import { FlatfileRecord } from '@flatfile/hooks'
 import { TextField, Sheet, Workbook } from '@flatfile/configure'
-import { SheetTester } from './utils/testing/SheetTester'
+import { SheetTester } from '../../src/utils/testing/SheetTester'
 
 
 
