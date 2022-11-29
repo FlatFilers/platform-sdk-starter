@@ -1,7 +1,12 @@
 import * as chrono from 'chrono-node'
 import { utcToZonedTime, format, formatInTimeZone } from 'date-fns-tz'
 //import { Field, GenericDefaults, SchemaILField, FieldHookDefaults, FullBaseFieldOptions } from '@flatfile/configure/stdlib/CastFunctions'
-import { Field, GenericFieldOptions, FieldHookDefaults, FullBaseFieldOptions } from '@flatfile/configure'
+import {
+  Field,
+  GenericFieldOptions,
+  FieldHookDefaults,
+  FullBaseFieldOptions,
+} from '@flatfile/configure'
 import { SchemaILField } from '@flatfile/schema'
 
 const GenericDefaults: GenericFieldOptions = {
@@ -22,8 +27,8 @@ const GenericDefaults: GenericFieldOptions = {
     compute: false,
     computeMessage: 'This value was automatically reformatted - original data:',
   },
+  getSheetCompute: false,
 }
-
 
 export const StringCast = (raw: string | undefined | null): string | null => {
   if (typeof raw === 'undefined') {
@@ -51,7 +56,7 @@ export const StringCastCompose = (otherFunc: (raw: string) => any) => {
   return innerCast
 }
 
-const ChronoStringDateCast = (raw:string) => {
+const ChronoStringDateCast = (raw: string) => {
   // use chrono.strict so that we dont get dates from strings like 'tomorrow', 'two weeks later'
   const parsedResult = chrono.strict.parse(raw, undefined)
 
@@ -78,27 +83,28 @@ const ChronoStringDateCast = (raw:string) => {
     //js dates are local TZ by default, we need to work around that
     //in this case, set the hour to offset the timezone offset, that will bring the time 00:00:00 GMT
     d.setHours(-1 * tzHours)
-  } else if ((hourCertain === true)  && (tzCertain === false)) {
+  } else if (hourCertain === true && tzCertain === false) {
     // if chrono was able to determine the hour, but not the timezone,
     // back out the timezone offset from the hours stored on d
     d.setHours(d.getHours() - tzHours)
-  }
-  else if (hourCertain === false && tzCertain === true ) {
+  } else if (hourCertain === false && tzCertain === true) {
     //I don't know how this parsing result would be possible we should
     //probably resort to 00:00:00 GMT, but to be extra strict, until
     //we have more information, we'll throw an error
     //d.setHours(-1 * tzHours)
-    throw new Error(`Don't know how to parse for hourCertain === false && tzCertain === true for ${raw}`)
+    throw new Error(
+      `Don't know how to parse for hourCertain === false && tzCertain === true for ${raw}`
+    )
   } else if (hourCertain === true && tzCertain === true) {
     //we were able to absolutely determin the hour and timezone, nothing to do here
+    //console.log(`chronoDate cast recieved ${raw} returning ${d} ${typeof d}`)
     return d
   }
 
-  
   return d
 }
 
-export const zFormat = (val:Date, fString:string):string => {
+export const zFormat = (val: Date, fString: string): string => {
   const prevailingTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const d = new Date()
   const tzHours = d.getTimezoneOffset() / 60
@@ -108,71 +114,70 @@ export const zFormat = (val:Date, fString:string):string => {
   return format(utcDate, fString)
 }
 
-
 export const ChronoDateCast = StringCastCompose(ChronoStringDateCast)
-
 
 type O = Record<string, any>
 type T = Date
-type PartialBaseFieldsAndOptions = Partial<FullBaseFieldOptions<T, O>> & {fString?:string}
+type PartialBaseFieldsAndOptions = Partial<FullBaseFieldOptions<T, O>> & {
+  fString?: string
+}
 
 export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
-    // if labelOptions is a string, then it is the label
-  let passedOptions:PartialBaseFieldsAndOptions 
+  // if labelOptions is a string, then it is the label
+  let passedOptions: PartialBaseFieldsAndOptions
   if (options === undefined) {
     passedOptions = {}
-  }
-  else if (typeof options === 'string') {
-    passedOptions = {label: options}
+  } else if (typeof options === 'string') {
+    passedOptions = { label: options }
   } else {
     passedOptions = options
   }
 
-    const passedStageVisibility = (passedOptions as SchemaILField)
-      ?.stageVisibility
+  const passedStageVisibility = (passedOptions as SchemaILField)
+    ?.stageVisibility
 
-    const stageVisibility = {
-      ...GenericDefaults.stageVisibility,
-      ...passedStageVisibility,
-    }
+  const stageVisibility = {
+    ...GenericDefaults.stageVisibility,
+    ...passedStageVisibility,
+  }
 
-    const passedAnnotations = (passedOptions as SchemaILField)?.annotations
+  const passedAnnotations = (passedOptions as SchemaILField)?.annotations
 
-    const annotations = {
-      ...GenericDefaults.annotations,
-      ...passedAnnotations,
-    }
+  const annotations = {
+    ...GenericDefaults.annotations,
+    ...passedAnnotations,
+  }
 
-    const fullOpts = {
-      ...GenericDefaults,
-      ...FieldHookDefaults<T>(),
-      cast:ChronoDateCast, 
-      ...passedOptions,
-      stageVisibility,
-      annotations,
-    }
+  const fullOpts = {
+    ...GenericDefaults,
+    ...FieldHookDefaults<T>(),
+    cast: ChronoDateCast,
+    ...passedOptions,
+    stageVisibility,
+    annotations,
+  }
 
-  let fString = (passedOptions.fString) ? passedOptions.fString : "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
+  let fString = passedOptions.fString
+    ? passedOptions.fString
+    : "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
   //let fString = (passedOptions.fString) ? passedOptions.fString : "yyyy-MM-dd"
 
-  fullOpts.egressFormat = (val:Date|string):string => {
+  fullOpts.egressFormat = (val: Date | string): string => {
     if (typeof val === 'string') {
       return val
     }
     try {
       return zFormat(val, fString)
-    } catch (e:any) {
+    } catch (e: any) {
       console.log(`error formatting ${val} typeof ${typeof val}`)
       console.log(e)
-      //@ts-ignore 
+      //@ts-ignore
       return NaN
     }
-    
   }
 
   const field = new Field<T, O>(fullOpts as FullBaseFieldOptions<T, O>)
   return field
 }
-
 
 export const SmartDateField = DateField
