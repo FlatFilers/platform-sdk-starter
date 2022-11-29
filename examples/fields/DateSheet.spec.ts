@@ -1,10 +1,8 @@
 import * as _ from 'lodash'
-import { SmartDateField, ChronoDateCast } from './DateField'
+import { SmartDateField } from './DateField'
 import { FlatfileRecord } from '@flatfile/hooks'
-import { Workbook } from '../ddl/Workbook'
-import { Sheet } from '../ddl/Sheet'
-import { TextField } from '../ddl/Field'
-import { SheetTester, matchSingleMessage } from './SheetTester'
+import { Workbook, Sheet, TextField } from '@flatfile/configure'
+import { SheetTester, matchSingleMessage } from '../../src/utils/testing/SheetTester'
 
 const CompSets = [
   { expResult: 'error___', before: '18/02/2009', /*--*/ after: '02/17/2009', bF: '2009-02-18', aF: '2009-02-17' },
