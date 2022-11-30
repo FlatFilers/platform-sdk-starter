@@ -65,14 +65,23 @@ const ChronoStringDateCast = (raw: string) => {
   }
   const d = firstResult.date()
 
-  const tzCertain = firstResult.start.isCertain('timezoneOffset')
-  const hourCertain = firstResult.start.isCertain('hour')
+  const resStart = firstResult.start
+  const tzCertain = resStart.isCertain('timezoneOffset')
+  const hourCertain = resStart.isCertain('hour')
   const tzHours = d.getTimezoneOffset() / 60
 
-  const yearCertain = firstResult.start.isCertain('year')
-  if (!yearCertain) {
-    return null
+  if (!resStart.isCertain('year')) {
+    throw new Error(`couldn't parse ${raw} with a certain date.  Please use an unambiguous date format`)
   }
+
+  if (!resStart.isCertain('month')) {
+    throw new Error(`couldn't parse ${raw} with a certain month.  Please use an unambiguous date format`)
+  }
+
+  if (!resStart.isCertain('day')) {
+    throw new Error(`couldn't parse ${raw} with a certain day.  Please use an unambiguous date format`)
+  }
+
 
   //console.log(firstResult)
   // we want all dates to end up in the UTC timezone, and when we

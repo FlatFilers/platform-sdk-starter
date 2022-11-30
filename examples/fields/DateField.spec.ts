@@ -65,7 +65,7 @@ describe('Cast Function tests ->', () => {
 
 
   test('expected parsing errors', ()=> {
-    assertDC('25-Feb-19', /*--*/ null) 
+    assertThrow('25-Feb-19', "couldn't parse 25-Feb-19 with a certain date.  Please use an unambiguous date format")
   })
   
 })

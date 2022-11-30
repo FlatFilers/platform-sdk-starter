@@ -113,7 +113,7 @@ describe('Extra test ->', () => {
   const SmartDateSheet = new Sheet(
     'SmartDateSheet',
     {
-      d: SmartDateField({ required: false }) //, fString: 'yyyy-MM-dd' }),
+      d: SmartDateField({ required: false, fString: 'yyyy-MM-dd' }),
     },
     {}
 )
@@ -122,8 +122,9 @@ describe('Extra test ->', () => {
     const testSheet = new SheetTester(SmartDateBook, 'SmartDateSheet')
     const row = { d: "25-Feb-19" }
     const messageRes = await testSheet.testMessage(row)
-    expect(messageRes).toStrictEqual([]) // expect no errors
     const results = await testSheet.testRecord(row)
-    expect(results['d']).toBe(null)
+    expect(matchSingleMessage(messageRes, 'd', "Error: couldn't parse 25-Feb-19 with a certain date.  Please use an unambiguous date format")).toBeTruthy()
+
   })
-  })
+
+})
