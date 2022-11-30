@@ -1,4 +1,4 @@
-import { ChronoDateCast, zFormat } from './DateField'
+import { ChronoDateCast, zFormat } from './SmartDateField'
 
 const Feb17DstringSimple = '02/17/2009'
 const Feb17DstringComplete = '2009-02-17T00:00:00.000Z'

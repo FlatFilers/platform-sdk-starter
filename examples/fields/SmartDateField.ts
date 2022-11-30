@@ -60,13 +60,6 @@ const ChronoStringDateCast = (raw: string) => {
   // use chrono.strict so that we dont get dates from strings like 'tomorrow', 'two weeks later'
   const parsedResult = chrono.strict.parse(raw, undefined)
 
-  // if (parsedResult === null) {
-  //   throw new Error(`'${raw}' parsed to 'null' which is invalid`)
-  // }
-  // if (parsedResult === undefined) {
-  //   throw new Error(`'${raw}' parsed to undefined which is invalid`)
-  // }
-
   const firstResult = parsedResult[0]
   if (firstResult === null || firstResult === undefined) {
     throw new Error(`'${raw}' returned no parse results`)
@@ -91,7 +84,6 @@ const ChronoStringDateCast = (raw: string) => {
     //I don't know how this parsing result would be possible we should
     //probably resort to 00:00:00 GMT, but to be extra strict, until
     //we have more information, we'll throw an error
-    //d.setHours(-1 * tzHours)
     throw new Error(
       `Don't know how to parse for hourCertain === false && tzCertain === true for ${raw}`
     )
@@ -122,7 +114,7 @@ type PartialBaseFieldsAndOptions = Partial<FullBaseFieldOptions<T, O>> & {
   fString?: string
 }
 
-export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
+export const SmartDateField = (options?: string | PartialBaseFieldsAndOptions) => {
   // if labelOptions is a string, then it is the label
   let passedOptions: PartialBaseFieldsAndOptions
   if (options === undefined) {
@@ -160,7 +152,6 @@ export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
   let fString = passedOptions.fString
     ? passedOptions.fString
     : "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
-  //let fString = (passedOptions.fString) ? passedOptions.fString : "yyyy-MM-dd"
 
   fullOpts.egressFormat = (val: Date | string): string => {
     if (typeof val === 'string') {
@@ -179,5 +170,3 @@ export const DateField = (options?: string | PartialBaseFieldsAndOptions) => {
   const field = new Field<T, O>(fullOpts as FullBaseFieldOptions<T, O>)
   return field
 }
-
-export const SmartDateField = DateField

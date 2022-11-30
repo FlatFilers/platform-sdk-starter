@@ -1,14 +1,6 @@
-import * as chrono from 'chrono-node'
-import { ChronoDateCast, DateField } from './DateField'
+import { ChronoDateCast, SmartDateField } from './SmartDateField'
 
 describe('Cast Function tests ->', () => {
-  const makeCastAssert = (castFn: any) => {
-    const assertFn = (raw: any, output: any): void => {
-      expect(castFn(raw)).toBe(output)
-    }
-    return assertFn
-  }
-
   const makeCastAssertException = (castFn: any) => {
     const assertFn = (raw: any, error: string): void => {
       expect(() => {
@@ -44,7 +36,7 @@ describe('Cast Function tests ->', () => {
   })
 
   test('instantiate DateField', () => {
-    const d = DateField()
+    const d = SmartDateField()
     expect(1).toBe(1)
   })
 
@@ -56,17 +48,14 @@ describe('Cast Function tests ->', () => {
     assertDC('February 20, 2009', new Date('2009-02-20T00:00:00.000Z')) //"Month D, Yr" Month name-Day-Year with no leading zeros
     assertDC('2/21/2009', /*---*/ new Date('2009-02-21T00:00:00.000Z')) //"M/D/YY"#Month-Day-Year with no leading zeros
     assertDC('22/2/2009', /*---*/ new Date('2009-02-22T00:00:00.000Z')), //"D/M/YY"#Day-Month-Year with no leading zeros
-      assertDC('2009/2/23', /*---*/ new Date('2009-02-23T00:00:00.000Z')), //"YY/M/D"#Year-Month-Day with no leading zeros
-      assertDC(' 2/24/2009', /*--*/ new Date('2009-02-24T00:00:00.000Z')) //"bM/bD/YY" #Month-Day-Year with spaces instead of leading zeros
+    assertDC('2009/2/23', /*---*/ new Date('2009-02-23T00:00:00.000Z')), //"YY/M/D"#Year-Month-Day with no leading zeros
+    assertDC(' 2/24/2009', /*--*/ new Date('2009-02-24T00:00:00.000Z')) //"bM/bD/YY" #Month-Day-Year with spaces instead of leading zeros
     assertDC('25Feb2009', /*-0-*/ new Date('2009-02-25T00:00:00.000Z')) // "DDMonYY" #Day-Month abbreviation-Year with leading zeros
 
-    assertDC(
-      '2009-02-26T00:00:00.000Z',
-      /*--*/ new Date('2009-02-26T00:00:00.000Z')
+    assertDC('2009-02-26T00:00:00.000Z', /*--*/ new Date('2009-02-26T00:00:00.000Z')
     )
     assertDC('02/27/2009', new Date('2009-02-27')) //"MM/DD/YY" #Month-Day-Year with leading zeros
     assertDC(' 2/8/2009', /*--*/ new Date('2009-02-08T00:00:00.000Z')) //"bM/bD/YY" #Month-Day-Year with spaces instead of leading zeros
-
     assertDC(' 8/2/2009', /*--*/ new Date('2009-08-02T00:00:00.000Z')) //"bM/bD/YY" #Month-Day-Year with spaces instead of leading zeros
   })
 
@@ -75,25 +64,3 @@ describe('Cast Function tests ->', () => {
   })
 })
 
-/*
-  test('DateField syntax play', () => {
-
-      //what do we want options on DateField to look like
-
-    DateField({egress:"YY/MM/DD"})
-
-    // known strings?
-    DateField({egressShorthand:"iso"})
-    DateField({egress:"iso-with-tz"})
-
-    //what about parsing options
-    DateField({egressShorthand:"iso"})
-    DateField({egress:"iso-with-tz"})
-
-    // what about a strict option
-    DateField({parseOptions: {strict:true}})
-    DateField({parseOptions: {parseString: "YY/MM/DD"}}) // and reject other formats?
-    
-    expect(1).toBe(1)
-  })
-  */
