@@ -65,7 +65,14 @@ describe('Cast Function tests ->', () => {
 
 
     assertDC('03/3/2009', /*---*/ new Date('2009-03-03T00:00:00.000Z')) //"D/M/YY"#Day-Month-Year with no leading zeros
-  })
+
+
+    assertDC('Nov 28, 2015, 7:41 AM', /*---*/ new Date('2015-11-28T07:41:00.000Z'))  
+    assertDC('2015-11-26T00:00:00000Z', /*---*/ new Date('2015-11-26T00:00:00.000Z'))  
+    assertDC('Fri, 27 November 2015 7:41am', /*---*/ new Date('2015-11-27T07:41:00.000Z'))  
+    // this probably shouldn't pass November 27th 2015 was a Friday
+    assertDC('Sun, 27 November 2015 7:41am', /*---*/ new Date('2015-11-27T07:41:00.000Z'))  
+})
 
   test('date time  functions', () => {
     assertDC('02/17/2009 11:44:55', /*--*/ new Date('2009-02-17T11:44:55.000Z')) //"MM/DD/YY" #Month-Day-Year with leading zeros
