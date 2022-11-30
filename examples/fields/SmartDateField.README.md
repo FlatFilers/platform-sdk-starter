@@ -25,9 +25,20 @@ Please report bugs where this behavior isn't the case.
 
 ## Installing SmartDateField in an existing Faltfile project
 
+`SmartDateField` is currently in public beta.  This exact code will work currently and against future versions of Flatfile... but we might update the behavior of the `SmartDateField` that is distributed going forward.  This lets us get feedback from users quickly, without locking us into supporting temporary design decisions.
+
+First copy the whole of [SmartDateField.ts](./SmartDateField.ts) into your repo.
+
+Then:
+
+
 You must edit the `package.json` at the project root and 
-change the line for `@flatfile/configure`
+change the line for
+
+ `@flatfile/configure`
 to 
+
+
 `"@flatfile/configure": "^0.4.8",`
 
 additionally you must add the following dependencies:
