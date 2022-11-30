@@ -2,7 +2,7 @@
 
 ## Why
 
-The `SmartDateField` lets you worry about operations on `Date`s as objects, without worrying about parsing dates, or formatting dates.  Currently the `SmartDateField` can parse 9 date types without any format strings.  This lets you concentrate on business logic, without worrying about incoming date formats.  This let's you confidently perform arithmetic and comparisons in `compute`, `recordCompute`, `batchRecordsCompute`, and `validate` on `Date`s.  `SmartDateField` has an `fString` argument that controls how the date is serialized after `validate` is finished.  Flatfile users no longer have to convert in and out of dates to maintain formatting.
+The `SmartDateField` lets you worry about operations on `Date`s as objects, without worrying about parsing dates, or formatting dates.  Currently the `SmartDateField` can parse [9 date types](./DateField.spec.ts#L43-L60) without any format strings.  This lets you concentrate on business logic, without worrying about incoming date formats.  This let's you confidently perform arithmetic and comparisons in `compute`, `recordCompute`, `batchRecordsCompute`, and `validate` on `Date`s.  `SmartDateField` has an `fString` argument that controls how the date is serialized after `validate` is finished.  Flatfile users no longer have to convert in and out of dates to maintain formatting.
 
 ## What
 
@@ -23,7 +23,7 @@ Dates that can't be explicitly parsed will throw an error and remain as the orig
 
 Please report bugs where this behavior isn't the case.
 
-## Installing SmartDateField in an existing Faltfile project
+## Installing SmartDateField in an existing Flatfile project
 
 `SmartDateField` is currently in public beta.  This exact code will work currently and against future versions of Flatfile... but we might update the behavior of the `SmartDateField` that is distributed going forward.  This lets us get feedback from users quickly, without locking us into supporting temporary design decisions.
 
@@ -56,6 +56,13 @@ then run `npm install`
 
 Reference the [package.json](../../package.json) include on this branch (soon to be main).
 
+## Using `fString`
 
+You can control the serialization format of `SmartDateField` with the `fString` option.
 
+```
+    before: SmartDateField({ required: true, fString: 'yyyy-MM-dd' }),
+```
+
+`fString` is a format string adhering to [Unicode Technical Standard #35](https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table).  You can read more in the [Date-fns docs](https://date-fns.org/v2.29.3/docs/format).  At some future point we might add support for [python/pandas format strings](https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior). 
 
