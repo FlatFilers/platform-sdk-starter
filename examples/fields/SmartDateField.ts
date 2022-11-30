@@ -1,5 +1,5 @@
 import * as chrono from 'chrono-node'
-import { utcToZonedTime, format, formatInTimeZone } from 'date-fns-tz'
+import { utcToZonedTime, format } from 'date-fns-tz'
 import {
   Field,
   GenericFieldOptions,
