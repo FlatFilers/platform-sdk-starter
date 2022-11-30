@@ -27,7 +27,9 @@ Please report bugs where this behavior isn't the case.
 
 `SmartDateField` is currently in public beta.  This exact code will work currently and against future versions of Flatfile... but we might update the behavior of the `SmartDateField` that is distributed going forward.  This lets us get feedback from users quickly, without locking us into supporting temporary design decisions.
 
-First copy the whole of [SmartDateField.ts](./SmartDateField.ts) into your repo.
+First copy the whole of [SmartDateField.ts](./SmartDateField.ts) into your repo at `src/SmartDateField.ts`  then in `src/index.ts` you can import `SmartDateField` by adding the line
+
+`import { SmartDateField } from './SmartDateField'`
 
 Then:
 
