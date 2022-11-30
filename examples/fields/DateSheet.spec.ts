@@ -109,6 +109,14 @@ describe('Dumb Date Comp Sheet ->', () => {
   })
 })
 
+
+// working dates
+/*
+    ["17 Feb, 2009",],  // "DD Mon, YYYY"  #Day with leading zeros, Month abbreviation, Year
+    [ "Feb 17, 2009", ], // "Mon DD, YYYY" #Month abbreviation, Day with leading zeros, Year
+    ["Feb172009", ], // "MonDDYY" #Month abbreviation-Day-Year with leading zeros
+*/
+
 describe('Extra test ->', () => { 
   const SmartDateSheet = new Sheet(
     'SmartDateSheet',
@@ -138,29 +146,18 @@ describe('Extra test ->', () => {
     ["2009Feb17", noParse], // "YYMonDD" #Year-Month abbreviation-Day with leading zeros
     ["48/2009", noParse],   // "day/YY"  #Day of year (counting consecutively from January 1)-Year 
     ["2009/48", noParse],  // "YY/day" #Year-Day of Year (counting consecutively from January 1—often called the Julian date format)
-
-
-    //["17 Feb, 2009", dErr],  // "DD Mon, YYYY"  #Day with leading zeros, Month abbreviation, Year
-    //[ "Feb 17, 2009", dErr], // "Mon DD, YYYY" #Month abbreviation, Day with leading zeros, Year
-    // ["Feb172009", dErr], // "MonDDYY" #Month abbreviation-Day-Year with leading zeros
-
   ], (combinedArg ) => {
     const [d, func] = combinedArg
     //@ts-ignore
     //console.log(d, func(d))
     //@ts-ignore
     return [d, func(d)]})
-  
 
-  console.log(failingDates)
   test.each(failingDates)('date comparison', async (d, err ) => { 
-    //const [d, err] = combined
     const row = { d }
     const messageRes = await testSheet.testMessage(row)
     const results = await testSheet.testRecord(row)
     expect(messageRes[0]).toMatchObject({message:err})
-    //expect(matchSingleMessage(messageRes, 'd', err)).toBeTruthy()
-
   })
 
 })
