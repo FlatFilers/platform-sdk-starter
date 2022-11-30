@@ -108,3 +108,14 @@ describe('Dumb Date Comp Sheet ->', () => {
     expect(results['after']).toBe(row['aF'])
   })
 })
+
+describe('Extra test ->', () => { 
+  test('date comparison', async () => { 
+    const testSheet = new SheetTester(SmartDateCompBook, 'DateSheet')
+    const row = { expResult: "No Error", before: "25-Feb-19", /*--*/ after: "" }
+    const messageRes = await testSheet.testMessage(row)
+    console.log(messageRes)
+    const results = await testSheet.testRecord(row)
+    expect(results['before']).toBe("Arseniy")
+  })
+  })
