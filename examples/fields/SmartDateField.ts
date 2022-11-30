@@ -69,6 +69,12 @@ const ChronoStringDateCast = (raw: string) => {
   const hourCertain = firstResult.start.isCertain('hour')
   const tzHours = d.getTimezoneOffset() / 60
 
+  const yearCertain = firstResult.start.isCertain('year')
+  if (!yearCertain) {
+    return null
+  }
+
+  //console.log(firstResult)
   // we want all dates to end up in the UTC timezone, and when we
   // don't have an exact time, default to 00:00:00
   if (hourCertain === false && tzCertain === false) {

@@ -62,5 +62,11 @@ describe('Cast Function tests ->', () => {
   test('date time  functions', () => {
     assertDC('02/17/2009 11:44:55', /*--*/ new Date('2009-02-17T11:44:55.000Z')) //"MM/DD/YY" #Month-Day-Year with leading zeros
   })
+
+
+  test('expected parsing errors', ()=> {
+    assertDC('25-Feb-19', /*--*/ null) 
+  })
+  
 })
 
