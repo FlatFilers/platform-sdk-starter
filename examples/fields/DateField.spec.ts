@@ -42,6 +42,14 @@ describe('Cast Function tests ->', () => {
 
   test('pandas date functions', () => {
     // doublecheck that pandas does the exact same thing
+
+
+    assertDC("Feb072009", /*--*/  new Date('2009-02-07T00:00:00.000Z')) // "MonDDYY" #Month abbreviation-Day-Year with leading zeros
+    assertDC("Feb 08, 2009", /**/ new Date('2009-02-08T00:00:00.000Z')) // "Mon DD, YYYY" #Month abbreviation, Day with leading zeros, Year
+    assertDC("09 Feb, 2009",      new Date('2009-02-09T00:00:00.000Z'))  // "DD Mon, YYYY"  #Day with leading zeros, Month abbreviation, Year
+    assertDC("Feb142009", /*--*/  new Date('2009-02-14T00:00:00.000Z')) // "MonDDYY" #Month abbreviation-Day-Year with leading zeros
+    assertDC("Feb 15, 2009", /**/ new Date('2009-02-15T00:00:00.000Z')) // "Mon DD, YYYY" #Month abbreviation, Day with leading zeros, Year
+    assertDC("16 Feb, 2009", /**/ new Date('2009-02-16T00:00:00.000Z'))  // "DD Mon, YYYY"  #Day with leading zeros, Month abbreviation, Year
     assertDC('02/17/2009', /*--*/ new Date('2009-02-17T00:00:00.000Z')) //"MM/DD/YY" #Month-Day-Year with leading zeros
     assertDC('18/02/2009', /*--*/ new Date('2009-02-18T00:00:00.000Z')) //"DD/MM/YY" #Day-Month-Year with leading zeros (
     assertDC('2009/02/19', /*--*/ new Date('2009-02-19T00:00:00.000Z')) //"YY/MM/DD" #Year-Month-Day with leading zeros
@@ -52,12 +60,16 @@ describe('Cast Function tests ->', () => {
     assertDC(' 2/24/2009', /*--*/ new Date('2009-02-24T00:00:00.000Z')) //"bM/bD/YY" #Month-Day-Year with spaces instead of leading zeros
     assertDC('25Feb2009', /*-0-*/ new Date('2009-02-25T00:00:00.000Z')) // "DDMonYY" #Day-Month abbreviation-Year with leading zeros
 
+
+
     assertDC('2009-02-26T00:00:00.000Z', /*--*/ new Date('2009-02-26T00:00:00.000Z')
     )
     assertDC('02/27/2009', new Date('2009-02-27')) //"MM/DD/YY" #Month-Day-Year with leading zeros
     assertDC(' 2/8/2009', /*--*/ new Date('2009-02-08T00:00:00.000Z')) //"bM/bD/YY" #Month-Day-Year with spaces instead of leading zeros
     assertDC(' 8/2/2009', /*--*/ new Date('2009-08-02T00:00:00.000Z')) //"bM/bD/YY" #Month-Day-Year with spaces instead of leading zeros
   })
+
+
 
   test('date time  functions', () => {
     assertDC('02/17/2009 11:44:55', /*--*/ new Date('2009-02-17T11:44:55.000Z')) //"MM/DD/YY" #Month-Day-Year with leading zeros
