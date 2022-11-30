@@ -110,12 +110,20 @@ describe('Dumb Date Comp Sheet ->', () => {
 })
 
 describe('Extra test ->', () => { 
+  const SmartDateSheet = new Sheet(
+    'SmartDateSheet',
+    {
+      d: SmartDateField({ required: false, fString: 'yyyy-MM-dd' }),
+    },
+    {}
+)
+  const SmartDateBook = new Workbook({ name: 'DateBook', namespace: 'test', sheets: { SmartDateSheet } })
   test('date comparison', async () => { 
-    const testSheet = new SheetTester(SmartDateCompBook, 'DateSheet')
-    const row = { expResult: "No Error", before: "25-Feb-19", /*--*/ after: "" }
+    const testSheet = new SheetTester(SmartDateBook, 'SmartDateSheet')
+    const row = { d: "25-Feb-19" }
     const messageRes = await testSheet.testMessage(row)
     console.log(messageRes)
     const results = await testSheet.testRecord(row)
-    expect(results['before']).toBe("Arseniy")
+    expect(results['d']).toBe("Arseniy")
   })
   })
