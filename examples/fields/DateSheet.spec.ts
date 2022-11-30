@@ -118,12 +118,48 @@ describe('Extra test ->', () => {
     {}
 )
   const SmartDateBook = new Workbook({ name: 'DateBook', namespace: 'test', sheets: { SmartDateSheet } })
-  test('date comparison', async () => { 
-    const testSheet = new SheetTester(SmartDateBook, 'SmartDateSheet')
-    const row = { d: "25-Feb-19" }
+  
+  const dErr = (d:string) => `Error: couldn't parse ${d} with a certain date.  Please use an unambiguous date format`
+  const dayErr = (d:string) => `Error: couldn't parse ${d} with a certain day.  Please use an unambiguous date format`
+  const noParse = (d:string) => `Error: '${d}' returned no parse results`
+
+  const testSheet = new SheetTester(SmartDateBook, 'SmartDateSheet')    
+  const failingDates = _.map([
+    ["25-Feb-19", dErr],
+    ["17/ 2/2009", dayErr], //"bD/bM/YY" #Day-Month-Year with spaces instead of leading zeros
+    ["2009/ 2/17", dErr], //"YY/bM/bD" #Year-Month-Day with spaces instead of leading zeros
+    ["20090217", noParse],  //"YYMMDD",  #Year-Month-Day with no separators
+    
+    ["2009, Feb 17", dErr], // "YYYYY-Mon-DD"  #Year, Month abbreviation, Day with leading zeros
+    ["2009, Feb 17", dErr], // "YYYY, Mon DD"  #Year, Month abbreviation, Day with leading zeros
+
+    ["02172009", noParse], // "MMDDYY"  #Month-Day-Year with no separators
+    ["17022009", noParse],  // "DDMMYY" #Day-Month-Year with no separators
+    ["2009Feb17", noParse], // "YYMonDD" #Year-Month abbreviation-Day with leading zeros
+    ["48/2009", noParse],   // "day/YY"  #Day of year (counting consecutively from January 1)-Year 
+    ["2009/48", noParse],  // "YY/day" #Year-Day of Year (counting consecutively from January 1—often called the Julian date format)
+
+
+    //["17 Feb, 2009", dErr],  // "DD Mon, YYYY"  #Day with leading zeros, Month abbreviation, Year
+    //[ "Feb 17, 2009", dErr], // "Mon DD, YYYY" #Month abbreviation, Day with leading zeros, Year
+    // ["Feb172009", dErr], // "MonDDYY" #Month abbreviation-Day-Year with leading zeros
+
+  ], (combinedArg ) => {
+    const [d, func] = combinedArg
+    //@ts-ignore
+    //console.log(d, func(d))
+    //@ts-ignore
+    return [d, func(d)]})
+  
+
+  console.log(failingDates)
+  test.each(failingDates)('date comparison', async (d, err ) => { 
+    //const [d, err] = combined
+    const row = { d }
     const messageRes = await testSheet.testMessage(row)
     const results = await testSheet.testRecord(row)
-    expect(matchSingleMessage(messageRes, 'd', "Error: couldn't parse 25-Feb-19 with a certain date.  Please use an unambiguous date format")).toBeTruthy()
+    expect(messageRes[0]).toMatchObject({message:err})
+    //expect(matchSingleMessage(messageRes, 'd', err)).toBeTruthy()
 
   })
 
