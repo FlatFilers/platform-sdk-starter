@@ -12,6 +12,43 @@ import {
   Do
 } from '../../src/expression-lang/EXPR'
 
+const tgrps = [
+  { name: 'Odin_', age: 3., job: 'kid', weight: 30., eye_color: 'blue_', fav_group: 'Raffi', age_sum: '0' }, 
+  { name: 'Sarah', age: 8., job: 'kid', weight: 60., eye_color: 'green', fav_group: 'Wiggles', age_sum: '0' },
+  { name: 'Paddy', age: 40, job: 'eng', weight: 190, eye_color: 'green', fav_group: 'Wiggles', age_sum: '0' },
+  { name: 'Kay__', age: 77, job: 'ret', weight: 160, eye_color: 'green', fav_group: 'Beach Boys', age_sum: '0' },
+  { name: 'Cliff', age: 86, job: 'ret', weight: 160, eye_color: 'gray_', fav_group: 'The Stones', age_sum: '0' }, 
+  { name: 'Franz', age: 72, job: 'ret', weight: 170, eye_color: 'blue_', fav_group: 'Beach Boys', age_sum: '0' }, 
+]
+
+
+const UniquePeopleSheet = new Sheet('People', 
+    {
+      job: TextField(), 
+      age: NumberField(),
+      age_sum: GroupByField(
+        ['job'],
+	GroupConstraintItem(
+	  ['nonUnique', 'fav_group'], Error('fav_group must be unique'),
+	  'fav_group', Group()))
+})
+const UniquePeopleBook = new Workbook({name: 't', namespace: 't', sheets: {UniquePeopleSheet}})
+
+describe('SampleGroupBy groupConstraint 2 ->', () => {
+
+      
+  const testSheet = new SheetTester(UniquePeopleBook, 'UniquePeopleSheet')
+  test('GroupByField works properly with sum - multiple rows', async () => {
+    const res = await testSheet.testMessages(tgrps)
+    console.log(res)
+    expect(res[3][0]).toMatchObject({
+        field: 'fav_group',
+        message: 'fav_group must be unique',
+    })
+    expect(res[4]).toStrictEqual([])
+  })
+})
+
 
 const CountSheet = new Sheet(
   'CountSheet',
