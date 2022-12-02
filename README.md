@@ -417,8 +417,24 @@ When releasing pieces to the SDK our thought process is guided by the following 
   - No. That wouldn't result in the proper user experience because the schema is for every user.
   - To customize behavior per user requires writing custom react editors for fields that specialize based on the logged-in user, then tying these editors or other custom functionality in with SchemaIL. We haven't written these custom fields, nor tied them in with SchemaIL.
 - **Can the SDK be used to generate dynamic schemas tied to my ORM or database definition?**
+
   - Currently this may be possible, but it isn't recommended.
   - Eventually this will be possible by writing tools that translate from ORM or database DDL to schemaIL. We are currently solidifying the core functionality of the platform and this will remain out of scope for the foreseeable future.
+
+  **CF Notes**
+
+**Are there character limits for error messages?**
+
+256-
+512-
+1024-
+
+backend message -
+frontend message -
+
+**What is the data hook lifecycle?**
+
+Example: Addressing messaging around fields set via data hook (ex: we have a data hook that populates an empty field. Upon landing in review, that field is populated with a value and a message. If another field on that record is populated, when data hooks are run again the field remains populated but without an error message letting the user know the field had been initially transformed.
 
 ## Glossary
 
@@ -686,9 +702,3 @@ const expectedOutputRows = [
 const results = await testSheet.testRecords(inputRows)
 expect(results).toMatchObject(expectedOutputRows)
 ```
-
-
-**CF Notes** - based on 11/30 convo do we want to include specifics on:
-
--  Are there character limits for error messages?
--  Addressing messaging around fields set via data hook (ex: we have a data hook that populates an empty field. Upon landing in review, that field is populated with a value and a message.  If another field on that record is populated, when data hooks are run again the field remains populated but without an error message letting the user know the field had been initially transformed.
