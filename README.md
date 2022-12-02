@@ -423,15 +423,6 @@ When releasing pieces to the SDK our thought process is guided by the following 
 
   **CF Notes**
 
-**Are there character limits for error messages?**
-
-256-
-512-
-1024-
-
-backend message -
-frontend message -
-
 **What is the data hook lifecycle?**
 
 Example: Addressing messaging around fields set via data hook (ex: we have a data hook that populates an empty field. Upon landing in review, that field is populated with a value and a message. If another field on that record is populated, when data hooks are run again the field remains populated but without an error message letting the user know the field had been initially transformed.
