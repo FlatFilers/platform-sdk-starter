@@ -198,6 +198,16 @@ department: OptionField({
 
 Here we provide a pre-defined list of values that this field can have. We have also included the `matchStrategy` flag, which determines whether Flatfile should only accept exact matches when automatically matching your OptionField options, or whether Flatfile should also use [historical matches and fuzzy matches](https://support.flatfile.com/hc/en-us/articles/8579991586324-Matching) while automatically matching your options. If this is not set, your OptionField will use historical and fuzzy matches to automatically match options for this field.
 
+If a `default` value is provided for an `OptionField` we check that is a value provided in `options`.
+
+If you want to have an option value of the empty string `''`, you must set that as a default like this.
+```
+    emptyExample : OptionField({
+      options:{eng:"Eng_Display_Label4", hr:"HR", "":"empty"},
+      default: ''
+    })
+```
+
 <!-- TODO what does `label` do? -->
 
 <!-- TODO Boolean Field? -->
