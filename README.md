@@ -400,30 +400,6 @@ You can't check for `null` or `undefined` in a validate function, because valida
 
 When would you want to check for `null` or `undefined` in a validate function?  The only place the built in `required` behavior doesn't work is when a `recordCompute` or `batchRecordsCompute` function was expected to provide a value for a field, and failed.  In that case, you are already writing a `recordCompute` or `batchRecordsCompute` function, check for the `null` there.
 
-We might add a `totalRequired` flag that checks that a field was filled out after `recordsCompute` and `batchRecordsCompute`.
-
-- **How do I set a computed default value for a field?
-`default` is a value, not a function.  Sometimes you want to compute a value when one isn't provided in the uploaded sheet.  Any function that you can run would depend on outside state and needs to be carefully considered.  Since field level hooks can't make async calls, the number of defaults that can be added is limited.
-
-Nonetheless here is the recommended way to add a computed default to a field.
-
-```
-export const nullCastCompose = (baseCastFunc:any, defaultFunc:any) => {
-	const retFunc = (raw:string|null|undefined) => {
-		const firstResult = baseCastFunc(raw)
-		if (firstResult === null) {
-			return defaultFunc(raw)
-		} else {
-			return firstResult
-		}
-	}
-}
-// use this null Compose like this
-new Sheet('employee', {
-	startDate: DateField(cast: nullCastCompose(DateCast, (raw:any) => (new Date())))})
-```
-
-Adding a default from an async call is not supported at the field level.  BatchRecordsCompute must be used.
 
 - **How can check the type and size of an url and return an error if the linked file is > 5mb or not an image?**
   - Currently this is best accomplished with a text field named `s3_url` that will match to the URL provided in the upload, and a row `compute` that stores the size of the download to `s3_url_size`, `s3_url_size` should have an `validate` of less than 5mb.
