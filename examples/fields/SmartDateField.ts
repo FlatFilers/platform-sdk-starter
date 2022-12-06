@@ -71,7 +71,7 @@ const ChronoStringDateCast = (raw: string) => {
   const tzHours = d.getTimezoneOffset() / 60
 
   if (!resStart.isCertain('year')) {
-    throw new Error(`couldn't parse ${raw} with a certain date.  Please use an unambiguous date format`)
+    throw new Error(`couldn't parse ${raw} with a certain year.  Please use an unambiguous date format`)
   }
 
   if (!resStart.isCertain('month')) {
