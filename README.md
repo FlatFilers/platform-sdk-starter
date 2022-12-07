@@ -405,6 +405,10 @@ When releasing pieces to the SDK our thought process is guided by the following 
 
 - **How can I lowercase an email field anytime input is provided by a file or manual entry?**
   - This is a good use for field `compute`. This function will be idempotent (running it over and over on the same input produces the same output and state)
+- **Why can't I check for nulls in a `validate` function?**
+  - You can't check for `null` or `undefined` in a validate function, because validate functions are never called with a value that isn't of the field's type.  The way to check for `null` is to set `required:true` on the field, this works for 95% of field use cases, this will flag an error at the review stage for fields provided with a `null` value.  Having this strict typing makes `validate` functions less error prone and less repetitious.  If we allowed `null` or `undefined` to propagate to `validate`,  every user provided function would have to start with checking for `null` or `undefined`, users who didn't do this would either see a typing error, or worse suffer unreliable code that was deployed.
+  - **What do I do if I want to check for null or undefined in a validate function?**
+    - The only place the built in `required` behavior doesn't work is when a `recordCompute` or `batchRecordsCompute` function was expected to provide a value for a field, and failed.  In that case, you are already writing a `recordCompute` or `batchRecordsCompute` function, check for the `null` there.
 - **How can check the type and size of an url and return an error if the linked file is > 5mb or not an image?**
   - Currently this is best accomplished with a text field named `s3_url` that will match to the URL provided in the upload, and a row `compute` that stores the size of the download to `s3_url_size`, `s3_url_size` should have an `validate` of less than 5mb.
   - In the near future this will be handled with a computed field that takes `s3_url` as an input and outputs `s3_url_size`.
