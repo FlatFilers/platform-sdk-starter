@@ -194,18 +194,7 @@ const zipCodeZeroPadding = (record: FlatfileRecord): FlatfileRecord => {
 const pipe = (...fns: Array<any>) => fns.reduce((acc, fn) => fn(acc));
 
 /**
- * Apply reduction to operations on a FlatfileRecord.
- *
- * @example
- * fold(fn1, fn2, fn3, ...)(record)
- */
-export const fold =
-    (...fns: Array<(x: FlatfileRecord) => void>) =>
-        (x: FlatfileRecord) =>
-            fns.map((f) => f(x));
-
-/**
- * Converts the normal `String.prototype.toLowerCase()` to a normal fn so it can be used with `pipe`.
+ * Converts `String.prototype.toLowerCase()` to a normal fn so it can be used with `pipe`.
  *
  * @param {string} value - value to apply operation.
  *
@@ -215,7 +204,7 @@ export const fold =
 const toLowerCase = (value: string): string => value.toLowerCase();
 
 /**
- * Converts the normal `String.prototype.trim()` to a normal fn so it can be used with `pipe`.
+ * Converts `String.prototype.trim()` to a normal fn so it can be used with `pipe`.
  *
  * @param {string} value - value to apply operation.
  *
@@ -233,6 +222,18 @@ const trim = (value: string): string => value.trim();
 const runValidations = (...fns: Array<any>): Array<FF.Message> => {
     return fns.reduce((acc, fn) => [...acc, fn()], []).filter(isNotNil);
 };
+
+/**
+ * Allows us to sequence multiple RecordHooks _synchronously_ on a `FlatfileRecord`.
+ *
+ * @example
+ * runRecordHooks(fn1, fn2, fn3, ...)(record)
+ */
+export const runRecordHooks =
+    (...fns: Array<(x: FlatfileRecord) => void>) =>
+        (x: FlatfileRecord) =>
+            fns.map((f) => f(x));
+
 
 /*
  * Main
@@ -301,9 +302,8 @@ const LeadsSheet = new FF.Sheet(
         allowCustomFields: false,
         readOnly: true,
         recordCompute: (record, _session, _logger) => {
-            return fold(emailOrPhoneRequired, zipCodeZeroPadding)(record);
+            return runRecordHooks(emailOrPhoneRequired, zipCodeZeroPadding)(record);
         },
-        batchRecordsCompute: async (_payload, _session, _logger) => { },
     },
 );
 
