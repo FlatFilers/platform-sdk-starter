@@ -278,7 +278,7 @@ const runValidations = (...fns: Array<any>): Array<FF.Message> => {
 };
 
 /**
- * Apply reduction to operations on a FlatfileRecord.
+ * Allows us to sequence multiple RecordHooks _synchronously_ on a `FlatfileRecord`.
  *
  * @example
  * runRecordHooks(fn1, fn2, fn3, ...)(record)
