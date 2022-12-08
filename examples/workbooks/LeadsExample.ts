@@ -309,7 +309,6 @@ const LeadsSheet = new FF.Sheet(
 
 const LeadsPortal = new FF.Portal({
     name: "Leads SDK example",
-    helpContent: "",
     sheet: "LeadsSheet",
 });
 
