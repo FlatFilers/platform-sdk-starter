@@ -29,16 +29,16 @@ const MySheet = new Sheet('MySheet', {
  * Define your Portals here, or import them:
  * import { YourPortal } from './path-to-your-portal/your-portal.ts'
  */
-const MyPortal = new Portal({
-  name: 'MyPortal',
-  sheet: 'MySheet',
-})
+// const MyPortal = new Portal({
+//   name: 'MyPortal',
+//   sheet: 'MySheet',
+// })
 
 // Workbook  - Update to reference your Workbook with Sheet(s) and Portal(s)
 export default new Workbook({
   name: 'MyWorkbook',
   namespace: 'my-workbook',
-  portals: [MyPortal],
+  // portals: [MyPortal],
   sheets: {
     MySheet,
   },
