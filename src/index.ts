@@ -5,8 +5,9 @@ import {
   DateField,
   NumberField,
   OptionField,
-  Portal,
+  // Portal,
   Sheet,
+  SpaceConfig,
   TextField,
   Workbook,
 } from '@flatfile/configure'
@@ -42,11 +43,26 @@ const BasicSheet = new Sheet(
 //   sheet: 'BasicSheet'
 // })
 
-export default new Workbook({
-  name: 'BasicSheetWorkbook',
-  namespace: 'basic',
-  sheets: {
-    BasicSheet,
-  },
-  // portals: [BasicSheetPortal],
-})
+export default new SpaceConfig({
+  name: 'Basic2',
+  workbookConfigs: {
+    'basic2':new Workbook({
+      name: 'BasicSheetWorkbook2',
+      namespace: 'basic2',
+      sheets: {
+        BasicSheet,
+      },
+      // portals: [BasicSheetPortal],
+    })
+  }
+}
+)
+
+// export default new Workbook({
+//   name: 'BasicSheetWorkbook',
+//   namespace: 'basic',
+//   sheets: {
+//     BasicSheet,
+//   },
+//   // portals: [BasicSheetPortal],
+// })
