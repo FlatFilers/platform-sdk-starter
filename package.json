@@ -27,7 +27,7 @@
     "devDependencies": {
         "@flatfile/configure": "^0.4.10",
         "@flatfile/hooks": "^1.2.1",
-        "@flatfile/schema":"^0.2.4",
+        "@flatfile/schema": "^0.2.4",
         "@types/jest": "^28.1.4",
         "@types/lodash": "^4.14.186",
         "@typescript-eslint/parser": "^5.31.0",
@@ -39,5 +39,8 @@
         "node-fetch": "^3.2.10",
         "prettier": "^2.7.1",
         "ts-jest": "^28.0.5"
+    },
+    "dependencies": {
+        "rollup": "^3.7.3"
     }
 }
