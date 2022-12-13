@@ -1,0 +1,9 @@
+{
+    "endpoint": "https://api.x.flatfile.com/v1",
+    "account": "us_acc_Z7JDFtmy",
+    "env": "dev_env_YmisURzx",
+    "version": "10",
+    "team": "1",
+    "clientId": "37a6ee3f-158a-4bd0-b841-6067d6a69ecd",
+    "secret": "1a621fe6-16be-4eda-af4c-2d684514b292"
+}

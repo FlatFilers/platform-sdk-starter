@@ -25,9 +25,10 @@
         "test": "jest --runInBand --detectOpenHandles --forceExit --passWithNoTests"
     },
     "devDependencies": {
-        "flatfile": "^3.1.0",
-        "@flatfile/configure": "^0.4.7",
-        "@flatfile/hooks": "^1.2.0",
+        "flatfile": "^3.1.8",
+        "@flatfile/configure": "^0.4.10",
+        "@flatfile/hooks": "^1.2.1",
+        "@flatfile/schema": "^0.2.4",
         "node-fetch": "^3.2.10",
         "@types/jest": "^28.1.4",
         "@types/lodash": "^4.14.186",
