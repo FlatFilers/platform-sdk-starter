@@ -59,7 +59,6 @@ const Employees = new Sheet(
   },
   {
     allowCustomFields: true,
-    readOnly: true,
     recordCompute: (record) => {
       const fullName = `{record.get('firstName')} {record.get('lastName')}`
       record.set('fullName', fullName)
@@ -254,7 +253,6 @@ const Employees = new Sheet(
   ...
   {
     allowCustomFields: true,
-    readOnly: true,
     recordCompute: (record) => {
       const fullName = `{record.get('firstName')} {record.get('lastName')}`
       record.set('fullName', fullName)
@@ -285,7 +283,6 @@ First we specify two options on the sheet: `allowCustomFields` and `readOnly`.
 
 `allowCustomFields`: explain what this does and what its default value is
 
-`readOnly`: explain what this does and what its default value is
 
 -->
 
@@ -615,7 +612,6 @@ This field will not be exported.
 ```ts
 export interface SheetOptions<FC> {
   allowCustomFields: boolean
-  readOnly: boolean
   recordCompute: (record:FlatfileRecord<any>, logger?:any): void
   batchRecordsCompute: (records: FlatfileRecords<any>) => Promise<void>
 
