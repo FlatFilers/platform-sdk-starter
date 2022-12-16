@@ -93,7 +93,6 @@ const Employees = new Sheet(
   },
   {
     allowCustomFields: true,
-    readOnly: true,
     recordCompute: (record) => {
       const fullName = `${record.get('firstName')} ${record.get('lastName')}`
       record.set('fullName', fullName)
