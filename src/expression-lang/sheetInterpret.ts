@@ -30,6 +30,19 @@ const match = (matchSpec: object, records: FlatfileRecord[]) => {
   )
 }
 
+const nonUnique = (column:string, records: FlatfileRecord[]) => {
+  const groups = _.groupBy(records, (rec) =>
+    rec.get(column))
+  //_.forEach(groups, (group: FlatfileRecord[], gbKey) => {
+  const groupSets = _.map(groups, (group: FlatfileRecord[]) => group)
+  const nonUniqueSets = _.filter(groupSets,
+	   (groupedBy:FlatfileRecord[]) => {
+	     if (groupedBy.length > 1) {
+	       return true}
+	     return false})
+  return _.flatten(nonUniqueSets)
+}
+
 
 
 
@@ -103,13 +116,14 @@ export const debug = (expr: NestedIns) => {
 const do_ = (...exprs: any) => exprs[exprs.length -1]
 
 //@ts-ignore
-const simpleInterpret = makeInterpreter({sumField, groupConstraintRow, error, match, 'do': do_})
+const simpleInterpret = makeInterpreter({sumField, groupConstraintRow, nonUnique, error, match, 'do': do_})
 
 export const sheetInterpret = makeInterpreter({
   error,
   match,
   groupByCompute,
   groupConstraintRow,
+  nonUnique,
   debug,
 })
 

@@ -29,7 +29,7 @@ const UniquePeopleSheet = new Sheet('People',
       age_sum: GroupByField(
         ['job'],
 	GroupConstraintItem(
-	  ['nonUnique', 'fav_group'], Error('fav_group must be unique'),
+	  ['nonUnique', 'fav_group', ['variable', 'group']], Error('fav_group must be unique'),
 	  'fav_group', Group()))
 })
 const UniquePeopleBook = new Workbook({name: 't', namespace: 't', sheets: {UniquePeopleSheet}})
