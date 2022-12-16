@@ -495,7 +495,6 @@ const ProductsSheet = new FF.Sheet(
     },
     {
         allowCustomFields: true,
-        readOnly: true,
         recordCompute: (record, _session, _logger) => {
             const defaultProductId = defaultUUID("product_id");
 

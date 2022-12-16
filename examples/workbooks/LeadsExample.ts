@@ -300,7 +300,6 @@ const LeadsSheet = new FF.Sheet(
     },
     {
         allowCustomFields: false,
-        readOnly: true,
         recordCompute: (record, _session, _logger) => {
             return runRecordHooks(emailOrPhoneRequired, zipCodeZeroPadding)(record);
         },
