@@ -57,27 +57,10 @@ new Sheet('Person', {
 ```
 
 Note that we passed in the `required:true` flag.
+## What happens when I have a default validate function, and the user passes in a validate function
+With out a custom written customizer argument to `makeField`, the passed in validate function would replace any other validate functions.
 
-## Extending extended fields
-
-You can also create a new field with this behavior built in
-
-```
-export const EduEmailField = makeField(EmailField(), {
-	validate: (val) =>  {
-		if(!val.endsWith(".edu")) {
-	      return [
-            new Message(
-              `'${val}' must end with a '.edu' domain`,
-              'warn',
-              'validate'
-            ),
-          ]
-		}
-	}
-})
-```
-
+If you want to build fields that merge `cast`, `compute`, and validate function check our advanced guide on extending fields.
 
 ## What if I want to add easily configurable related options
 
@@ -110,7 +93,6 @@ customizer: (
   ) => Field<T>
 ```
 
-At it's core, `makeField` and `makeFieldRequired` takes successive levels of options and applies them to create an instantiated field.  nb makeField does no intelligent merging of `cast`, `compute`, or `validate` functions, only assignment, but it give you all the lever to implement your own custom combination decision.  
 
 customizers allow you accept new option names.  The extra option names need to go into the type signature of `makeField` an `makeFieldRequired`, in this case `{uniqueAndRequired:boolean}`.  These extra args are then made available to the customizer function.
 
@@ -132,11 +114,4 @@ Object syntax
 
 
 We recommend using `makeFieldRequired` because the type signature is slightly simpler and easier for users of your field to understand.
-
-
-To write
-## Building cast functions with FallbackCast and ChainCast
-## Writing a customizer that succesively applies validation functions with mergeValidate
-## Help understanding the typing
-## philosophy of fields
 
