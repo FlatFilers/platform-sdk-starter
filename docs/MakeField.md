@@ -2,7 +2,7 @@
 
 Flatfile fields are built around composable extensibility with fine grained functions that are easily built upon
 
-`MakeField` lets you create first class `Field`s to build data import workflows custom suite to your needs.
+`makeField` lets you create first class `Field`s to build data import workflows custom suite to your needs.
 
 ## How do I package common defaults into a field.
 
@@ -31,7 +31,7 @@ new Sheet('Person', {
 If you find yourself using this field frequently you can create your own email Field.
 
 ```
-export const EmailField = MakeField(TextField, {
+export const EmailField = makeField(TextField(), {
 	validate: (val: string) => {
 		const emailRegex = /[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/
         if (!emailRegex.test(val)) {
@@ -58,38 +58,12 @@ new Sheet('Person', {
 
 Note that we passed in the `required:true` flag.
 
-## Adding validation methods ontop of one-another
-
-imagine you want to validate that an email ends with `.edu`, do you have to start from scratch? No. Here's what passing in an a validate option to email field would look like.
-
-```
-new Sheet('Person', {
-   email: EmailField({required:true,
-	validate: (val) =>  {
-		if(!val.endsWith(".edu")) {
-	      return [
-            new Message(
-              `'${val}' must end with a '.edu' domain`,
-              'warn',
-              'validate'
-            ),
-          ]
-		}
-	}
-   })
-})
-```
-
-Then both validations will be run, so the string "3627 Gentle Ln" would have the following warnings:
-"'3627 Gentle Ln' is not formatted like an email" and
-"'3627 Gentle Ln' must end with a .edu domain"
-
 ## Extending extended fields
 
 You can also create a new field with this behavior built in
 
 ```
-export const EduEmailField = MakeField(EmailField, {
+export const EduEmailField = makeField(EmailField(), {
 	validate: (val) =>  {
 		if(!val.endsWith(".edu")) {
 	      return [
@@ -104,160 +78,65 @@ export const EduEmailField = MakeField(EmailField, {
 })
 ```
 
-## What about extending `compute` hooks
-
-`Compute` hooks are functions that go from `T` to `T`. With `MakeField` extending `compute` hooks are applied successively.
-Some examples
-
-```
-const Add10Field = MakeField(NumberField({}), {compute:(v:number) => v + 10})
-Add10Field().verifyResult('5', 15)
-
-Add10Field({compute:(v:number) => v / 5}).verifyResult('5', 3) // 15 / 3
-
-const AlsoAdd200Field = MakeField(Add10Field, {compute:(v:number) => v + 200})
-AlsoAdd200Field({}).verifyResult('5', 215) //'5' => 15 => 215
-```
-
-## What if I want to extend a field that does a lot of things I want, but some things I don't
-
-What if you have a field that you like the compute hook, but not the validate hook., and you want to write a field with a simpler validate hook. In this case you must selectively pull in the hook you like and put it on top of a simpler base field
-
-```
-const WeirdValidateMathChainField = MakeField(AlsoAdd200Field, {
-	validate: (val) => {
-	  if (val % 2 === 0) {
-		  return [
-            new Message(
-              `'${val}' must be odd`
-              'warn',
-              'validate'
-            ),
-          ]
-	  }
-	},
-	compute: (v) => Math.pow(v, 2)
-	})
-//note that we are basing this on the much simpler NumberField
-const SelectivelyComposedField = MakeField(NumberField, {compute:WeirdValidateMathChainField.options.compute})
-```
-
-Whoa, what happened here, won't we just get a compute of `Math.pow(v, 2)`, no. You will get the fully constructed chain of computes that `WeirdValidateMathChainField` had.
 
 ## What if I want to add easily configurable related options
 
 ```js
-const UniqueAndRequiredField = MakeField(
-  TextField,
-  {},
-  {
-    customizer: (customizerOpts: { uniqueAndRequired: boolean }) => {
-      if (uniqueAndRequired) {
-        return { unique: true, required: true }
-      } else {
-        return {}
-      }
-    },
-    customizerDefaults: { uniqueAndRequired: false },
+
+const UniqueAndRequiredField = makeFieldRequired<string,{uniqueAndRequired:boolean}>(
+  TextField(),
+  {uniqueAndRequired:false},
+  (mergedOptions, passedOptions) => {
+  if (passedOptions.uniqueAndRequired) {
+    const consolidatedOptions = mergeFieldOptions(mergedOptions, { unique: true, required: true })
+    return new Field(consolidatedOptions)
+  } else {
+    return new Field(mergedOptions)
   }
-)
+})
+
 ```
+This lets us call our new `UniqueAndRequiredField` like this `UniqueAndRequiredField({uniqueAndRequired:true})` and have the other options set for us. 
 
-## What if I want to customize behavior of hooks
 
-You can add your own options that allow shorthand configuration of fields. Let's make a regex validator field
+To do this we are adding options to the fieldCreator and  using a `customizer` that interprets those options.  A customizer has the type signature of
 
 ```js
-const RegexCustomizerField = MakeField(
-  TextField,
-  {},
-  {
-    customizer: (customizerOpts: {
-      acceptRegexp: RegExp,
-      rejectString: string,
-    }) => {
-      const validateFunc = (val: string) => {
-        if (!acceptRegexp.test(val)) {
-          return [new Message(`'${val}' ${rejectString}`, 'warn', 'validate')]
-        }
-      }
-      return { validate: validateFunc }
-    },
-    //note, this default regexp will always return true
-    customizerDefaults: {
-      acceptRegexp: /.*/,
-      rejectString: "It' Saul Goodman",
-    },
-  }
-)
-
-const InstantiatedEmailField = RegexCustomizerField({
-  acceptRegexp: /[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/,
-  rejectString: 'is not formatted like an email',
-})
+customizer: (
+    mergedOptions: FieldOnlyOptions<T> & ExtraOptions,
+    extraUserOptions: Partial<FieldOnlyOptions<T>> & ExtraOptions,
+    baseField: FieldOnlyOptions<T>,
+    newDefaults: Partial<FieldOnlyOptions<T>> & ExtraOptions
+  ) => Field<T>
 ```
 
-## What about cast functions
+At it's core, `makeField` and `makeFieldRequired` takes successive levels of options and applies them to create an instantiated field.  nb makeField does no intelligent merging of `cast`, `compute`, or `validate` functions, only assignment, but it give you all the lever to implement your own custom combination decision.  
 
-Cast functions are tricky to write and require deliberate thought. cast functions have no default extension method and are only replaced in whole. Cast functions are particularly difficult to write because of the multitude of possible incoming types
+customizers allow you accept new option names.  The extra option names need to go into the type signature of `makeField` an `makeFieldRequired`, in this case `{uniqueAndRequired:boolean}`.  These extra args are then made available to the customizer function.
 
-There are two main composition methods `NullCastCompose` and `ValCastCompose`
+The job of the customizer function is to take all the available options and defaults then return a `Field` instance.  Customizer is passed 4 arguments
 
-`NullCastCompose` runs a second `cast` function, when the first one returned null. The second function is called with the same arguments as the incoming raw value. It gives you another bite at the apple
+`mergedOptions` - FieldOnlyOptions overwritten in the following order (last wins), BaseFields, NewDefaults, PassedOptions.
+`passedOptions` - What options did the user call this field with
+`baseField` - What options were on the original field?
+`newDefaults` - What options were added as defaults to this field.
 
-```
-const SimpleBooleanCast = (
-  raw: string | undefined | null | boolean
-): boolean | null => {
-  if (typeof raw === 'boolean') {
-    return raw
-  } else if (typeof raw === 'string') {
-	if (raw === 'true') {
-		return true
-	} else if (raw === 'false') {
-		return false
-	}
-  }
-  return null
-}
+## What's the difference between `makeField` and `makeFieldRequired`.
 
-const extraTaxBooleanCast = (raw: string | undefined | null | boolean) => {
-	if (raw === 'Non Taxable') {
-		return false
-	} else if (raw === "taxable') {
-		return true
-	}
-	return null
-}
+Both functions take largely the same arguments, `makeFieldRequirements` returns a fieldCreator that must be passed in the new options for the type, and the Field creator is only called via the object syntax, the label only shortcut isn't allowed.
 
-const TaxBooleanCast = NullCastCompose(SimpleBooleanCast, extraTaxBooleanCast)
-```
+Label shortcut:
+`TextField('label name')`
+Object syntax
+`TextField({required:true, label:'label name'})`
 
-`ValCastCompose` allows for additional refinement from a cast that returns a value. It only calls the second cast function when the first cast function returns a value
 
-```
-const stripCurrencyMarks = (val: string) => _.without(val, '$', ',', '€')
-const CurrencyCast = ValCastCompose(ValCastCompose(StringCast, stripCurrencyMarks), NumberCast)
-```
+We recommend using `makeFieldRequired` because the type signature is slightly simpler and easier for users of your field to understand.
 
-in the above code, we first make sure that we are getting a string without currency marks ValCastCompose(StringCast, stripCurrencyMarks), then send the result into NumberCast. If any function returns null, the whole cast function returns null
 
-## Docstrings
+To write
+## Building cast functions with FallbackCast and ChainCast
+## Writing a customizer that succesively applies validation functions with mergeValidate
+## Help understanding the typing
+## philosophy of fields
 
-We recommend writing extensive docstrings for your Fields like this:
-
-```
- /**
- * A function to join fields into one with a seperator (e.g: ["John", "Smith"] becomes "John Smith")
- * @constructor
- * @param {Array<string>} fieldsToJoin - an array of field values to join.
- * @param {string} separator - what value is used between joined string (e.g, ' ', '-', ',').
- * @return {string} result is a string value of the new field
- */
-
- /**
- * A field that strips common currency characters from incoming data and returns a number for future fields
- * @param {FiledArgs} All of the regular Field options
- */
-export const CurrencyField = MakeField(NumberField, {cast:CurrencyCast})
-```
