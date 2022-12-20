@@ -82,6 +82,9 @@ describe('Cast Function tests ->', () => {
   test('expected parsing errors', ()=> {
     assertThrow('25-Feb-19', "couldn't parse 25-Feb-19 with a certain year.  Please use an unambiguous date format")
   })
-  
+  test('extraParseString', () => {
+    const df = SmartDateField({extraParseString:"yyyyMMdd"})
+    expect(df.options.cast('20080302')).toStrictEqual(new Date('2008-03-02T00:00:00.000Z'))
+  })  
 })
 

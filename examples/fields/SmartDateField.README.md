@@ -66,6 +66,13 @@ You can control the serialization format of `SmartDateField` with the `fString` 
 
 `fString` is a format string adhering to [Unicode Technical Standard #35](https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table).  You can read more in the [Date-fns docs](https://date-fns.org/v2.29.3/docs/format).  At some future point we might add support for [python/pandas format strings](https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior). 
 
+## Using `extraParseString`
+Sometimes SmartDateField can't parse a date because it doesn't know how, or parsing would require an assumption that isn't reliable.  For those cases you can use `extraParseString`.
+```
+SmartDateField({extraParseString:"yyyyMMdd"})
+```
+Will try to parse all incoming dates normally, if it still can't parse the date, it will try to parse with the parse string. so for the above configured field, the string `'20080302'` parses to `new Date('2008-03-02T00:00:00.000Z')`
+
 
 ## Supported date formats
 
