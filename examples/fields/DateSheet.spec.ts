@@ -127,7 +127,7 @@ describe('Extra test ->', () => {
 )
   const SmartDateBook = new Workbook({ name: 'DateBook', namespace: 'test', sheets: { SmartDateSheet } })
   
-  const dErr = (d:string) => `Error: couldn't parse ${d} with a certain date.  Please use an unambiguous date format`
+  const dErr = (d:string) => `Error: couldn't parse ${d} with a certain year.  Please use an unambiguous date format`
   const dayErr = (d:string) => `Error: couldn't parse ${d} with a certain day.  Please use an unambiguous date format`
   const noParse = (d:string) => `Error: '${d}' returned no parse results`
 

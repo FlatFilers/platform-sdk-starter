@@ -32,11 +32,11 @@ describe('Cast Function tests ->', () => {
   })
 
   test('DateCast handles infinity as an error', () => {
-    assertThrow(1 / 0, "'Infinity' returned no parse results")
+    assertThrow(1 / 0, "unexpected type in ChronoStringDateCast for val Infinity typeof number")
   })
 
   test('instantiate DateField', () => {
-    const d = SmartDateField()
+    const d = SmartDateField({})
     expect(1).toBe(1)
   })
 
@@ -80,7 +80,7 @@ describe('Cast Function tests ->', () => {
 
 
   test('expected parsing errors', ()=> {
-    assertThrow('25-Feb-19', "couldn't parse 25-Feb-19 with a certain date.  Please use an unambiguous date format")
+    assertThrow('25-Feb-19', "couldn't parse 25-Feb-19 with a certain year.  Please use an unambiguous date format")
   })
   
 })
