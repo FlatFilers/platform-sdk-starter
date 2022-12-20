@@ -198,6 +198,16 @@ department: OptionField({
 
 Here we provide a pre-defined list of values that this field can have. We have also included the `matchStrategy` flag, which determines whether Flatfile should only accept exact matches when automatically matching your OptionField options, or whether Flatfile should also use [historical matches and fuzzy matches](https://support.flatfile.com/hc/en-us/articles/8579991586324-Matching) while automatically matching your options. If this is not set, your OptionField will use historical and fuzzy matches to automatically match options for this field.
 
+If a `default` value is provided for an `OptionField` we check that is a value provided in `options`.
+
+If you want to have an option value of the empty string `''`, you must set that as a default like this.
+```
+    emptyExample : OptionField({
+      options:{eng:"Eng_Display_Label4", hr:"HR", "":"empty"},
+      default: ''
+    })
+```
+
 <!-- TODO what does `label` do? -->
 
 <!-- TODO Boolean Field? -->
@@ -312,7 +322,7 @@ batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
 
 #### Knowing which hooks to use
 
-`validate` should be used in most cases where you want to confirm that user-inputted data matches your specifications. For most fields, you probably want to use `validate`. This function gets the proper type per field, and lets you add messages to the cell, including errors, warnings, and rejections, so the user can correct errors themselves.
+`validate` should be used in most cases where you want to confirm that user-inputted data matches your specifications. For most fields, you probably want to use `validate`. This function gets the proper type per field, and lets you add messages to the cell, including errors, warnings, and rejections, so the user can correct errors themselves. Validate can’t change data, it can only send messages. Compute must be used if you want to perform any type of transformation
 
 `recordCompute` and `batchRecordsCompute` should only be used for cases where you must modify user-inputted data or generate new values not provided by the user but needed for your systems. For simple row work (that doesn't make HTTP calls) use `recordCompute`. If you need to make an a call to an external API, reach for `batchRecordsCompute` on sheet, as this allows you to request info about multiple values at once for increased performance.
 
@@ -395,6 +405,10 @@ When releasing pieces to the SDK our thought process is guided by the following 
 
 - **How can I lowercase an email field anytime input is provided by a file or manual entry?**
   - This is a good use for field `compute`. This function will be idempotent (running it over and over on the same input produces the same output and state)
+- **Why can't I check for nulls in a `validate` function?**
+  - You can't check for `null` or `undefined` in a validate function, because validate functions are never called with a value that isn't of the field's type.  The way to check for `null` is to set `required:true` on the field, this works for 95% of field use cases, this will flag an error at the review stage for fields provided with a `null` value.  Having this strict typing makes `validate` functions less error prone and less repetitious.  If we allowed `null` or `undefined` to propagate to `validate`,  every user provided function would have to start with checking for `null` or `undefined`, users who didn't do this would either see a typing error, or worse suffer unreliable code that was deployed.
+  - **What do I do if I want to check for null or undefined in a validate function?**
+    - The only place the built in `required` behavior doesn't work is when a `recordCompute` or `batchRecordsCompute` function was expected to provide a value for a field, and failed.  In that case, you are already writing a `recordCompute` or `batchRecordsCompute` function, check for the `null` there.
 - **How can check the type and size of an url and return an error if the linked file is > 5mb or not an image?**
   - Currently this is best accomplished with a text field named `s3_url` that will match to the URL provided in the upload, and a row `compute` that stores the size of the download to `s3_url_size`, `s3_url_size` should have an `validate` of less than 5mb.
   - In the near future this will be handled with a computed field that takes `s3_url` as an input and outputs `s3_url_size`.
@@ -552,7 +566,7 @@ The default value for this field
 
 #### `validate`
 
-`validate` takes the type specified by the field and returns validation messages. This is the most commonly used field hook.
+`validate` takes the type specified by the field and returns validation messages. This is the most commonly used field hook. Validate can’t change data, it can only send messages. Compute must be used if you want to perform any type of transformation
 
 #### Other Field Options
 
