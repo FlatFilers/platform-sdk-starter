@@ -15,7 +15,7 @@ We will add options to override these assumption as needed.
 
 Dates without an Time of Day (TOD) and without a timezone (TZ)  will be interpreted as 00:00:00 in GMT.  By default JS dates are formatted to 00:00:00 in the local timezone, this leads to inconsistent results based on how the server is setup.  00:00:00 is also the the behavior of pandas timestamp
 
-Dates with a TOD and without a TZ will be interpreted as that TOD in GMT.  You might want to default to a local timezone here, that option will be added.
+Dates with a TOD and without a TZ will be interpreted as that TOD in GMT.
 
 Dates with a TOD and TZ will be interpreted with that TOD and TZ.
 
