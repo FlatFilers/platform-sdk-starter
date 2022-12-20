@@ -2,7 +2,7 @@
 
 ## Why
 
-The `SmartDateField` lets you worry about operations on `Date`s as objects, without worrying about parsing dates, or formatting dates.  Currently the `SmartDateField` can parse [9 date types](./DateField.spec.ts#L43-L60) without any format strings.  This lets you concentrate on business logic, without worrying about incoming date formats.  This let's you confidently perform arithmetic and comparisons in `compute`, `recordCompute`, `batchRecordsCompute`, and `validate` on `Date`s.  `SmartDateField` has an `fString` argument that controls how the date is serialized after `validate` is finished.  Flatfile users no longer have to convert in and out of dates to maintain formatting.
+The `SmartDateField` lets you work with operations on `Date`s as objects, without worrying about parsing dates, or formatting dates.  Currently the `SmartDateField` can parse [16 date types](./DateField.spec.ts#L43-L60) without any format strings.  This lets you concentrate on business logic, without worrying about incoming date formats.  This lets you confidently perform arithmetic and comparisons in `compute`, `recordCompute`, `batchRecordsCompute`, and `validate` on `Date`s.  `SmartDateField` has an `fString` argument that controls how the date is serialized after `validate` is finished.  Flatfile users no longer have to convert in and out of dates to maintain formatting.
 
 ## What
 
@@ -25,9 +25,9 @@ Please report bugs where this behavior isn't the case.
 
 ## Installing SmartDateField in an existing Flatfile project
 
-`SmartDateField` is currently in public beta.  This exact code will work currently and against future versions of Flatfile... but we might update the behavior of the `SmartDateField` that is distributed going forward.  This lets us get feedback from users quickly, without locking us into supporting temporary design decisions.
+`SmartDateField` is currently in public alpha.  This exact code will work currently and against future versions of Flatfile... but we might update the behavior of the `SmartDateField` that is distributed going forward.  This lets us get feedback from users quickly, without locking us into supporting temporary design decisions.
 
-First copy the whole of [SmartDateField.ts](./SmartDateField.ts) into your repo at `src/SmartDateField.ts`  then in `src/index.ts` you can import `SmartDateField` by adding the line
+First copy the whole of [SmartDateField.ts](./SmartDateField.ts) into your repo at `src/SmartDateField.ts`  then in `src/index.ts` (or relevant template file where you want to use `SmartDateField` you can import `SmartDateField` by adding the line
 
 `import { SmartDateField } from './SmartDateField'`
 
