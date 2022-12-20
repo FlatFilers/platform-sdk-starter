@@ -50,7 +50,7 @@ export const Unless = (predicate: any, expr: any) => [
   expr,
 ]
 
-
+export const NonUnique = (column:string, group:NestedIns) => ['nonUnique', column, group]
 
 export const Error = (message: string) => ['error', message]
 export const Group = () => ['variable', 'group']
