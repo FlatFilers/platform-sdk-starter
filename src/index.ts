@@ -13,15 +13,23 @@ import {
   Workbook,
 } from '@flatfile/configure'
 
+import {SmartDateField } from '../examples/fields/SmartDateField'
+
 /**
  * Sheets
  * Define your Sheet configuration and Fields here, or import them:
  * import { YourSheet } from './path-to-your-sheet/your-sheet.ts'
  */
-const MySheet = new Sheet('MySheet', {
-  firstName: TextField(),
-  lastName: TextField(),
-  age: NumberField(),
+const DateSheet = new Sheet('DateSheet', {
+  fstring: TextField(),
+  raw_date: TextField(),
+  base_date: SmartDateField({}),
+  Fr_date: SmartDateField({locale:'fr'}),
+  Ja_date: SmartDateField({locale:'ja'}),
+  Nl_date: SmartDateField({locale:'nl'}),
+  Ru_date: SmartDateField({locale:'ru'}),
+  De_date: SmartDateField({locale:'de'}),
+  descriptions: TextField()
 })
 
 /**
@@ -31,7 +39,7 @@ const MySheet = new Sheet('MySheet', {
  */
 const MyPortal = new Portal({
   name: 'MyPortal',
-  sheet: 'MySheet',
+  sheet: 'DateSheet',
 })
 
 // Workbook  - Update to reference your Workbook with Sheet(s) and Portal(s)
@@ -40,6 +48,6 @@ export default new Workbook({
   namespace: 'my-workbook',
   portals: [MyPortal],
   sheets: {
-    MySheet,
+    DateSheet
   },
 })
