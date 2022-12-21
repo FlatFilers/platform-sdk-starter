@@ -59,7 +59,6 @@ const Employees = new Sheet(
   },
   {
     allowCustomFields: true,
-    readOnly: true,
     recordCompute: (record) => {
       const fullName = `{record.get('firstName')} {record.get('lastName')}`
       record.set('fullName', fullName)
@@ -254,7 +253,6 @@ const Employees = new Sheet(
   ...
   {
     allowCustomFields: true,
-    readOnly: true,
     recordCompute: (record) => {
       const fullName = `{record.get('firstName')} {record.get('lastName')}`
       record.set('fullName', fullName)
@@ -285,7 +283,6 @@ First we specify two options on the sheet: `allowCustomFields` and `readOnly`.
 
 `allowCustomFields`: explain what this does and what its default value is
 
-`readOnly`: explain what this does and what its default value is
 
 -->
 
@@ -322,7 +319,7 @@ batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
 
 #### Knowing which hooks to use
 
-`validate` should be used in most cases where you want to confirm that user-inputted data matches your specifications. For most fields, you probably want to use `validate`. This function gets the proper type per field, and lets you add messages to the cell, including errors, warnings, and rejections, so the user can correct errors themselves.
+`validate` should be used in most cases where you want to confirm that user-inputted data matches your specifications. For most fields, you probably want to use `validate`. This function gets the proper type per field, and lets you add messages to the cell, including errors, warnings, and rejections, so the user can correct errors themselves. Validate can’t change data, it can only send messages. Compute must be used if you want to perform any type of transformation
 
 `recordCompute` and `batchRecordsCompute` should only be used for cases where you must modify user-inputted data or generate new values not provided by the user but needed for your systems. For simple row work (that doesn't make HTTP calls) use `recordCompute`. If you need to make an a call to an external API, reach for `batchRecordsCompute` on sheet, as this allows you to request info about multiple values at once for increased performance.
 
@@ -566,7 +563,7 @@ The default value for this field
 
 #### `validate`
 
-`validate` takes the type specified by the field and returns validation messages. This is the most commonly used field hook.
+`validate` takes the type specified by the field and returns validation messages. This is the most commonly used field hook. Validate can’t change data, it can only send messages. Compute must be used if you want to perform any type of transformation
 
 #### Other Field Options
 
@@ -615,7 +612,6 @@ This field will not be exported.
 ```ts
 export interface SheetOptions<FC> {
   allowCustomFields: boolean
-  readOnly: boolean
   recordCompute: (record:FlatfileRecord<any>, logger?:any): void
   batchRecordsCompute: (records: FlatfileRecords<any>) => Promise<void>
 
