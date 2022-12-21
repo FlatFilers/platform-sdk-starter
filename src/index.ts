@@ -13,7 +13,7 @@ import {
 } from '@flatfile/configure'
 
 const BasicSheet = new Sheet(
-  'BasicSheet',
+  'CF BasicSheet',
   {
     id: NumberField({
       required: true,
@@ -44,11 +44,11 @@ const BasicSheet = new Sheet(
 // })
 
 export default new SpaceConfig({
-  name: 'Basic2',
+  name: 'CF Basic',
   workbookConfigs: {
-    'basic2':new Workbook({
-      name: 'BasicSheetWorkbook2',
-      namespace: 'basic2',
+    'basic':new Workbook({
+      name: 'BasicSheetWorkbook',
+      namespace: 'basic',
       sheets: {
         BasicSheet,
       },
