@@ -133,3 +133,4 @@ dist
 
 # Flatfile
 .flatfile
+.flatfilerc
