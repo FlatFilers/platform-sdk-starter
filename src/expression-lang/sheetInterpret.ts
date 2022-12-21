@@ -24,13 +24,13 @@ export const info = (message: string, stage: TRecordStageLevel = 'validate') => 
 }
 
 
-const match = (matchSpec: object, records: FlatfileRecord[]) => {
+const match = (records: FlatfileRecord[], matchSpec: object) => {
   return _.filter(records, (rec: FlatfileRecord) =>
     _.isMatch(rec.originalValue, matchSpec)
   )
 }
 
-const nonUnique = (column:string, records: FlatfileRecord[]) => {
+const nonUnique = (records: FlatfileRecord[], column:string) => {
   const groups = _.groupBy(records, (rec) =>
     rec.get(column))
   //_.forEach(groups, (group: FlatfileRecord[], gbKey) => {

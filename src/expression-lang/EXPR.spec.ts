@@ -96,7 +96,7 @@ describe('GroupConstraint Tests ->', () => {
   test('Match', () => {
     const recs = getRecs()
     const matchResult = sheetInterpret(
-      Match({ name: 'Paddy' }, recs)
+      Match(recs, { name: 'Paddy' })
     ) as any[]
     expect(matchResult.length).toBe(1)
     expect(matchResult[0].value).toMatchObject({ age: 40, name: 'Paddy' })
@@ -110,14 +110,14 @@ describe('GroupConstraint Tests ->', () => {
 
   test('GroupConstraint', () => {
     const recs = getRecs()
-    const greenEyes = sheetInterpret(Match({ eyeColor: 'green' }, recs), {})
+    const greenEyes = sheetInterpret(Match(recs, { eyeColor: 'green' }), {})
     const retireds = sheetInterpret(Match({ job: 'ret' }, recs), {})
 
     const gcResult = sheetInterpret(
       GroupConstraintItem(
         Group(),
         Unless(
-          GreaterThan(Count(Match({ job: 'kid' }, MatchResult())), 0),
+          GreaterThan(Count(Match(MatchResult(), { job: 'kid' })), 0),
           Error('No Kids')
         ),
         'name',
@@ -131,7 +131,7 @@ describe('GroupConstraint Tests ->', () => {
       GroupConstraintItem(
         Group(),
         Unless(
-          GreaterThan(Count(Match({ job: 'kid' }, MatchResult())), 0),
+          GreaterThan(Count(Match(MatchResult(), { job: 'kid' })), 0),
           Error('No Kids')
         ),
         'name',
@@ -149,7 +149,7 @@ describe('GroupConstraint Tests ->', () => {
       Group(),
       Unless(
 	GreaterThan(
-	  Count(Match({job:'kid'}, Group())),
+	  Count(Match(Group(), {job:'kid'})),
 	  0),
 	Error('No Kids')),
       'name',
@@ -157,7 +157,7 @@ describe('GroupConstraint Tests ->', () => {
       .toStrictEqual(
 	['groupConstraintRow',
 	 ['quote', ['variable', 'group']],
-	 ['quote', ['when', ['not', ['>', ['count', ['match', {job:'kid'}, ['variable', 'group']]], 0 ]],
+	 ['quote', ['when', ['not', ['>', ['count', ['match', ['variable', 'group'], {job:'kid'}]], 0 ]],
 		    ['error', 'No Kids']]],
 	 'name',
 	 ['variable', 'group']])

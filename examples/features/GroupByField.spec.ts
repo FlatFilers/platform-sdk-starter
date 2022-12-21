@@ -30,7 +30,7 @@ const UniquePeopleSheet = new Sheet('People',
       age_sum: GroupByField(
         ['job'],
 	GroupConstraintItem(
-	  NonUnique('fav_group', Group()),
+	  NonUnique(Group(), 'fav_group'),
 	  Error('fav_group must be unique'),
 	  'fav_group', Group()))
 })
@@ -139,7 +139,7 @@ const PeopleSheet = new Sheet('People',
 	  Group(),
 	  Unless(
 	    GreaterThan(
-	      Count(Match({eye_color: 'blue_'}, Group())),
+	      Count(Match(Group(), {eye_color: 'blue_'})),
 	      0),
 	    Error('No Blue eyes')),
 	  'name',
@@ -177,7 +177,7 @@ const BothSheet =  new Sheet(
 	  Group(),
 	  Unless(
 	    GreaterThan(
-	      Count(Match({eye_color: 'blue_'}, Group())),
+	      Count(Match(Group(), {eye_color: 'blue_'})),
 	      0),
 	    Error('No Blue eyes')),
 	  'name',

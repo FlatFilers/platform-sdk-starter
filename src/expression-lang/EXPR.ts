@@ -50,17 +50,17 @@ export const Unless = (predicate: any, expr: any) => [
   expr,
 ]
 
-export const NonUnique = (column:string, group:NestedIns) => ['nonUnique', column, group]
+export const NonUnique = (group:NestedIns, column:string) => ['nonUnique', group, column]
 
 export const Error = (message: string) => ['error', message]
 export const Group = () => ['variable', 'group']
 export const Val = () => ['variable', 'val']
 export const MatchResult = () => ['variable', 'matchResult']
 
-export const Match = (matchSpec: any, recordGrouping: any) => [
+export const Match = (recordGrouping: any, matchSpec: any) => [
   'match',
-  matchSpec,
   recordGrouping,
+  matchSpec
 ]
 export const ImplicitGreaterThan = (comparand: any) => ['>', Val(), comparand]
 export const ImplicitLessThan = (comparand: any) => ['>', Val(), comparand]
