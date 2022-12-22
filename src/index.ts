@@ -24,6 +24,7 @@ const DateSheet = new Sheet('DateSheet', {
   fstring: TextField(),
   raw_date: TextField(),
   base_date: SmartDateField({}),
+  en_date: SmartDateField({locale:'en'}),
   Fr_date: SmartDateField({locale:'fr'}),
   Ja_date: SmartDateField({locale:'ja'}),
   Nl_date: SmartDateField({locale:'nl'}),

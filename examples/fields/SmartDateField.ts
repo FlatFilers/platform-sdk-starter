@@ -96,9 +96,17 @@ export const SmartDateField = makeField<
   { fString?: string; extraParseString?: string, locale?: Locales }
 >(
   DateField({}),
-  { fString: "yyyy-MM-dd'T'HH:mm:ss.000'Z'" },
+  { },
   (mergedOpts, passedOptions) => {
     //I wish our types did this for us.
+
+
+    const defaultedPassedoptions = {
+      ...{fString: "yyyy-MM-dd'T'HH:mm'Z'", extraParseString: undefined, locale:'en'},
+      //...{fString: "yyyy-MM-dd'T'HH:mm:ss.00000'Z'", extraParseString: undefined, locale:'en'},
+      //this causes a failure
+      //...{fString: "'Zasdfasdf'", extraParseString: undefined, locale:'en'},
+      ...passedOptions}
     if (_.keys(passedOptions).includes('cast')) {
       throw new Error(
         `Cannot instantiate this field with an overridden cast function`
@@ -109,15 +117,16 @@ export const SmartDateField = makeField<
         `Cannot instantiate this field with an overridden cast function`
       )
     }
-    const locale = passedOptions.locale || "en"
-    const extraParseString = passedOptions.extraParseString
-      ? passedOptions.extraParseString
-      : false
+    const locale = defaultedPassedoptions.locale
+    const extraParseString = defaultedPassedoptions.extraParseString
 
+    //@ts-ignore
+    const localeCast = getChronoDateCast(locale)
+    
     let cast
     if (extraParseString) {
       cast = FallbackCast(
-        getChronoDateCast(locale),
+	localeCast,
         StringChainCast((val: string | Date): Nullable<Date> => {
           if (typeof val === 'string') {
             const parsed = parse(val, extraParseString, new Date())
@@ -134,15 +143,20 @@ export const SmartDateField = makeField<
         })
       )
     } else {
-      cast = getChronoDateCast(locale)
+      cast = localeCast
     }
 
     const egressFormat = (val: Date | string): string => {
+
       if (typeof val === 'string') {
-        return val
+	// console.log("passed a string, returning the same")
+	// console.log("passed a string, returning the same")
+        //return val
+	//@ts-ignore
+	return null
       }
       try {
-        return zFormat(val, passedOptions.fString as string)
+        return zFormat(val, defaultedPassedoptions.fString as string)
       } catch (e: any) {
         console.log(`error formatting ${val} typeof ${typeof val}`)
         console.log(e)
