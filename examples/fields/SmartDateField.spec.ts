@@ -8,12 +8,12 @@ const CompSets = [
   { expResult: 'error___', before: '18/02/2009', /*--*/ after: '02/17/2009', bF: '2009-02-18', aF: '2009-02-17' },
   { expResult: "No Error", before: "02/17/2009", /*--*/ after: "2009/02/19", bF: '2009-02-17', aF: '2009-02-19' },
   { expResult: "No Error", before: "2009/02/19", /*--*/ after: "February 20, 2009", bF: '2009-02-19', aF: '2009-02-20' },
-  { expResult: "error___", before: "2/21/2009" , /*--*/ after: "February 20, 2009", bF: '2009-02-21', aF: '2009-02-20' },
+  { expResult: "error___", before: "2/21/2009", /*--*/ after: "February 20, 2009", bF: '2009-02-21', aF: '2009-02-20' },
   { expResult: "error___", before: "22/2/2009", /*---*/ after: "2009/02/19", bF: '2009-02-22', aF: '2009-02-19' },
   { expResult: "No Error", before: "2/21/2009", /*---*/ after: "2009/2/23", bF: '2009-02-21', aF: '2009-02-23' },
-  { expResult: "No Error", before: "February 20, 2009", after: " 2/24/2009", bF: '2009-02-20', aF: '2009-02-24'},
-  { expResult: "No Error", before: "February 20, 2009", after: "25Feb2009", bF: '2009-02-20', aF: '2009-02-25'},
-  { expResult: "No Error", before: " 2/8/2009", /*---*/ after: " 8/2/2009", bF: '2009-02-08', aF: '2009-08-02'},
+  { expResult: "No Error", before: "February 20, 2009", after: " 2/24/2009", bF: '2009-02-20', aF: '2009-02-24' },
+  { expResult: "No Error", before: "February 20, 2009", after: "25Feb2009", bF: '2009-02-20', aF: '2009-02-25' },
+  { expResult: "No Error", before: " 2/8/2009", /*---*/ after: " 8/2/2009", bF: '2009-02-08', aF: '2009-08-02' },
 ]
 
 const DateSheet = new Sheet(
@@ -61,31 +61,31 @@ const CompSets2 = [
 
   { expResult: "No Error", before: "02/17/2009", /*--*/ after: "2009/02/19", bF: '2009-2-17', aF: '2009-2-19' },
   { expResult: "No Error", before: "2009/02/19", /*--*/ after: "February 20, 2009", bF: '2009-2-19', aF: '2009-2-20' },
-  { expResult: "error___", before: "2/21/2009" , /*--*/ after: "February 20, 2009", bF: '2009-2-21', aF: '2009-2-20' },
+  { expResult: "error___", before: "2/21/2009", /*--*/ after: "February 20, 2009", bF: '2009-2-21', aF: '2009-2-20' },
   { expResult: "No Error", before: "2/21/2009", /*---*/ after: "2009/2/23", bF: '2009-2-21', aF: '2009-2-23' },
-  { expResult: "No Error", before: "February 20, 2009", after: " 2/24/2009", bF: '2009-2-20', aF: '2009-2-24'},
-  { expResult: "No Error", before: "February 20, 2009", after: "25Feb2009", bF: '2009-2-20', aF: '2009-2-25'},
+  { expResult: "No Error", before: "February 20, 2009", after: " 2/24/2009", bF: '2009-2-20', aF: '2009-2-24' },
+  { expResult: "No Error", before: "February 20, 2009", after: "25Feb2009", bF: '2009-2-20', aF: '2009-2-25' },
 ]
 
 const DumbDateSheet = new Sheet(
   'DumbDateSheet',
   {
-    before: TextField({ required: true}),
-    after: TextField({ required: true}),
+    before: TextField({ required: true }),
+    after: TextField({ required: true }),
     expResult: TextField({ required: true }),
   },
   {
     recordCompute: (record: FlatfileRecord) => {
       const [beforeRaw, afterRaw] = [record.get('before'), record.get('after')]
-      if (_.isString(beforeRaw) &&  _.isString(afterRaw)) {
-	const [before, after] = [new Date(beforeRaw), new Date(afterRaw)]
-	const bothPresent = before && after
-	const notBefore = before > after
-	if (bothPresent && notBefore) {
+      if (_.isString(beforeRaw) && _.isString(afterRaw)) {
+        const [before, after] = [new Date(beforeRaw), new Date(afterRaw)]
+        const bothPresent = before && after
+        const notBefore = before > after
+        if (bothPresent && notBefore) {
           record.addError(['before', 'after'], "field 'before' must be a date before 'after'")
-	}
-	record.set('before', `${before.getUTCFullYear()}-${before.getUTCMonth() + 1}-${before.getUTCDate()}`)
-	record.set('after', `${after.getUTCFullYear()}-${after.getUTCMonth() + 1}-${after.getUTCDate()}`)
+        }
+        record.set('before', `${before.getUTCFullYear()}-${before.getUTCMonth() + 1}-${before.getUTCDate()}`)
+        record.set('after', `${after.getUTCFullYear()}-${after.getUTCMonth() + 1}-${after.getUTCDate()}`)
       }
     },
   }
@@ -117,27 +117,27 @@ describe('Dumb Date Comp Sheet ->', () => {
     ["Feb172009", ], // "MonDDYY" #Month abbreviation-Day-Year with leading zeros
 */
 
-describe('Extra test ->', () => { 
+describe('Extra test ->', () => {
   const SmartDateSheet = new Sheet(
     'SmartDateSheet',
     {
       d: SmartDateField({ required: false, fString: 'yyyy-MM-dd' }),
     },
     {}
-)
+  )
   const SmartDateBook = new Workbook({ name: 'DateBook', namespace: 'test', sheets: { SmartDateSheet } })
-  
-  const dErr = (d:string) => `Error: couldn't parse ${d} with a certain year.  Please use an unambiguous date format`
-  const dayErr = (d:string) => `Error: couldn't parse ${d} with a certain day.  Please use an unambiguous date format`
-  const noParse = (d:string) => `Error: '${d}' returned no parse results`
 
-  const testSheet = new SheetTester(SmartDateBook, 'SmartDateSheet')    
+  const dErr = (d: string) => `Error: couldn't parse ${d} with a certain year.  Please use an unambiguous date format`
+  const dayErr = (d: string) => `Error: couldn't parse ${d} with a certain day.  Please use an unambiguous date format`
+  const noParse = (d: string) => `Error: '${d}' returned no parse results`
+
+  const testSheet = new SheetTester(SmartDateBook, 'SmartDateSheet')
   const failingDates = _.map([
     ["25-Feb-19", dErr],
     ["17/ 2/2009", dayErr], //"bD/bM/YY" #Day-Month-Year with spaces instead of leading zeros
     ["2009/ 2/17", dErr], //"YY/bM/bD" #Year-Month-Day with spaces instead of leading zeros
     ["20090217", noParse],  //"YYMMDD",  #Year-Month-Day with no separators
-    
+
     ["2009, Feb 17", dErr], // "YYYYY-Mon-DD"  #Year, Month abbreviation, Day with leading zeros
     ["2009, Feb 17", dErr], // "YYYY, Mon DD"  #Year, Month abbreviation, Day with leading zeros
 
@@ -146,18 +146,17 @@ describe('Extra test ->', () => {
     ["2009Feb17", noParse], // "YYMonDD" #Year-Month abbreviation-Day with leading zeros
     ["48/2009", noParse],   // "day/YY"  #Day of year (counting consecutively from January 1)-Year 
     ["2009/48", noParse],  // "YY/day" #Year-Day of Year (counting consecutively from January 1—often called the Julian date format)
-  ], (combinedArg ) => {
+  ], (combinedArg) => {
     const [d, func] = combinedArg
     //@ts-ignore
-    //console.log(d, func(d))
-    //@ts-ignore
-    return [d, func(d)]})
+    return [d, func(d)]
+  })
 
-  test.each(failingDates)('date comparison', async (d, err ) => { 
+  test.each(failingDates)('date comparison', async (d, err) => {
     const row = { d }
     const messageRes = await testSheet.testMessage(row)
     const results = await testSheet.testRecord(row)
-    expect(messageRes[0]).toMatchObject({message:err})
+    expect(messageRes[0]).toMatchObject({ message: err })
   })
 
 })
@@ -165,14 +164,16 @@ describe('Extra test ->', () => {
 describe('SmartDateField tests ->', () => {
   test('prevent egressCycle errors at instantiation time', () => {
     expect(() => {
-      SmartDateField({fString:"yyyy-MM-dd'paddy'"}) })
+      SmartDateField({ fString: "yyyy-MM-dd'paddy'" })
+    })
       .toThrow("Error: instantiating a SmartDateField with an fString of yyyy-MM-dd'paddy', and locale of 'en'.  will result in data loss or unexpected behavior")
 
     expect(() => {
-      SmartDateField({locale:'fr', fString:"MM-dd-yy'"}) })
+      SmartDateField({ locale: 'fr', fString: "MM-dd-yy'" })
+    })
       .toThrow("Error: instantiating a SmartDateField with an fString of MM-dd-yy', and locale of 'fr'.  will result in data loss or unexpected behavior")
     //we expect the following to work because that is the default for en locale
-    SmartDateField({fString:"MM-dd-yy'"})
+    SmartDateField({ fString: "MM-dd-yy'" })
   })
 })
 
@@ -220,7 +221,7 @@ describe('Cast Function tests ->', () => {
   test('pandas date functions', () => {
     assertDC("Feb072009", /*--*/  new Date('2009-02-07T00:00:00.000Z')) // "MonDDYY" Month abbreviation-Day-Year with leading zeros
     assertDC("Feb 08, 2009", /**/ new Date('2009-02-08T00:00:00.000Z')) // "Mon DD, YYYY" Month abbreviation, Day with leading zeros, Year
-    assertDC("09 Feb, 2009",      new Date('2009-02-09T00:00:00.000Z')) // "DD Mon, YYYY" Day with leading zeros, Month abbreviation, Year
+    assertDC("09 Feb, 2009", new Date('2009-02-09T00:00:00.000Z')) // "DD Mon, YYYY" Day with leading zeros, Month abbreviation, Year
     assertDC('02/17/2009', /*--*/ new Date('2009-02-17T00:00:00.000Z')) // "MM/DD/YY" Month-Day-Year with leading zeros - Non ambiguous
     assertDC('18/02/2009', /*--*/ new Date('2009-02-18T00:00:00.000Z')) // "DD/MM/YY" Day-Month-Year with leading zeros - Non ambiguous
     assertDC('2009/02/19', /*--*/ new Date('2009-02-19T00:00:00.000Z')) // "YY/MM/DD" Year-Month-Day with leading zeros - Non ambiguous
@@ -240,25 +241,25 @@ describe('Cast Function tests ->', () => {
     assertDC('03/3/2009', /*---*/ new Date('2009-03-03T00:00:00.000Z')) //"D/M/YY"#Day-Month-Year with no leading zeros
 
 
-    assertDC('Nov 28, 2015, 7:41 AM', /*---*/ new Date('2015-11-28T07:41:00.000Z'))  
-    assertDC('2015-11-26T00:00:00000Z', /*---*/ new Date('2015-11-26T00:00:00.000Z'))  
-    assertDC('Fri, 27 November 2015 7:41am', /*---*/ new Date('2015-11-27T07:41:00.000Z'))  
+    assertDC('Nov 28, 2015, 7:41 AM', /*---*/ new Date('2015-11-28T07:41:00.000Z'))
+    assertDC('2015-11-26T00:00:00000Z', /*---*/ new Date('2015-11-26T00:00:00.000Z'))
+    assertDC('Fri, 27 November 2015 7:41am', /*---*/ new Date('2015-11-27T07:41:00.000Z'))
     // this probably shouldn't pass November 27th 2015 was a Friday
-    assertDC('Sun, 27 November 2015 7:41am', /*---*/ new Date('2015-11-27T07:41:00.000Z'))  
-})
+    assertDC('Sun, 27 November 2015 7:41am', /*---*/ new Date('2015-11-27T07:41:00.000Z'))
+  })
 
   test('date time  functions', () => {
     assertDC('02/17/2009 11:44:55', /*--*/ new Date('2009-02-17T11:44:55.000Z')) //"MM/DD/YY" #Month-Day-Year with leading zeros
   })
 
 
-  test('expected parsing errors', ()=> {
+  test('expected parsing errors', () => {
     assertThrow('25-Feb-19', "couldn't parse 25-Feb-19 with a certain year.  Please use an unambiguous date format")
   })
   test('extraParseString', () => {
-    const df = SmartDateField({extraParseString:"yyyyMMdd"})
+    const df = SmartDateField({ extraParseString: "yyyyMMdd" })
     expect(df.options.cast('20080302')).toStrictEqual(new Date('2008-03-02T00:00:00.000Z'))
-  })  
+  })
 })
 
 
