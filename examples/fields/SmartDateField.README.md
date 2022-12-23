@@ -50,7 +50,8 @@ additionally you must add the following dependencies:
     "dependencies": {
         "chrono-node": "^2.4.1",
         "date-fns": "^2.29.3",
-        "date-fns-tz": "^1.3.7"
+        "date-fns-tz": "^1.3.7",
+        "lodash": "^4.17.21",
     }
 ```
 
