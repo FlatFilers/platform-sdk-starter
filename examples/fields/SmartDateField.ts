@@ -189,11 +189,11 @@ export const SmartDateField = makeField<
 	//@ts-ignore
 	if (!verifyEgressCycle(f, d)) {
 	  egressDebug(f,d)
-	  throw new Error(`Cannot instantiate a SmartDateField with an fString of ${fString}, and locale of ${locale}. it fails verifyEgressCycle`)
+	  throw new Error(`Error: instantiating a SmartDateField with an fString of ${fString}, and locale of '${locale}'.  will result in data loss or unexpected behavior`)
 	}
       } catch (e:any) {
 	egressDebug(f,d)
-	throw new Error(`Cannot instantiate a SmartDateField with an fString of ${fString}, and locale of '${locale}'. it fails verifyEgressCycle`)
+	throw new Error(`Error: instantiating a SmartDateField with an fString of ${fString}, and locale of '${locale}'.  will result in data loss or unexpected behavior`)
       }
     }
     //pretty much any date, nothing notable.  ChronoDateCast is fine here,  we just want a date

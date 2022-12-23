@@ -166,11 +166,11 @@ describe('SmartDateField tests ->', () => {
   test('prevent egressCycle errors at instantiation time', () => {
     expect(() => {
       SmartDateField({fString:"yyyy-MM-dd'paddy'"}) })
-      .toThrow("Cannot instantiate a SmartDateField with an fString of yyyy-MM-dd'paddy', and locale of 'en'. it fails verifyEgressCycle")
+      .toThrow("Error: instantiating a SmartDateField with an fString of yyyy-MM-dd'paddy', and locale of 'en'.  will result in data loss or unexpected behavior")
 
     expect(() => {
       SmartDateField({locale:'fr', fString:"MM-dd-yy'"}) })
-      .toThrow("Cannot instantiate a SmartDateField with an fString of MM-dd-yy', and locale of 'fr'. it fails verifyEgressCycle")
+      .toThrow("Error: instantiating a SmartDateField with an fString of MM-dd-yy', and locale of 'fr'.  will result in data loss or unexpected behavior")
     SmartDateField({fString:"MM-dd-yy'"})
   })
 })
