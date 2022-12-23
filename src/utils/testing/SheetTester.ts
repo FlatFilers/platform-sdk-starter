@@ -117,13 +117,6 @@ export class SheetTester {
 
 }
 
-// export interface InfoObj  {
-//   field: string
-//   message: string
-//   level: TRecordStageLevel
-//   stage: 'validate' | 'compute'
-// }
-
 export type InfoObj = IRecordInfo<TRecordData<TPrimitive>, string | number>
 
 export const removeUndefineds = (obj:Record<string, any>) => _.pickBy(obj, _.identity)

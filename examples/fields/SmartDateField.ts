@@ -116,15 +116,12 @@ export const SmartDateField = makeField<
   DateField({}),
   { },
   (mergedOpts, passedOptions) => {
-    //I wish our types did this for us.
-
-
-    const defaultedPassedoptions = {
+    const defaultedPassedOptions = {
       ...{fString: "yyyy-MM-dd'T'HH:mm'Z'", extraParseString: undefined, locale:'en'},
-      //...{fString: "yyyy-MM-dd'T'HH:mm:ss.00000'Z'", extraParseString: undefined, locale:'en'},
-      //this causes a failure
-      //...{fString: "'Zasdfasdf'", extraParseString: undefined, locale:'en'},
       ...passedOptions}
+    
+    const { fString, extraParseString, locale}  = defaultedPassedOptions
+
     if (_.keys(passedOptions).includes('cast')) {
       throw new Error(
         `Cannot instantiate this field with an overridden cast function`
@@ -132,11 +129,9 @@ export const SmartDateField = makeField<
     }
     if (_.keys(passedOptions).includes('egressFormat')) {
       throw new Error(
-        `Cannot instantiate this field with an overridden cast function`
+        `Cannot instantiate this field with an overridden egressFormat function`
       )
     }
-    const locale = defaultedPassedoptions.locale
-    const extraParseString = defaultedPassedoptions.extraParseString
 
     //@ts-ignore
     const localeCast = getChronoDateCast(locale)
@@ -163,7 +158,7 @@ export const SmartDateField = makeField<
     } else {
       cast = localeCast
     }
-    const fString = defaultedPassedoptions.fString as string
+
     const egressFormat = (val: Date | string): string => {
 
       if (typeof val === 'string') {
@@ -198,7 +193,7 @@ export const SmartDateField = makeField<
     }
     //pretty much any date, nothing notable.  ChronoDateCast is fine here,  we just want a date
     testEgressCycle(ChronoDateCast('2009-02-24T00:00:00.000Z') as Date )
-    //this will pick up month/date ambiguity... and it's interaction between locale and fString
+    //this will pick up month/date ambiguity... and its interaction between locale and fString
     testEgressCycle(ChronoDateCast('2009-02-05T00:00:00.000Z') as Date )
 
     return f
