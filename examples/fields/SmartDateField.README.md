@@ -40,7 +40,6 @@ change the line for
  `@flatfile/configure`
 to 
 
-
 `"@flatfile/configure": "^0.5.2",`
 
 additionally you must add the following dependencies:
@@ -64,7 +63,8 @@ For the string `'06/02/09'`, `en` expects day first, then month yielding Februar
 
 ## Using `fString`
 
-You can control the serialization format of `SmartDateField` with the `fString` option.
+You can control how dates are converted back to strings with the fString option. fString represents the date format you want to egress, and specifies how dates should be displayed to the user in the data table.
+
 
 ```
     before: SmartDateField({ required: true, fString: 'yyyy-MM-dd' }),
