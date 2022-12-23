@@ -2,7 +2,8 @@
 
 ## Why
 
-The `SmartDateField` lets you work with operations on `Date`s as objects, without worrying about parsing dates, or formatting dates.  Currently the `SmartDateField` can parse [12 date types](./SmartDateField.spec.ts#L221-L235) without any format strings.  This lets you concentrate on business logic, without worrying about incoming date formats.  This lets you confidently perform arithmetic and comparisons in `compute`, `recordCompute`, `batchRecordsCompute`, and `validate` on `Date`s.  `SmartDateField` has an `fString` argument that controls how the date is serialized after `validate` is finished.  Flatfile users no longer have to convert in and out of dates to maintain formatting.
+The `SmartDateField` lets you work with operations on `Date`s as objects, without worrying about parsing dates, or formatting dates.  Currently the `SmartDateField` can parse [12
+date types](./SmartDateField.spec.ts#L221-L235) without any format strings.  This lets you concentrate on business logic, without worrying about incoming date formats.  This lets you confidently perform arithmetic and comparisons in `compute`, `recordCompute`, `batchRecordsCompute`, and `validate` on `Date`s.  `SmartDateField` has an `fString` argument that controls how the date is serialized after `validate` is finished.  Flatfile users no longer have to convert in and out of dates to maintain formatting.
 
 ## What
 
@@ -55,7 +56,7 @@ additionally you must add the following dependencies:
 
 then run `npm install && npm update`
 
-Reference the [package.json](../../package.json) include on this branch (soon to be main).
+Reference the [package.json](../../package.json).
 
 ## Locale
 You can instantiate a field with a locale argument of `"en"` `"fr"` `"nl"` `"ru"` or `"de"` this controls some default parsing behavor, `en` is the default.  Behavior that changes includes words used for months and days.  It also controls the default order of ambiguous month/day in Dates.
