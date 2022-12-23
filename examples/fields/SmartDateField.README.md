@@ -25,7 +25,7 @@ Please report bugs where this behavior isn't the case.
 
 ## Installing SmartDateField in an existing Flatfile project
 
-`SmartDateField` is currently in public alpha.  This exact code will work currently and against future versions of Flatfile... but we might update the behavior of the `SmartDateField` that is distributed going forward.  This lets us get feedback from users quickly, without locking us into supporting temporary design decisions.
+`SmartDateField` is currently in public alpha.  This exact code will work currently and against future versions of Flatfile, but we might update the behavior of the `SmartDateField` that is distributed going forward.  Please send any feedback or ideas for improvement to support@flatfile.com.
 
 First copy the whole of [SmartDateField.ts](./SmartDateField.ts) into your repo at `src/SmartDateField.ts`  then in `src/index.ts` (or relevant template file where you want to use `SmartDateField`) you can import `SmartDateField` by adding the line
 
