@@ -6,7 +6,7 @@ The `SmartDateField` lets you work with operations on `Date`s as objects, withou
 
 ## What
 
-There are comprehensive tests for `SmartDateField`, the most demonstrative being [DateSheet.spec.ts](./DateSheet.spec.ts) .  This shows how dates can be compared as first class objects in a `recordCompute` function, and then formatted to a different persistence format with `fString`.
+There are comprehensive tests for `SmartDateField`, the most demonstrative being [DateSheet.spec.ts](./DateSheet.spec.ts).  This shows how dates can be compared as first class objects in a `recordCompute` function, and then formatted to a different persistence format with `fString`.
 
 
 ### Assumptions made
