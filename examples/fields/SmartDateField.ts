@@ -7,8 +7,7 @@ const { StringChainCast, FallbackCast } = stdlib.cast
 
 type Locales = "en" | "fr" | "nl" | "ru" | "de"
 
-//const getChronoDateCast = (locale: Locales): (raw:string | Date) => Nullable<Date> => {
-  const getChronoDateCast = (locale: Locales) => {
+const getChronoDateCast = (locale: Locales) => {
   const ChronoStringDateCast = (raw: string | Date |null) => {
     if (typeof raw === 'string') {
       // use chrono.strict so that we dont get dates from strings like 'tomorrow', 'two weeks later'
@@ -75,8 +74,7 @@ type Locales = "en" | "fr" | "nl" | "ru" | "de"
     }
   }
   return ChronoStringDateCast
-
-  }
+}
 
 
 /**
