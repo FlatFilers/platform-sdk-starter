@@ -43,7 +43,6 @@ type Locales = "en" | "fr" | "nl" | "ru" | "de"
         )
       }
 
-      //console.log(firstResult)
       // we want all dates to end up in the UTC timezone, and when we
       // don't have an exact time, default to 00:00:00
       if (hourCertain === false && tzCertain === false) {
@@ -63,7 +62,6 @@ type Locales = "en" | "fr" | "nl" | "ru" | "de"
         )
       } else if (hourCertain === true && tzCertain === true) {
         //we were able to absolutely determin the hour and timezone, nothing to do here
-        //console.log(`chronoDate cast recieved ${raw} returning ${d} ${typeof d}`)
         return d
       }
 
@@ -78,8 +76,16 @@ type Locales = "en" | "fr" | "nl" | "ru" | "de"
   }
   return ChronoStringDateCast
 
-}
-export const zFormat = (val: Date, fString: string): string => {
+  }
+
+
+/**
+ * GMTFormatDate formats all dates relative to Greenwich Mean Time.
+ * This means that the same format string will be regardless of the
+ * system timezone.
+ */
+
+export const GMTFormatDate= (val: Date, fString: string): string => {
   const prevailingTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const d = new Date()
   const tzHours = d.getTimezoneOffset() / 60
@@ -165,10 +171,10 @@ export const SmartDateField = makeField<
         return val
       }
       try {
-        const output =  zFormat(val, fString )
+        const output =  GMTFormatDate(val, fString )
 	return output
       } catch (e: any) {
-	console.log(`error calling zFormat on ${val} of type ${typeof val} with fString of ${fString}.  Err of ${e}`)
+	console.log(`error calling GMTFormatDate on ${val} of type ${typeof val} with fString of ${fString}. Err of ${e}`)
 	//trying to return something that is obviously an error
         //@ts-ignore
         return NaN

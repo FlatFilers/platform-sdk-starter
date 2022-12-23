@@ -1,5 +1,5 @@
 import * as _ from 'lodash'
-import { SmartDateField, ChronoDateCast } From './SmartDateField'
+import { SmartDateField, ChronoDateCast } from './SmartDateField'
 import { FlatfileRecord } from '@flatfile/hooks'
 import { Workbook, Sheet, TextField } from '@flatfile/configure'
 import { SheetTester, matchSingleMessage } from '../../src/utils/testing/SheetTester'

@@ -1,4 +1,4 @@
-import { ChronoDateCast, zFormat } from './SmartDateField'
+import { ChronoDateCast, GMTFormatDate } from './SmartDateField'
 
 const Feb17DstringSimple = '02/17/2009'
 const Feb17DstringComplete = '2009-02-17T00:00:00.000Z'
@@ -11,18 +11,18 @@ describe('Cast Function tests ->', () => {
   })
 
   test('basic fromat equivalence', () => {
-    expect(zFormat(Feb17D, 'yyyy-MM-dd')).toBe('2009-02-17')
+    expect(GMTFormatDate(Feb17D, 'yyyy-MM-dd')).toBe('2009-02-17')
   })
 
   test('basic fromat equivalence', () => {
-    expect(zFormat(Feb17D, "yyyy-MM-dd'T'HH:mm:ss.000'Z'")).toBe(
+    expect(GMTFormatDate(Feb17D, "yyyy-MM-dd'T'HH:mm:ss.000'Z'")).toBe(
       Feb17DstringComplete
     )
   })
   test('full egress cycle', () => {
     const cdDate = ChronoDateCast(Feb17DstringSimple)
     expect(cdDate).toStrictEqual(Feb17D)
-    const slashDateString = zFormat(Feb17D, 'yyyy/MM/dd')
+    const slashDateString = GMTFormatDate(Feb17D, 'yyyy/MM/dd')
     expect(slashDateString).toStrictEqual('2009/02/17')
     expect(ChronoDateCast(slashDateString)).toStrictEqual(Feb17D)
   })
