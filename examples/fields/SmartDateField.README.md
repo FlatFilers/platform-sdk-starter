@@ -103,7 +103,7 @@ Will try to parse all incoming dates normally, if it still can't parse the date,
 
 
 ## Supported date formats
-
+SmartDateField will parse the following formats with no configuration out of the box.
 | Format       | Example                  | Explanation                                          |
 |:-------------|:-------------------------|------------------------------------------------------|
 | MonDDYY      | Feb072009                | Month abbreviation-Day-Year with leading zeros       |
