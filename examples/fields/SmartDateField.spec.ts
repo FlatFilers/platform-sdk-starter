@@ -221,8 +221,6 @@ describe('Cast Function tests ->', () => {
     assertDC("Feb072009", /*--*/  new Date('2009-02-07T00:00:00.000Z')) // "MonDDYY" Month abbreviation-Day-Year with leading zeros
     assertDC("Feb 08, 2009", /**/ new Date('2009-02-08T00:00:00.000Z')) // "Mon DD, YYYY" Month abbreviation, Day with leading zeros, Year
     assertDC("09 Feb, 2009",      new Date('2009-02-09T00:00:00.000Z')) // "DD Mon, YYYY" Day with leading zeros, Month abbreviation, Year
-    assertDC("Feb 15, 2009", /**/ new Date('2009-02-15T00:00:00.000Z')) // "Mon DD, YYYY" Month abbreviation, Day with leading zeros, Year
-    assertDC("16 Feb, 2009", /**/ new Date('2009-02-16T00:00:00.000Z')) // "DD Mon, YYYY" Day with leading zeros, Month abbreviation, Year
     assertDC('02/17/2009', /*--*/ new Date('2009-02-17T00:00:00.000Z')) // "MM/DD/YY" Month-Day-Year with leading zeros - Non ambiguous
     assertDC('18/02/2009', /*--*/ new Date('2009-02-18T00:00:00.000Z')) // "DD/MM/YY" Day-Month-Year with leading zeros - Non ambiguous
     assertDC('2009/02/19', /*--*/ new Date('2009-02-19T00:00:00.000Z')) // "YY/MM/DD" Year-Month-Day with leading zeros - Non ambiguous

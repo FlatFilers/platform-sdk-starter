@@ -2,7 +2,7 @@
 
 ## Why
 
-The `SmartDateField` lets you work with operations on `Date`s as objects, without worrying about parsing dates, or formatting dates.  Currently the `SmartDateField` can parse [14 date types](./SmartDateField.spec.ts#L221-L235) without any format strings.  This lets you concentrate on business logic, without worrying about incoming date formats.  This lets you confidently perform arithmetic and comparisons in `compute`, `recordCompute`, `batchRecordsCompute`, and `validate` on `Date`s.  `SmartDateField` has an `fString` argument that controls how the date is serialized after `validate` is finished.  Flatfile users no longer have to convert in and out of dates to maintain formatting.
+The `SmartDateField` lets you work with operations on `Date`s as objects, without worrying about parsing dates, or formatting dates.  Currently the `SmartDateField` can parse [12 date types](./SmartDateField.spec.ts#L221-L235) without any format strings.  This lets you concentrate on business logic, without worrying about incoming date formats.  This lets you confidently perform arithmetic and comparisons in `compute`, `recordCompute`, `batchRecordsCompute`, and `validate` on `Date`s.  `SmartDateField` has an `fString` argument that controls how the date is serialized after `validate` is finished.  Flatfile users no longer have to convert in and out of dates to maintain formatting.
 
 ## What
 
@@ -103,7 +103,6 @@ SmartDateField({extraParseString:"yyyyMMdd"})
 ```
 Will try to parse all incoming dates normally, if it still can't parse the date, it will try to parse with the parse string. so for the above configured field, the string `'20080302'` parses to `new Date('2008-03-02T00:00:00.000Z')`
 
-
 ## Supported date formats
 SmartDateField will parse the following formats with no configuration out of the box.
 | Format       | Example                  | Explanation                                          |
@@ -111,8 +110,6 @@ SmartDateField will parse the following formats with no configuration out of the
 | MonDDYY      | Feb072009                | Month abbreviation-Day-Year with leading zeros       |
 | Mon DD, YYYY | Feb 15, 2009             | Month abbreviation, Day with leading zeros, Year     |
 | DDMonYY      | 09 Feb, 2009             | Day-Month abbreviation-Year with leading zeros       |
-| Mon DD, YYYY | Feb 15, 2009             | "Month abbreviation, Day with leading zeros, Year"   |
-| DD Mon, YYYY | 16 Feb, 2009             | Day with leading zeros, Month abbreviation, Year     |
 | MM/DD/YY     | 02/17/2009               | Month-Day-Year with leading zeros - non ambiguous    |
 | DD/MM/YY     | 17/02/2009               | Day-Month-Day with leading zeros - non ambiguous     |
 | YY/MM/DD     | 2009/02/19               | Year-Month-Day with leading zeros                    |
@@ -122,5 +119,3 @@ SmartDateField will parse the following formats with no configuration out of the
 | YY/M/D       | 2009/2/23                | Year/Month/Day with no leading zeros - non ambiguous |
 | bM/bD/YY     | ' 2/24/2009'             | Month-Day-Year with leading spaces non ambiguous     |
 | ISO Full     | 2009-02-26T00:00:00.000Z | Fully specified date with time and timezone          |
-
-
