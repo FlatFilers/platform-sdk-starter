@@ -2,7 +2,7 @@
 
 ## Why
 
-The `SmartDateField` lets you work with operations on `Date`s as objects, without worrying about parsing dates, or formatting dates.  Currently the `SmartDateField` can parse [16 date types](./DateField.spec.ts#L43-L60) without any format strings.  This lets you concentrate on business logic, without worrying about incoming date formats.  This lets you confidently perform arithmetic and comparisons in `compute`, `recordCompute`, `batchRecordsCompute`, and `validate` on `Date`s.  `SmartDateField` has an `fString` argument that controls how the date is serialized after `validate` is finished.  Flatfile users no longer have to convert in and out of dates to maintain formatting.
+The `SmartDateField` lets you work with operations on `Date`s as objects, without worrying about parsing dates, or formatting dates.  Currently the `SmartDateField` can parse [14 date types](./SmartDateField.spec.ts#L221-L235) without any format strings.  This lets you concentrate on business logic, without worrying about incoming date formats.  This lets you confidently perform arithmetic and comparisons in `compute`, `recordCompute`, `batchRecordsCompute`, and `validate` on `Date`s.  `SmartDateField` has an `fString` argument that controls how the date is serialized after `validate` is finished.  Flatfile users no longer have to convert in and out of dates to maintain formatting.
 
 ## What
 
@@ -70,7 +70,7 @@ You can control how dates are converted back to strings with the fString option.
     before: SmartDateField({ required: true, fString: 'yyyy-MM-dd' }),
 ```
 
-`fString` is a format string adhering to [Unicode Technical Standard #35](https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table).  You can read more in the [Date-fns docs](https://date-fns.org/v2.29.3/docs/format).  At some future point we might add support for [python/pandas format strings](https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior). 
+`fString` is a format string adhering to [Unicode Technical Standard #35](https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table).  You can read more in the [Date-fns docs](https://date-fns.org/v2.29.3/docs/format).
 
 
 ### Errors when using `fString`
@@ -104,19 +104,21 @@ Will try to parse all incoming dates normally, if it still can't parse the date,
 
 ## Supported date formats
 
-| Format       | Example           | Explanation                                         |
-|:-------------|:------------------|-----------------------------------------------------|
-| DDMonYY      | 09 Feb, 2009      | Day-Month abbreviation-Year with leading zeros      |
-| iso full     | Feb142009         | '2009-02-26T00:00:00.000Z'                          |
-| D/M/YY       | 22/2/2009         | Day-Month-Year with no leading zeros                |
-| DD Mon, YYYY | 16 Feb, 2009      | Day with leading zeros, Month abbreviation, Year    |
-| DD/MM/YY     | 18/02/2009        | Day-Month-Year with leading zeros (                 |
-| M/D/YY       | 2/21/2009         | Month-Day-Year with no leading zeros                |
-| MM/DD/YY     | 02/17/2009        | Month-Day-Year with leading zeros                   |
-| Mon DD, YYYY | Feb 15, 2009      | Month abbreviation, Day with leading zeros, Year    |
-| MonDDYY      | Feb072009         | Month abbreviation-Day-Year with leading zeros      |
-| Month D, Yr  | February 20, 2009 | Month name-Day-Year with no leading zeros           |
-| YY/M/D       | 2009/2/23         | Year-Month-Day with no leading zeros                |
-| YY/MM/DD     | 2009/02/19        | Year-Month-Day with leading zeros                   |
-| bM/bD/YY     | 2/24/2009         | Month-Day-Year with spaces instead of leading zeros |
+| Format       | Example                  | Explanation                                          |
+|:-------------|:-------------------------|------------------------------------------------------|
+| MonDDYY      | Feb072009                | Month abbreviation-Day-Year with leading zeros       |
+| Mon DD, YYYY | Feb 15, 2009             | Month abbreviation, Day with leading zeros, Year     |
+| DDMonYY      | 09 Feb, 2009             | Day-Month abbreviation-Year with leading zeros       |
+| Mon DD, YYYY | Feb 15, 2009             | "Month abbreviation, Day with leading zeros, Year"   |
+| DD Mon, YYYY | 16 Feb, 2009             | Day with leading zeros, Month abbreviation, Year     |
+| MM/DD/YY     | 02/17/2009               | Month-Day-Year with leading zeros - non ambiguous    |
+| DD/MM/YY     | 17/02/2009               | Day-Month-Day with leading zeros - non ambiguous     |
+| YY/MM/DD     | 2009/02/19               | Year-Month-Day with leading zeros                    |
+| Month D, Yr  | February 20, 2009        | Month name-Day-Year with no leading zeros            |
+| M/D/YY       | 2/21/2009                | Month/Day/Year with no leading zeros - non ambiguous |
+| D/M/YY       | 22/2/2009                | Day-Month-Year with no leading zeros - non ambiguous |
+| YY/M/D       | 2009/2/23                | Year/Month/Day with no leading zeros - non ambiguous |
+| bM/bD/YY     | ' 2/24/2009'             | Month-Day-Year with leading spaces non ambiguous     |
+| ISO Full     | 2009-02-26T00:00:00.000Z | Fully specified date with time and timezone          |
+
 
