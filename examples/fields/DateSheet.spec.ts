@@ -164,13 +164,13 @@ describe('Extra test ->', () => {
 
 describe('SmartDateField tests ->', () => {
   test('prevent egressCycle errors at instantiation time', () => {
-    try {
-      const sdf = SmartDateField({fString:"yyyy-MM-dd'paddy'"})
+    expect(() => {
+      SmartDateField({fString:"yyyy-MM-dd'paddy'"}) })
+      .toThrow("Cannot instantiate a SmartDateField with an fString of yyyy-MM-dd'paddy', and locale of 'en'. it fails verifyEgressCycle")
 
-      // Fail test if above expression doesn't throw anything.
-      expect(true).toBe(false);
-    } catch (e:any) {
-      expect(e.message).toBe("Cannot instantiate a SmartDateField with an fString of yyyy-MM-dd'paddy', it fails verifyEgressCycle")
-  }
+    expect(() => {
+      SmartDateField({locale:'fr', fString:"MM-dd-yy'"}) })
+      .toThrow("Cannot instantiate a SmartDateField with an fString of MM-dd-yy', and locale of 'fr'. it fails verifyEgressCycle")
+    SmartDateField({fString:"MM-dd-yy'"})
   })
 })
