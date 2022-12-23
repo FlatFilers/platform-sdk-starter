@@ -41,7 +41,7 @@ change the line for
 to 
 
 
-`"@flatfile/configure": "^0.4.8",`
+`"@flatfile/configure": "^0.5.2",`
 
 additionally you must add the following dependencies:
 ```
@@ -52,9 +52,15 @@ additionally you must add the following dependencies:
     }
 ```
 
-then run `npm install`
+then run `npm install && npm update`
 
 Reference the [package.json](../../package.json) include on this branch (soon to be main).
+
+## Locale
+You can instantiate a field with a locale argument of `"en"` `"fr"` `"nl"` `"ru"` or `"de"` this controls some default parsing behavor, `en` is the default.  Behavior that changes includes words used for months and days.  It also controls the default order of ambiguous month/day in Dates.
+
+For the string `'06/02/09'`, `en` expects day first, then month yielding February 6th
+                             `fr` expects month first, yielding June 2nd.
 
 ## Using `fString`
 
@@ -65,6 +71,28 @@ You can control the serialization format of `SmartDateField` with the `fString` 
 ```
 
 `fString` is a format string adhering to [Unicode Technical Standard #35](https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table).  You can read more in the [Date-fns docs](https://date-fns.org/v2.29.3/docs/format).  At some future point we might add support for [python/pandas format strings](https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior). 
+
+
+### Errors when using `fString`
+
+You need to be careful when selecting an `fString` to make sure it agrees with the locale parsing format.  If it doesn't, you will seen an error on publish like this: 
+the field of `SmartDateField({locale:'fr', fString:"MM-dd-yy'"})` will yield an error like
+
+```
+castVal Wed Feb 04 2009 19:00:00 GMT-0500 (Eastern Standard Time) becomes 02-05-09 after egressFormat, which when cast gives Fri May 01 2009 20:00:00 GMT-0400 (Eastern Daylight Time)
+/Users/paddy/platform-sdk-starter/.flatfile/build.js:57356
+        throw new Error(`Error: instantiating a SmartDateField with an fString of ${fString}, and locale of '${locale2}'.  will result in data loss or unexpected behavior`);
+              ^
+
+Error: Error: instantiating a SmartDateField with an fString of MM-dd-yy', and locale of 'fr'.  will result in data loss or unexpected behavior
+```
+
+In this case we have a field with locale of `fr`.  with an fString of MM-dd-yy.  This format string doesn't agree with the locale.  This can lead to unexpected behavior.
+
+If we didn't have this check, the following unwanted behavior could occur...
+You start with a file containing "Feb 5th 2009" which is parsed as a date, then presented and saved as 02-05-09.  if this same value is pasted into the table, it is parsed next as May 2nd 2009.  This is unexpected behavior so we throw an error.
+
+
 
 ## Using `extraParseString`
 Sometimes SmartDateField can't parse a date because it doesn't know how, or parsing would require an assumption that isn't reliable.  For those cases you can use `extraParseString`.

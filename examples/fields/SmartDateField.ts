@@ -5,7 +5,7 @@ import parse from 'date-fns/parse'
 import { stdlib, Field, DateField, Nullable, verifyEgressCycle, makeField, mergeFieldOptions } from '@flatfile/configure'
 const { StringChainCast, FallbackCast } = stdlib.cast
 
-type Locales = "en" | "fr" | "ja" | "nl" | "ru" | "de"
+type Locales = "en" | "fr" | "nl" | "ru" | "de"
 
 //const getChronoDateCast = (locale: Locales): (raw:string | Date) => Nullable<Date> => {
   const getChronoDateCast = (locale: Locales) => {
