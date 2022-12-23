@@ -396,6 +396,11 @@ When releasing pieces to the SDK our thought process is guided by the following 
 2. Can we support this code for the next 6 months until a breaking release?
 3. Does this work as we expect it to?
 
+## Extra Docs
+Links to more in-depth documentation we have written about features.
+
+* [SmartDateField](./examples/fields/SmartDateField.README.md)
+
 ---
 
 ### FAQ
