@@ -1,29 +1,10 @@
-import {
-  Sheet,
-  Workbook,
-  TextField,
-  Message,
-  LinkedField,
-} from '@flatfile/configure'
-
-// const LinkedSheet = new Sheet(
-//   'LinkedSheet',
-//   {
-//     firstName: TextField('First Name'),
-//     middleName: TextField('Middle'),
-//   },
-//   {}
-// )
+import { Sheet, Workbook, TextField, Message } from '@flatfile/configure'
 
 const TestSheet = new Sheet(
   'TestSheet',
   {
     firstName: TextField('First Name'),
     middleName: TextField('Middle'),
-    // linkedField: LinkedField({
-    //   label: 'Link to LinkedSheet',
-    //   sheet: LinkedSheet,
-    // }),
     lastName: TextField({
       label: 'Last Name',
       compute: (val: string): string => {
