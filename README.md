@@ -59,7 +59,6 @@ const Employees = new Sheet(
   },
   {
     allowCustomFields: true,
-    readOnly: true,
     recordCompute: (record) => {
       const fullName = `{record.get('firstName')} {record.get('lastName')}`
       record.set('fullName', fullName)
@@ -254,7 +253,6 @@ const Employees = new Sheet(
   ...
   {
     allowCustomFields: true,
-    readOnly: true,
     recordCompute: (record) => {
       const fullName = `{record.get('firstName')} {record.get('lastName')}`
       record.set('fullName', fullName)
@@ -285,7 +283,6 @@ First we specify two options on the sheet: `allowCustomFields` and `readOnly`.
 
 `allowCustomFields`: explain what this does and what its default value is
 
-`readOnly`: explain what this does and what its default value is
 
 -->
 
@@ -398,6 +395,11 @@ When releasing pieces to the SDK our thought process is guided by the following 
 1. Does this solve a problem in an extensible way? Will we paint ourselves into a corner to solve a current problem?
 2. Can we support this code for the next 6 months until a breaking release?
 3. Does this work as we expect it to?
+
+## Extra Docs
+Links to more in-depth documentation we have written about features.
+
+* [SmartDateField](./examples/fields/SmartDateField.README.md)
 
 ---
 
@@ -615,7 +617,6 @@ This field will not be exported.
 ```ts
 export interface SheetOptions<FC> {
   allowCustomFields: boolean
-  readOnly: boolean
   recordCompute: (record:FlatfileRecord<any>, logger?:any): void
   batchRecordsCompute: (records: FlatfileRecords<any>) => Promise<void>
 

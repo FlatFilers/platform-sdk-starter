@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { IRecordInfo, TRecordData, TPrimitive,  FlatfileRecords, FlatfileSession, IPayload } from '@flatfile/hooks'
 import { NumberField, Sheet, TextField, Workbook } from '@flatfile/configure'
 import { sheetInterpret } from '../../expression-lang/sheetInterpret'
-
+import { Workbook } from '@flatfile/configure'
 const localSheetCompute = (
   sheet: Sheet<any>,
   records: FlatfileRecords<any>
@@ -144,13 +144,6 @@ export class SheetTester {
   }
 
 }
-
-// export interface InfoObj  {
-//   field: string
-//   message: string
-//   level: TRecordStageLevel
-//   stage: 'validate' | 'compute'
-// }
 
 export type InfoObj = IRecordInfo<TRecordData<TPrimitive>, string | number>
 
