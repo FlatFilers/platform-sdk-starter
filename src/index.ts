@@ -11,7 +11,10 @@ import {
   TextField,
   Workbook,
 } from '@flatfile/configure'
-import { createReferenceId } from '../src/common/common'
+
+import { SetValWhen, RCChain, createReferenceId, validateRegex, RequiredWhen, ValidateNumberValueRange  } from '../src/common/common'
+import { bicRegex } from '../src/common/regex'
+import { instrumentTypeOptions } from '../src/common/types'
 
 
 const Models = new Sheet(
@@ -25,11 +28,11 @@ const Models = new Sheet(
           annotations: {
               default: false,
           },
-          //stageVisibility: {
-             // mapping: false,
-              //review: true,
-              //export: true
-          //}
+          stageVisibility: {
+             mapping: false,
+              review: true,
+              export: true
+          }
       }),
 
       name: TextField({
@@ -40,11 +43,11 @@ const Models = new Sheet(
           annotations: {
               default: false,
           },
-          // stageVisibility: {
-          //     mapping: true,
-          //     review: true,
-          //     export: true
-          // }
+          stageVisibility: {
+              mapping: true,
+              review: true,
+              export: true
+          }
       }),
 
       targetStyle: OptionField({
@@ -58,11 +61,11 @@ const Models = new Sheet(
           annotations: {
               default: false,
           },
-          //stageVisibility: {
-            //  mapping: true,
-              //review: true,
-              //export: true
-          //}
+          stageVisibility: {
+             mapping: true,
+              review: true,
+              export: true
+          }
       }),
 
       valuation: OptionField({
@@ -77,11 +80,11 @@ const Models = new Sheet(
           annotations: {
               default: false,
           },
-          //stageVisibility: {
-            //  mapping: true,
-              //review: true,
-              //export: true
-          //}
+          stageVisibility: {
+             mapping: true,
+              review: true,
+              export: true
+          }
       }),
 
       toleranceType: OptionField({
@@ -94,11 +97,11 @@ const Models = new Sheet(
           annotations: {
               default: false,
           },
-          // stageVisibility: {
-          //     mapping: true,
-          //     review: true,
-          //     export: true
-          // }
+          stageVisibility: {
+              mapping: true,
+              review: true,
+              export: true
+          }
       }),
   },
   {
@@ -119,11 +122,11 @@ const AssetClass = new Sheet(
       annotations: {
         default: false,
               },
-      // stageVisibility: {
-      //   mapping: false,
-      //   review: true,
-      //   export: true
-      // }
+      stageVisibility: {
+        mapping: false,
+        review: true,
+        export: true
+      }
     }),
     name: TextField({
       label: 'Asset Class Name',
@@ -133,11 +136,11 @@ const AssetClass = new Sheet(
       annotations: {
         default: false,
               },
-      // stageVisibility: {
-      //   mapping: true,
-      //   review: true,
-      //   export: true
-      // }
+      stageVisibility: {
+        mapping: true,
+        review: true,
+        export: true
+      }
     }),
     legacyCodeAssetClass: TextField({
       label: 'Asset Class Legacy Code',
@@ -147,11 +150,11 @@ const AssetClass = new Sheet(
       annotations: {
         default: false,
               },
-      // stageVisibility: {
-      //   mapping: true,
-      //   review: true,
-      //   export: false
-      // }
+      stageVisibility: {
+        mapping: true,
+        review: true,
+        export: false
+      }
     })
   },
   {
@@ -161,6 +164,298 @@ const AssetClass = new Sheet(
     },
   },
 )
+  
+  const FinancialInstitutions = new Sheet(
+    'Financial Institutions',
+    {
+      referenceId: TextField({
+        label: 'Reference Id',
+        required: false,
+        unique: true,
+        primary: true,
+        description: 'Reference Id of the Finacial Institution',
+        annotations: {
+          default: false,
+                },
+        stageVisibility: {
+          mapping: false,
+          review: true,
+          export: true
+        }
+      }),
+  
+      name: TextField({
+        label: 'Name',
+        description: 'The name of the Financial Institution',
+        required: true,
+        unique: true,
+        primary: false,
+        annotations: {
+          default: false,
+                },
+        stageVisibility: {
+          mapping: true,
+          review: true,
+          export: true
+        }
+      }),
+  
+      shortCode: TextField({
+        label: 'Short Code',
+        description:
+          'A short code representing the Financial Institution. *Must be unique',
+        required: true,
+        unique: true,
+        primary: false,
+        annotations: {
+          default: false,
+                },
+        stageVisibility: {
+          mapping: true,
+          review: true,
+          export: true
+        }
+      }),
+  
+      institutionType: OptionField({
+        label: 'Institution Type',
+        description: 'The type of Financial Institution defined by the firm',
+        required: false,
+        options: {
+          'CUSTODIAN': 'CUSTODIAN',
+          'EXECUTING-BROKER': 'EXECUTING-BROKER',
+          'PRIME-BROKER': 'PRIME-BROKER',
+        },
+        unique: false,
+        primary: false,
+        annotations: {
+          default: false,
+                },
+        stageVisibility: {
+          mapping: true,
+          review: true,
+          export: true
+        }
+      }),
+  
+      partytype: OptionField({
+        label: 'Party Type',
+        options: {
+          'ATS': 'ATS',
+          'EXECUTING-BROKER': 'EXECUTING-BROKER',
+          'EMS': 'EMS',
+        },
+        description:
+          'Party type of the financial institution',
+        required: false,
+        unique: false,
+        primary: false,
+        annotations: {
+          default: false,
+                },
+        stageVisibility: {
+          mapping: true,
+          review: true,
+          export: true
+        }
+      }),
+
+      executionmethod: OptionField({
+        label: 'Execution Method',
+        description: 'The execution method of the broker',
+        options: {
+          'FILE': 'FILE',
+          'FIX': 'FIX',
+          'MANUAL': 'MANUAL',
+        },
+        required: false,
+        unique: false,
+        primary: false,
+        annotations: {
+          default: false,
+                },
+        stageVisibility: {
+          mapping: true,
+          review: true,
+          export: true
+        }
+      }),
+  
+      fixconnectiontype: OptionField({
+        label: 'Fix Connection Type',
+        description: '',
+        options: {
+          'CONDITIONAL-ORDERS': 'CONDITIONAL-ORDERS',
+          'HIGH-TOUCH': 'HIGH-TOUCH',
+          'LOW-TOUCH': 'LOW-TOUCH',
+          'STAGING': 'STAGING',
+        },
+        required: false,
+        unique: false,
+        primary: false,
+        annotations: {
+          default: false,
+                },
+        stageVisibility: {
+          mapping: true,
+          review: true,
+          export: true
+        }
+      }),
+  
+      crossingnetwork: OptionField({
+        label: 'Crossing Network',
+        description: 'The dark pool that this financial institution represents',
+        options: {
+          'BIDS': 'BIDS',
+          'BLOCKCROSS': 'BLOCKCROSS',
+          'LIQUIDNET': 'LIQUIDNET',
+          'LUMINX': 'LUMINX',
+          'POSIT': 'POSIT',
+        },
+        required: false,
+        unique: false,
+        primary: false,
+        annotations: {
+          default: false,
+                },
+        stageVisibility: {
+          mapping: true,
+          review: true,
+          export: true
+        }
+      }),
+  
+      fixcode: TextField({
+        label: 'Fix Code',
+        description: 'Provided by Itiviti',
+        required: false,
+        unique: false,
+        primary: false,
+        annotations: {
+          default: false,
+                },
+        stageVisibility: {
+          mapping: true,
+          review: true,
+          export: true
+        }
+      }),
+  
+      instrumenttype: OptionField({
+        label: 'Instrument Type',
+        description:
+          'Must be a valid aggregate or RefID from FetchInstrumentTypes',
+        options: {...instrumentTypeOptions},
+        required: false,
+        unique: false,
+        primary: false,
+        annotations: {
+          default: false,
+                },
+        stageVisibility: {
+          mapping: true,
+          review: true,
+          export: true
+        }
+      }),
+  
+      region: OptionField({
+        label: 'Region',
+        description: 'Region the broker trades are in',
+        options: {
+          'AMERICAS': 'Americas',
+          'ASIA': 'Asia',
+          'AFRICA': 'Africa',
+          'OCEANIA': 'Oceania',
+          'EUROPE': 'Europe',
+        },
+        required: false,
+        unique: false,
+        primary: false,
+        annotations: {
+          default: false,
+                },
+        stageVisibility: {
+          mapping: true,
+          review: true,
+          export: true
+        }
+      }),
+
+      dtcids: NumberField({
+        label: 'DTC IDs',
+        description: 'DTC Identifier',
+        required: false,
+        unique: false,
+        primary: false,
+        annotations: {
+          default: false,
+                },
+        stageVisibility: {
+          mapping: true,
+          review: true,
+          export: true
+        },
+        validate: (v: number) => { return ValidateNumberValueRange(v, 0, 99999999) }
+      }),
+  
+      posttrademethod: OptionField({
+        label: 'Post Trade Method',
+        options: {
+          CTM: 'CTM',
+          MANUAL: 'Manual',
+        },
+        required: false,
+        unique: false,
+        primary: false,
+        annotations: {
+          default: false,
+                },
+        stageVisibility: {
+          mapping: true,
+          review: true,
+          export: true
+        }
+      }),
+  
+      bic: TextField({
+        label: 'BIC',
+        description: 'The bank identification code. Must be alphanumeric',
+        required: false,
+        unique: false,
+        primary: false,
+        annotations: {
+          default: false,
+                },
+        stageVisibility: {
+          mapping: true,
+          review: true,
+          export: true
+        },
+        validate: (v: string) => { return validateRegex(v, bicRegex, 'Invalid BIC value') }
+      }),
+    },
+    {
+      recordCompute:  (record, _session, _logger) => {
+        createReferenceId("FINANCIAL_INSTITUTION", 'name', 'referenceId', record)
+        SetValWhen('institutionType', ['CUSTODIAN', 'PRIME-BROKER'], 'executionmethod', null)(record)  
+        SetValWhen('institutionType', ['CUSTODIAN', 'PRIME-BROKER'], 'instrumenttype', null)(record)
+        SetValWhen('institutionType', ['CUSTODIAN', 'PRIME-BROKER'], 'partytype', null)(record)
+        SetValWhen('fixconnectiontype', ['HIGH-TOUCH', 'LOW-TOUCH', 'STAGING'], 'crossingnetwork', null)(record)
+        SetValWhen('executionmethod', ['FILE','MANUAL'], 'fixconnectiontype', null)(record)
+        RequiredWhen('institutionType', 'EXECUTING-BROKER', 'partytype')(record)
+        RequiredWhen('institutionType', 'EXECUTING-BROKER', 'shortCode')(record)
+        RequiredWhen('institutionType', 'EXECUTING-BROKER', 'instrumenttype')(record)
+        RequiredWhen('institutionType', 'EXECUTING-BROKER', 'executionmethod')(record)
+        RequiredWhen('institutionType', 'EXECUTING-BROKER', 'posttrademethod')(record)
+        RequiredWhen('executionmethod', 'FIX', 'fixconnectiontype')(record)
+        RequiredWhen('executionmethod', 'FIX', 'fixcode')(record)
+        RequiredWhen('fixconnectiontype', 'CONDITIONAL-ORDERS', 'crossingnetwork')(record)
+        
+      }         
+    }
+  )
 
 
 // const BasicSheetPortal = new Portal({
@@ -169,14 +464,15 @@ const AssetClass = new Sheet(
 // })
 
 export default new SpaceConfig({
-  name: 'Ridgeline Testing',
+  name: 'Ridgeline (Models, Asset Class, Financial)',
   workbookConfigs: {
     'basic':new Workbook({
-      name: 'RidgelineTest',
-      namespace: 'Ridgeline',
+      name: 'Ridgeline (Models, Asset Class, Financial)',
+      namespace: 'Ridgeline (Models, Asset Class, Financial)',
       sheets: {
         Models,
         AssetClass,
+        FinancialInstitutions,
       },
       // portals: [BasicSheetPortal],
     })
