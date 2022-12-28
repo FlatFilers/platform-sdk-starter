@@ -1,0 +1,36 @@
+fstring,raw_date,base_date,en_date,Fr_date,Ja_date,Nl_date,Ru_date,De_date,full_description
+MonDDYY,Feb072009,2009-02-07T00:00:00.000Z,Feb072009,Feb072009,Feb072009,Feb072009,Feb072009,Feb072009,Month abbreviation-Day-Year with leading zeros
+"Mon DD, YYYY","Feb 08, 2009",2009-02-08T00:00:00.000Z,"Feb 08, 2009","Feb 08, 2009","Feb 08, 2009","Feb 08, 2009","Feb 08, 2009","Feb 08, 2009","Month abbreviation, Day with leading zeros, Year"
+DDMonYY,25Feb2009,2009-02-25T00:00:00.000Z,25Feb2009,25Feb2009,25Feb2009,25Feb2009,25Feb2009,25Feb2009,Day-Month abbreviation-Year with leading zeros
+"DD Mon, YYYY","09 Feb, 2009",2009-02-09T00:00:00.000Z,"09 Feb, 2009","09 Feb, 2009","09 Feb, 2009","09 Feb, 2009","09 Feb, 2009","09 Feb, 2009","Day with leading zeros, Month abbreviation, Year"
+MonDDYY,Feb142009,2009-02-14T00:00:00.000Z,Feb142009,Feb142009,Feb142009,Feb142009,Feb142009,Feb142009,Month abbreviation-Day-Year with leading zeros
+"Mon DD, YYYY","Feb 15, 2009",2009-02-15T00:00:00.000Z,"Feb 15, 2009","Feb 15, 2009","Feb 15, 2009","Feb 15, 2009","Feb 15, 2009","Feb 15, 2009","Month abbreviation, Day with leading zeros, Year"
+"DD Mon, YYYY","16 Feb, 2009",2009-02-16T00:00:00.000Z,"16 Feb, 2009","16 Feb, 2009","16 Feb, 2009","16 Feb, 2009","16 Feb, 2009","16 Feb, 2009","Day with leading zeros, Month abbreviation, Year"
+MM/DD/YY,02/17/2009,2009-02-17T00:00:00.000Z,02/17/2009,02/17/2009,02/17/2009,02/17/2009,02/17/2009,02/17/2009,Month-Day-Year with leading zeros
+DD/MM/YY,18/02/2009,2009-02-18T00:00:00.000Z,18/02/2009,18/02/2009,18/02/2009,18/02/2009,18/02/2009,18/02/2009,Day-Month-Year with leading zeros (
+YY/MM/DD,2009/02/19,2009-02-19T00:00:00.000Z,2009/02/19,2009/02/19,2009/02/19,2009/02/19,2009/02/19,2009/02/19,Year-Month-Day with leading zeros
+"Month D, Yr","February 20, 2009",2009-02-20T00:00:00.000Z,"February 20, 2009","February 20, 2009","February 20, 2009","February 20, 2009","February 20, 2009","February 20, 2009",Month name-Day-Year with no leading zeros
+M/D/YY,2/21/2009,2009-02-21T00:00:00.000Z,2/21/2009,2/21/2009,2/21/2009,2/21/2009,2/21/2009,2/21/2009,Month-Day-Year with no leading zeros
+D/M/YY,22/2/2009,2009-02-22T00:00:00.000Z,22/2/2009,22/2/2009,22/2/2009,22/2/2009,22/2/2009,22/2/2009,Day-Month-Year with no leading zeros
+YY/M/D,2009/2/23,2009-02-23T00:00:00.000Z,2009/2/23,2009/2/23,2009/2/23,2009/2/23,2009/2/23,2009/2/23,Year-Month-Day with no leading zeros
+"Month D, Yr","February 20, 2009",2009-02-20T00:00:00.000Z,"February 20, 2009","February 20, 2009","February 20, 2009","February 20, 2009","February 20, 2009","February 20, 2009", Month name-Day-Year with no leading zeros
+bM/bD/YY, 2/24/2009,2009-02-24T00:00:00.000Z, 2/24/2009, 2/24/2009, 2/24/2009, 2/24/2009, 2/24/2009, 2/24/2009,Month-Day-Year with spaces instead of leading zeros
+MM/DD/YY,02/27/2009,2009-02-27T00:00:00.000Z,02/27/2009,02/27/2009,02/27/2009,02/27/2009,02/27/2009,02/27/2009,Month-Day-Year with leading zeros
+bM/bD/YY, 2/8/2009,2009-02-08T00:00:00.000Z, 2/8/2009, 2/8/2009, 2/8/2009, 2/8/2009, 2/8/2009, 2/8/2009,Month-Day-Year with spaces instead of leading zeros
+bM/bD/YY, 8/2/2009,2009-08-02T00:00:00.000Z, 8/2/2009, 8/2/2009, 8/2/2009, 8/2/2009, 8/2/2009, 8/2/2009,Month-Day-Year with spaces instead of leading zeros
+D/M/YY,03/3/2009,2009-03-03T00:00:00.000Z,03/3/2009,03/3/2009,03/3/2009,03/3/2009,03/3/2009,03/3/2009,Day-Month-Year with no leading zeros                      
+??-Mon-??,25-Feb-19,,25-Feb-19,25-Feb-19,25-Feb-19,25-Feb-19,25-Feb-19,25-Feb-19,
+bD/bM/YY,17/ 2/2009,,17/ 2/2009,17/ 2/2009,17/ 2/2009,17/ 2/2009,17/ 2/2009,17/ 2/2009,Day-Month-Year with spaces instead of leading zeros
+YY/bM/bD,2009/ 2/17,,2009/ 2/17,2009/ 2/17,2009/ 2/17,2009/ 2/17,2009/ 2/17,2009/ 2/17,Year-Month-Day with spaces instead of leading zeros
+YYMMDD,20090217,,20090217,20090217,20090217,20090217,20090217,20090217,Year-Month-Day with no separators
+YYYY-Mon-DD,"2009, Feb 17",,"2009, Feb 17","2009, Feb 17","2009, Feb 17","2009, Feb 17","2009, Feb 17","2009, Feb 17","Year, Month abbreviation, Day with leading zeros"
+"YYYY, Mon DD","2009, Feb 17",,"2009, Feb 17","2009, Feb 17","2009, Feb 17","2009, Feb 17","2009, Feb 17","2009, Feb 17","Year, Month abbreviation, Day with leading zeros"
+MMDDYYYY,2172009,,2172009,2172009,2172009,2172009,2172009,2172009,Month-Day-Year with no separators
+DDMMYYYY,17022009,,17022009,17022009,17022009,17022009,17022009,17022009,Day-Month-Year with no separators
+YYMonDD,2009Feb17,,2009Feb17,2009Feb17,2009Feb17,2009Feb17,2009Feb17,2009Feb17,Year-Month abbreviation-Day with leading zeros
+day/YY,48/2009,,48/2009,48/2009,48/2009,48/2009,48/2009,48/2009,Day of year (counting consecutively from January 1)-Year 
+YY/day,2009/48,,2009/48,2009/48,2009/48,2009/48,2009/48,2009/48,Year-Day of Year (counting consecutively from January 1—often called the Julian date form
+M/D/YY,2/21/2009,2009-02-21T00:00:00.000Z,2/21/2009,2/21/2009,2/21/2009,2/21/2009,2/21/2009,2/21/2009,Month-Day-Year non ambiguous day/month – day over 12
+D/M/YY,22/2/2009,2009-02-22T00:00:00.000Z,22/2/2009,22/2/2009,22/2/2009,22/2/2009,22/2/2009,22/2/2009,Day-Month-Year with no leading zeros non ambiguous day/month – day over 12
+M/D/YY (amb),2/6/2009,2009-02-06T00:00:00.000Z,2/6/2009,2/6/2009,2/6/2009,2/6/2009,2/6/2009,2/6/2009,Month-Day-Year with no leading zeros -ambiguous
+D/M/YY (amb),06/02/09,2009-02-06T00:00:00.000Z,06/02/09,06/02/09,06/02/09,06/02/09,06/02/09,06/02/09,Day-Month-Year with no leading zeros -ambiguous

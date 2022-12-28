@@ -1,6 +1,5 @@
 import _ from 'lodash'
-
-import { FlatfileRecords, FlatfileSession, IPayload } from '@flatfile/hooks'
+import { IRecordInfo, TRecordData, TPrimitive,  FlatfileRecords, FlatfileSession, IPayload } from '@flatfile/hooks'
 import { Workbook } from '@flatfile/configure'
 
 export class SheetTester {
@@ -97,14 +96,59 @@ export class SheetTester {
     return transform(pkey, value)
   }
 
-  public async testRecord(recordBatch: {}) {
-    const transformedRecords = await this.transformRecords([recordBatch])
+  public async testRecord(record: {}) {
+    const transformedRecords = await this.transformRecords([record])
     return transformedRecords.records[0].value
   }
 
-  public async testRecords(recordBatch: any[]) {
+  public async testRecords(recordBatch: Record<string, any>[]) {
     const transformedRecords = await this.transformRecords(recordBatch)
 
     return transformedRecords.records.map((r) => r.value)
   }
+  public async testMessage(record: {}) {
+    const transformedRecords = await this.transformRecords([record])
+    return transformedRecords.records.map((r) => r.toJSON().info)[0]
+  }
+  public async testMessages(recordBatch: Record<string, any>[]) {
+    const transformedRecords = await this.transformRecords(recordBatch)
+    return transformedRecords.records.map((r) => r.toJSON().info)
+  }
+
 }
+
+export type InfoObj = IRecordInfo<TRecordData<TPrimitive>, string | number>
+
+export const removeUndefineds = (obj:Record<string, any>) => _.pickBy(obj, _.identity)
+export const matchMessages = (messages:InfoObj[], field?:string, message?:string, level?:string): false| any[] => {
+
+  const results = _.filter(messages, removeUndefineds({field,message,level}))
+  if (results.length > 0) {
+    return results
+  }
+  return false
+}
+
+export const matchSingleMessage = (
+  messages:InfoObj[], field?:string, message?:string, level?:string): false| any => {
+  const results = matchMessages(messages, field, message, level)
+  if (results === false) {
+    return false
+  }
+  if (results.length === 1) {
+    return results[0]
+  }
+  if (results.length > 1) {
+    throw new Error("more than one message returned")
+  }
+  if (results.length === 0) {
+    //unreachable
+    return false
+  }
+  //unreachable
+  return false
+}
+
+//use the match functions like
+//     const res = await testSheet.testMessage(inputRow)
+//    expect(matchSingleMessage(res, 'numField', 'more than 5', 'error')).toBeTruthy()
