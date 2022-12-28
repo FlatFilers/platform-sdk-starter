@@ -1,5 +1,5 @@
-
 # Platform SDK Starter
+
 The platform SDK starter is a way to configure your Flatfile Workbook in code.
 
 Visit [the Guides](https://flatfile.com/docs/guides/) to learn more about using Flatfile and the Platform SDK Starter.
@@ -7,7 +7,6 @@ Visit [the Guides](https://flatfile.com/docs/guides/) to learn more about using 
 ## Getting Started
 
 Visit [CLI quickstart](https://flatfile.com/docs/get-started/quickstart/) and follow instructions to sign up for a Flatfile account and run this code locally.
-
 
 ### 1. Introduction to Workbooks
 
@@ -60,7 +59,6 @@ const Employees = new Sheet(
   },
   {
     allowCustomFields: true,
-    readOnly: true,
     recordCompute: (record) => {
       const fullName = `{record.get('firstName')} {record.get('lastName')}`
       record.set('fullName', fullName)
@@ -116,11 +114,10 @@ const LinkedSheet = new Sheet(
 ...
 ```
 
-[View full source code](examples/FullExample.ts)
+[View full source code](examples/workbooks/FullExample.ts)
 
 The above code will generate a **Workbook** that looks like this:
 ![Sample Data upload](/assets/SampleImportErrors.png)
-
 
 ### 2. Deploy the Schema
 
@@ -139,7 +136,7 @@ Now, let's take a closer look at the example **Workbook** we just deployed, star
 3. `DateField`: a date
 4. `OptionField`: a field with a set of pre-defined values
 5. `BooleanField`: a true / false field
-5. `LinkedField`: a field that links two sheets together
+6. `LinkedField`: a field that links two sheets together
 
 ### Field options
 
@@ -177,6 +174,7 @@ salary: NumberField({
   },
 }),
 ```
+
 Here we've indicated that the `salary` field is required, and we've given it a human-readable description.
 
 We also provide a `validate` function that defines what we consider to be a valid value for this field. In this case, we've decided that `salary` must be greater than or equal to $30,000. We also provide a human-readable message to be displayed when the validation criterion is not met.
@@ -198,8 +196,18 @@ department: OptionField({
 ```
 
 Here we provide a pre-defined list of values that this field can have. We have also included the `matchStrategy` flag, which determines whether Flatfile should only accept exact matches when automatically matching your OptionField options, or whether Flatfile should also use [historical matches and fuzzy matches](https://support.flatfile.com/hc/en-us/articles/8579991586324-Matching) while automatically matching your options. If this is not set, your OptionField will use historical and fuzzy matches to automatically match options for this field.
-<!-- TODO what does `label` do? -->
 
+If a `default` value is provided for an `OptionField` we check that is a value provided in `options`.
+
+If you want to have an option value of the empty string `''`, you must set that as a default like this.
+```
+    emptyExample : OptionField({
+      options:{eng:"Eng_Display_Label4", hr:"HR", "":"empty"},
+      default: ''
+    })
+```
+
+<!-- TODO what does `label` do? -->
 
 <!-- TODO Boolean Field? -->
 
@@ -225,7 +233,7 @@ const BaseSheet = new Sheet(
     }),
     middleName: TextField('Middle'),
     lastName: TextField(),
-    email: TextField()
+    email: TextField(),
   },
   {
     previewFieldKey: 'email',
@@ -233,7 +241,7 @@ const BaseSheet = new Sheet(
 )
 ```
 
-Here we define the sheet we are linking to, and on the sheet set the `previewFieldKey` option that will display on the original template. Note: `LinkedField` can currently only be implemented in Workspaces, which is why this example doesn't have a portal deployed for the LinkedSheet and BaseSheet sheets. 
+Here we define the sheet we are linking to, and on the sheet set the `previewFieldKey` option that will display on the original template. Note: `LinkedField` can currently only be implemented in Workspaces, which is why this example doesn't have a portal deployed for the LinkedSheet and BaseSheet sheets.
 
 ### Sheet options
 
@@ -245,7 +253,6 @@ const Employees = new Sheet(
   ...
   {
     allowCustomFields: true,
-    readOnly: true,
     recordCompute: (record) => {
       const fullName = `{record.get('firstName')} {record.get('lastName')}`
       record.set('fullName', fullName)
@@ -276,7 +283,6 @@ First we specify two options on the sheet: `allowCustomFields` and `readOnly`.
 
 `allowCustomFields`: explain what this does and what its default value is
 
-`readOnly`: explain what this does and what its default value is
 
 -->
 
@@ -313,13 +319,14 @@ batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
 
 #### Knowing which hooks to use
 
-`validate` should be used in most cases where you want to confirm that user-inputted data matches your specifications. For most fields, you probably want to use `validate`. This function gets the proper type per field, and lets you add messages to the cell, including errors, warnings, and rejections, so the user can correct errors themselves.
+`validate` should be used in most cases where you want to confirm that user-inputted data matches your specifications. For most fields, you probably want to use `validate`. This function gets the proper type per field, and lets you add messages to the cell, including errors, warnings, and rejections, so the user can correct errors themselves. Validate can’t change data, it can only send messages. Compute must be used if you want to perform any type of transformation
 
 `recordCompute` and `batchRecordsCompute` should only be used for cases where you must modify user-inputted data or generate new values not provided by the user but needed for your systems. For simple row work (that doesn't make HTTP calls) use `recordCompute`. If you need to make an a call to an external API, reach for `batchRecordsCompute` on sheet, as this allows you to request info about multiple values at once for increased performance.
 
 #### Parsing, casting, and field conversion.
 
 <!-- TODO: explain what a cast function is and how it is used for parsing input -->
+
 We have written sensible default implementations of cast functions for TextField, NumberField, and DateField. We wrote extensive tests to document and verify their behavior. Refer to [the CastFunction tests](https://github.com/FlatFilers/platform-sdk-mono/blob/main/packages/configure/src/stdlib/CastFunctions.spec.ts) to see more.
 
 When our default `cast` function can't parse an incoming value in a reliable way, the cast function throws an error. The error message shows up in the UI and the original value is stored in the table so users can edit that value into a proper type.
@@ -333,6 +340,7 @@ compute:(v:string) => {return v.toLocaleLowerCase()}
 ```
 
 is a good function, since `compute("ASDF") === compute('asdf') === 'asdf'`.
+
 <!-- TODO provide an example of a bad function -->
 
 ### 4. Test your stuff
@@ -388,11 +396,21 @@ When releasing pieces to the SDK our thought process is guided by the following 
 2. Can we support this code for the next 6 months until a breaking release?
 3. Does this work as we expect it to?
 
+## Extra Docs
+Links to more in-depth documentation we have written about features.
+
+* [SmartDateField](./examples/fields/SmartDateField.README.md)
+
 ---
+
 ### FAQ
 
 - **How can I lowercase an email field anytime input is provided by a file or manual entry?**
   - This is a good use for field `compute`. This function will be idempotent (running it over and over on the same input produces the same output and state)
+- **Why can't I check for nulls in a `validate` function?**
+  - You can't check for `null` or `undefined` in a validate function, because validate functions are never called with a value that isn't of the field's type.  The way to check for `null` is to set `required:true` on the field, this works for 95% of field use cases, this will flag an error at the review stage for fields provided with a `null` value.  Having this strict typing makes `validate` functions less error prone and less repetitious.  If we allowed `null` or `undefined` to propagate to `validate`,  every user provided function would have to start with checking for `null` or `undefined`, users who didn't do this would either see a typing error, or worse suffer unreliable code that was deployed.
+  - **What do I do if I want to check for null or undefined in a validate function?**
+    - The only place the built in `required` behavior doesn't work is when a `recordCompute` or `batchRecordsCompute` function was expected to provide a value for a field, and failed.  In that case, you are already writing a `recordCompute` or `batchRecordsCompute` function, check for the `null` there.
 - **How can check the type and size of an url and return an error if the linked file is > 5mb or not an image?**
   - Currently this is best accomplished with a text field named `s3_url` that will match to the URL provided in the upload, and a row `compute` that stores the size of the download to `s3_url_size`, `s3_url_size` should have an `validate` of less than 5mb.
   - In the near future this will be handled with a computed field that takes `s3_url` as an input and outputs `s3_url_size`.
@@ -419,39 +437,64 @@ When releasing pieces to the SDK our thought process is guided by the following 
   - Eventually this will be possible by writing tools that translate from ORM or database DDL to schemaIL. We are currently solidifying the core functionality of the platform and this will remain out of scope for the foreseeable future.
 
 ## Glossary
-### Sheet
-A `Sheet` object describes the desired characteristics or "shape" of data that you expect for an individual CSV file or sheet in an excel file. A Sheet can be thought of as roughly analogous to a database table.  
-### Field
-A `Field` object represents a column of data in a `Sheet`.  They are similar to columns in a database.  Fields can be configured to clean, transform and validate incoming data through options and hooks.
-### Data Hook®
-Data Hooks® are the Flatfile copyrighted term for code that runs on `Field`s and `Sheet`s to transform and validate data.
-### Field Hook
-Field hooks are Data Hook®s that run on individual fields.
-### Workbook
-A Workbook is a collection of Sheets.  The Sheets of a Workbook can be optionally linked together via `ForeignKey`.  A Workbook is similar to a database schema.
 
+### Sheet
+
+A `Sheet` object describes the desired characteristics or "shape" of data that you expect for an individual CSV file or sheet in an excel file. A Sheet can be thought of as roughly analogous to a database table.
+
+### Field
+
+A `Field` object represents a column of data in a `Sheet`. They are similar to columns in a database. Fields can be configured to clean, transform and validate incoming data through options and hooks.
+
+### Data Hook®
+
+Data Hooks® are the Flatfile copyrighted term for code that runs on `Field`s and `Sheet`s to transform and validate data.
+
+### Field Hook
+
+Field hooks are Data Hook®s that run on individual fields.
+
+### Workbook
+
+A Workbook is a collection of Sheets. The Sheets of a Workbook can be optionally linked together via `ForeignKey`. A Workbook is similar to a database schema.
 
 ## Object Reference
+
 Technically taken from SchemaIL interfaces
+
 ### BaseFields
-The base fields closely mirror primitive types and vary primarily by their default cast functions.  Read [the CastFunction tests](https://github.com/FlatFilers/platform-sdk-mono/blob/main/packages/configure/src/stdlib/CastFunctions.spec.ts) for explicit understanding of cast function behavior.
+
+The base fields closely mirror primitive types and vary primarily by their default cast functions. Read [the CastFunction tests](https://github.com/FlatFilers/platform-sdk-mono/blob/main/packages/configure/src/stdlib/CastFunctions.spec.ts) for explicit understanding of cast function behavior.
+
 #### TextField
-Persists strings.  Defaults to `StringCast` `cast`.
+
+Persists strings. Defaults to `StringCast` `cast`.
+
 #### NumberField
-Persists numbers.  Defaults to `NumberCast` `cast`
+
+Persists numbers. Defaults to `NumberCast` `cast`
+
 #### BooleanField
-Persists booleans.  Defaults to `BooleanCast` `cast`
+
+Persists booleans. Defaults to `BooleanCast` `cast`
+
 #### DateField.
-Persists Dates.  Defaults to `DateCast` `cast`
+
+Persists Dates. Defaults to `DateCast` `cast`
 
 ### Special Fields
+
 #### OptionField
+
 Presents the user with discrete options. Accepts a specific option of
+
 ```ts
 options:{'dbValue': 'Label displayed to user'}
 options:{'dbValue': {label: 'Label displayed to user',  futureOption1: undefined}
 ```
+
 It is called like this
+
 ```
     department: OptionField({
       label: 'Department',
@@ -462,7 +505,9 @@ It is called like this
       },
     }),
 ```
+
 or
+
 ```ts
     department: OptionField({
       label: 'Department',
@@ -476,6 +521,7 @@ or
 ```
 
 ### FieldOptions
+
 ```ts
 interface FieldOptions {
   label: string
@@ -488,57 +534,89 @@ interface FieldOptions {
   validate: (value: T) => void | Message[]
 }
 ```
+
 (Field Options Definitions)[https://github.com/FlatFilers/platform-sdk-mono/blob/main/packages/configure/src/ddl/Field.ts#L43-L69]
 Every field can set at least the above properties
-#### Label
-Controls the label displayed for the field in the UI
-#### Required
-Is a value for this field required after the `default` stage of field hooks.  If set to true, an error will be thrown and registered as such on the cell for that value, no further processing will take place for that field.
-#### Primary
-Is this field the primary key for a sheet, or part of a composite primary key (not currently supported).  Primary implies unique too.
-#### Unique
-Is this field required to be unique across the whole sheet.  We have chosen to treat a field with multiple `null`s as still unique.  [Tests and comments](https://github.com/FlatFilers/platform-sdk-mono/blob/main/packages/configure/src/ddl/Sheet.ts#L41-L46)
 
+#### Label
+
+Controls the label displayed for the field in the UI
+
+#### Required
+
+Is a value for this field required after the `default` stage of field hooks. If set to true, an error will be thrown and registered as such on the cell for that value, no further processing will take place for that field.
+
+#### Primary
+
+Is this field the primary key for a sheet, or part of a composite primary key (not currently supported). Primary implies unique too.
+
+#### Unique
+
+Is this field required to be unique across the whole sheet. We have chosen to treat a field with multiple `null`s as still unique. [Tests and comments](https://github.com/FlatFilers/platform-sdk-mono/blob/main/packages/configure/src/ddl/Sheet.ts#L41-L46)
 
 #### `cast`
-`cast` transforms input into the type specified by the field.
-#### `default`
-The default value for this field
-#### `compute`
-`compute` takes the type specified by the field and returns the type specified by the field.
-#### `validate`
-`validate` takes the type specified by the field and returns validation messages.  This is the most commonly used field hook.
 
+`cast` transforms input into the type specified by the field.
+
+#### `default`
+
+The default value for this field
+
+#### `compute`
+
+`compute` takes the type specified by the field and returns the type specified by the field.
+
+#### `validate`
+
+`validate` takes the type specified by the field and returns validation messages. This is the most commonly used field hook. Validate can’t change data, it can only send messages. Compute must be used if you want to perform any type of transformation
 
 #### Other Field Options
+
 ##### Description
+
 Long form description that appears in the UI upon hover of the field name.
+
 ##### Annotations
+
 Annotations are automatically filled in messages that the platform sdk provides when `default` or `compute` changes a value. Following independent options set as an object - `{}`
+
 ###### default
+
 If set to `true` insertions of the `default` value will be annotated with an info message of `defaultMessage`
+
 ###### defaultMessage
-The message to use when a `default` value is inserted.  If none specified, defaults to 'This field was automatically given a default value of'
+
+The message to use when a `default` value is inserted. If none specified, defaults to 'This field was automatically given a default value of'
+
 ###### compute
+
 If set to `true` instances where `compute` changes the value of a field will be annotated with an info message of `computeMessage`
+
 ###### computeMessage
-The message to use when a `compute` changes a value.  if none specified, defaults to 'This value was automatically reformatted - original data:'
+
+The message to use when a `compute` changes a value. if none specified, defaults to 'This value was automatically reformatted - original data:'
+
 ##### stageVisibility
+
 controls what parts of mapping/review/export a field occurs in
+
 ###### mapping
+
 When set to `false` this field will not appear for matching in the mapping stage.
+
 ###### review
+
 This field will not appear in the review stage
+
 ###### export
+
 This field will not be exported.
 
-
-
 ### SheetOptions
+
 ```ts
 export interface SheetOptions<FC> {
   allowCustomFields: boolean
-  readOnly: boolean
   recordCompute: (record:FlatfileRecord<any>, logger?:any): void
   batchRecordsCompute: (records: FlatfileRecords<any>) => Promise<void>
 
@@ -546,18 +624,23 @@ export interface SheetOptions<FC> {
 ```
 
 #### allowCustomFields
-Allows the end user to create additional fields from their upload when the incoming column does not match with any existing field for the Sheet.
-#### recordCompute
-Function that receives a row with all required fields fully present and optional fields typed `optional?:string`. Best used to compute derived values, can also be used to update existing fields.
-#### batchRecordsCompute
-Asynchronous function that is best for HTTP/API calls. External calls can be made to fill in values from external services. This takes `records` so it is easier to make bulk calls.
 
+Allows the end user to create additional fields from their upload when the incoming column does not match with any existing field for the Sheet.
+
+#### recordCompute
+
+Function that receives a row with all required fields fully present and optional fields typed `optional?:string`. Best used to compute derived values, can also be used to update existing fields.
+
+#### batchRecordsCompute
+
+Asynchronous function that is best for HTTP/API calls. External calls can be made to fill in values from external services. This takes `records` so it is easier to make bulk calls.
 
 ## SheetTester®
 
-This helper utility gives you tools to test real records and fields locally against your field hooks (`default`, `cast`, `compute` and `validate`) and record-level compute functions (`recordCompute` and `batchRecordsCompute`). This runs the exact same logic that is done on Flatfile's production servers so it will produce the same results locally for quick testing before deploying. 
+This helper utility gives you tools to test real records and fields locally against your field hooks (`default`, `cast`, `compute` and `validate`) and record-level compute functions (`recordCompute` and `batchRecordsCompute`). This runs the exact same logic that is done on Flatfile's production servers so it will produce the same results locally for quick testing before deploying.
 
 For example, with this TestSheet:
+
 ```js
 const TestSheet = new Sheet(
   'TestSheet',
@@ -581,14 +664,16 @@ const TestSheet = new Sheet(
 ```
 
 ### transformField(fieldName: string, value: string)
-This takes a field name and value and returns the transformed value based on all sheet operations: 
+
+This takes a field name and value and returns the transformed value based on all sheet operations:
 
 ```js
 expect(await testSheet.transformField('age', '10')).toEqual(20)
 ```
 
 ### testRecord(record: object)
-This takes a full record and returns the transformed record based on all sheet operations: 
+
+This takes a full record and returns the transformed record based on all sheet operations:
 
 ```js
 const inputRow = { firstName: 'foo', age: '10', testBoolean: 'true' }
@@ -599,17 +684,18 @@ expect(res).toMatchObject(expectedOutputRow)
 ```
 
 ### testRecords(record: object[])
-This takes an array of full records and returns the transformed records based on all sheet operations: 
+
+This takes an array of full records and returns the transformed records based on all sheet operations:
 
 ```js
 const inputRows = [
-    { firstName: 'foo', age: '10', testBoolean: 'true' },
-    { firstName: 'bar', age: '8', testBoolean: 'true' },
+  { firstName: 'foo', age: '10', testBoolean: 'true' },
+  { firstName: 'bar', age: '8', testBoolean: 'true' },
 ]
 
 const expectedOutputRows = [
-    { age: 20, firstName: 'FOO', testBoolean: true },
-    { age: 16, firstName: 'BAR', testBoolean: true },
+  { age: 20, firstName: 'FOO', testBoolean: true },
+  { age: 16, firstName: 'BAR', testBoolean: true },
 ]
 
 const results = await testSheet.testRecords(inputRows)

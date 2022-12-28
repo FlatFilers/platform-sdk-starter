@@ -1,3 +1,7 @@
+/**
+ * Example workbook for importing employees
+ * Test with the sample file at examples/sample-uploads/employees.csv
+ */
 import {
   BooleanField,
   DateField,
@@ -8,7 +12,7 @@ import {
   Sheet,
   TextField,
   Workbook,
-  LinkedField
+  LinkedField,
 } from '@flatfile/configure'
 
 import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
@@ -24,27 +28,24 @@ const BaseSheet = new Sheet(
     lastName: TextField(),
     email: TextField({
       unique: true,
-    })
+    }),
   },
   {
     previewFieldKey: 'email',
   }
 )
 
-const LinkedSheet = new Sheet(
-  'LinkedSheet',
-  {
-    email: LinkedField({
-      unique: true,
-      label: 'Email',
-      primary: true,
-      sheet: BaseSheet
-    }),
-    firstName: TextField(),
-    middleName: TextField('Middle'),
-    lastName: TextField(),
-  },
-)
+const LinkedSheet = new Sheet('LinkedSheet', {
+  email: LinkedField({
+    unique: true,
+    label: 'Email',
+    primary: true,
+    sheet: BaseSheet,
+  }),
+  firstName: TextField(),
+  middleName: TextField('Middle'),
+  lastName: TextField(),
+})
 
 const Employees = new Sheet(
   'Employees',
@@ -88,11 +89,10 @@ const Employees = new Sheet(
         }
       },
     }),
-    startDate: DateField()
+    startDate: DateField(),
   },
   {
     allowCustomFields: true,
-    readOnly: true,
     recordCompute: (record) => {
       const fullName = `${record.get('firstName')} ${record.get('lastName')}`
       record.set('fullName', fullName)
@@ -105,7 +105,7 @@ const Employees = new Sheet(
           Accept: 'application/json',
         },
       })
-      const result = await response.json()
+      const result = (await response.json()) as any
       payload.records.map(async (record: FlatfileRecord) => {
         record.set('fromHttp', result.info.postgres.status)
       })
@@ -115,7 +115,7 @@ const Employees = new Sheet(
 
 const EmployeesPortal = new Portal({
   name: 'EmployeesPortal',
-  sheet: 'Employees'
+  sheet: 'Employees',
 })
 
 export default new Workbook({
@@ -124,7 +124,7 @@ export default new Workbook({
   sheets: {
     Employees,
     BaseSheet,
-    LinkedSheet
+    LinkedSheet,
   },
   portals: [EmployeesPortal],
 })
