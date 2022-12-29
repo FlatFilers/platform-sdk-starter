@@ -1,6 +1,12 @@
 import {
   Group,
   SumField,
+  GroupConstraintItem,
+  Unless,
+  GreaterThan,
+  Count,
+  Match,
+  Error
 } from '../../src/expression-lang/EXPR'
 import {
   NumberField,
@@ -9,7 +15,6 @@ import {
   GroupByField,
   Workbook,
   Portal,
-  Sheet,
 } from '@flatfile/configure'
 
 
@@ -24,18 +29,44 @@ const JobAgeSheet =   new Sheet(
       ),
   }
 )
-
-
 const JobAgePortal = new Portal({
   name: 'JobAgePortal',
   sheet: 'JobAgeSheet'
 })
 
+
+
+const PeopleSheet = new Sheet('People', 
+    {
+      name: TextField(), 
+      job: TextField(), 
+      eye_color: TextField(), 
+      age_sum: GroupByField(
+        ['job'],
+	GroupConstraintItem(
+	  Group(),
+	  Unless(
+	    GreaterThan(
+	      Count(Match(Group(), {eye_color: 'blue_'})),
+	      0),
+	    Error('No Blue eyes')),
+	  'name',
+	  Group()))
+})
+
+const PeoplePortal = new Portal({
+  name: 'PeoplePortal',
+  sheet: 'PeopleSheet'
+})
+
+
 export default new Workbook({
   name: 'GroupByWorkbook',
   namespace: 'basic',
   sheets: {
-    JobAgeSheet
+    JobAgeSheet,
+    PeopleSheet
   },
-  portals: [JobAgePortal],
+  portals: [JobAgePortal, PeoplePortal],
 })
+
