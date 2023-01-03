@@ -135,7 +135,7 @@ const PeopleSheet = new Sheet('People',
       age: NumberField(),
       age_sum: GroupByField(
         ['job'],
-	GroupConstraintItem(
+	Do(GroupConstraintItem(
 	  Group(),
 	  Unless(
 	    GreaterThan(
@@ -143,7 +143,7 @@ const PeopleSheet = new Sheet('People',
 	      0),
 	    Error('No Blue eyes')),
 	  'name',
-	  Group()))
+	  Group()), "22222"  )
 	
 })
 const PeopleBook = new Workbook({name: 't', namespace: 't', sheets: {PeopleSheet}})

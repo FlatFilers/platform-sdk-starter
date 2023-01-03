@@ -6,7 +6,8 @@ import {
   GreaterThan,
   Count,
   Match,
-  Error
+  Error,
+  Do
 } from '../../src/expression-lang/EXPR'
 import {
   NumberField,
@@ -40,18 +41,22 @@ const PeopleSheet = new Sheet('People',
     {
       name: TextField(), 
       job: TextField(), 
+  //foo: TextField({stageVisibility: {review:false}}),
+  foo: TextField({stageVisibility: {review:true}}),
       eye_color: TextField(), 
       age_sum: GroupByField(
         ['job'],
-	GroupConstraintItem(
-	  Group(),
-	  Unless(
-	    GreaterThan(
-	      Count(Match(Group(), {eye_color: 'blue_'})),
-	      0),
-	    Error('No Blue eyes')),
-	  'name',
-	  Group()))
+	Do(
+	  GroupConstraintItem(
+	    Group(),
+	    Unless(
+	      GreaterThan(
+		Count(Match(Group(), {eye_color: 'blue_'})),
+		0),
+	      Error('No Blue eyes')),
+	    'name',
+	    Group()),
+	   "33333"))
 })
 
 const PeoplePortal = new Portal({
