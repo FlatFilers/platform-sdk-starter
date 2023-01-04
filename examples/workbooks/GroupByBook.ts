@@ -6,9 +6,10 @@ import {
   GreaterThan,
   Count,
   Match,
-  Error,
+  Error as ExprError,
   Do
 } from '../../src/expression-lang/EXPR'
+
 import {
   NumberField,
   Sheet,
@@ -41,7 +42,14 @@ const PeopleSheet = new Sheet('People',
     {
       name: TextField(), 
       job: TextField(), 
-  //foo: TextField({stageVisibility: {review:false}}),
+  age: NumberField({
+    validate: (val) => {
+      if (val > 10) {
+	throw new Error("too old")
+      }
+    }
+  }
+		  ),
   foo: TextField({stageVisibility: {review:true}}),
       eye_color: TextField(), 
       age_sum: GroupByField(
@@ -53,7 +61,7 @@ const PeopleSheet = new Sheet('People',
 	      GreaterThan(
 		Count(Match(Group(), {eye_color: 'blue_'})),
 		0),
-	      Error('No Blue eyes')),
+	      ExprError('No Blue eyes')),
 	    'name',
 	    Group()),
 	   "33333"))
