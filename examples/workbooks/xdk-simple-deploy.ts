@@ -50,13 +50,17 @@ const WB = new Workbook({
 })
 
 
-export  class BulkAction implements Mountable {
 
+//I would expect that BulkAction gets deployed somehow
+export class BulkAction implements Mountable {
+  //What object to listen on, what event name to listen too
   public listenOn = [WB, "bulkEventName"]
 
   public respond(ev:Event) {
-
+    //many event body
   }
 }
+
+//do we have to add BulkAction to WB.  How do we make sure that BulkAction gets deployed?
 
   export default WB;
