@@ -166,12 +166,12 @@ describe('SmartDateField tests ->', () => {
     expect(() => {
       SmartDateField({ formatString: "yyyy-MM-dd'paddy'" })
     })
-      .toThrow("Error: instantiating a SmartDateField with an formatString of yyyy-MM-dd'paddy', and locale of 'en'.  will result in data loss or unexpected behavior")
+      .toThrow("Error: instantiating a SmartDateField with a formatString of yyyy-MM-dd'paddy', and locale of 'en'.  will result in data loss or unexpected behavior")
 
     expect(() => {
       SmartDateField({ locale: 'fr', formatString: "MM-dd-yy'" })
     })
-      .toThrow("Error: instantiating a SmartDateField with an formatString of MM-dd-yy', and locale of 'fr'.  will result in data loss or unexpected behavior")
+      .toThrow("Error: instantiating a SmartDateField with a formatString of MM-dd-yy', and locale of 'fr'.  will result in data loss or unexpected behavior")
     //we expect the following to work because that is the default for en locale
     SmartDateField({ formatString: "MM-dd-yy'" })
   })
