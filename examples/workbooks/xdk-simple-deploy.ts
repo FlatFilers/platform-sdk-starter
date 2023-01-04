@@ -41,10 +41,39 @@ const TestSheet = new Sheet(
   }
 )
 
-export default new Workbook({
+const WB = new Workbook({
   name: 'Sheet from SDK',
   namespace: 'xdk-test',
   sheets: {
     TestSheet,
   },
 })
+
+
+
+// so I don't want mountable, because I want BulkAction to end up in the same space that has WB
+//export class BulkAction implements Mountable {
+
+
+//I would expect that BulkAction gets deployed somehow
+export class BulkAction implements EventHandler {
+  //What object to listen on, what event name to listen too
+  public listenOn = [WB, "bulkEventName"]
+
+  public respond(ev:Event) {
+    //many event body
+  }
+}
+
+const ba = new BulkAction()
+ba.on([EventTopic.BulkActionName], (e) => {
+  ba.respond(e);
+}
+     )
+
+//do we have to add BulkAction to WB.  How do we make sure that BulkAction gets deployed?
+//How  do we make sure that BulkAction ends up in the same SpaceConfig with WB
+
+
+
+  export default WB;
