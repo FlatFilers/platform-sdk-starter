@@ -41,10 +41,22 @@ const TestSheet = new Sheet(
   }
 )
 
-export default new Workbook({
+const WB = new Workbook({
   name: 'Sheet from SDK',
   namespace: 'xdk-test',
   sheets: {
     TestSheet,
   },
 })
+
+
+export  class BulkAction implements Mountable {
+
+  public listenOn = [WB, "bulkEventName"]
+
+  public respond(ev:Event) {
+
+  }
+}
+
+  export default WB;
