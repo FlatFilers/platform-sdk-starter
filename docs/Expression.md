@@ -43,7 +43,32 @@ const SimpleSheet = new Sheet(
 
 note, when used in a `validate` function, there are special MessageConditionals `ErrorWhen`,`ErrorUnless`, `WarnWhen`, `WarnUnless`, `InfoWhen`, `InfoUnless` that should be used.  `ErrorWhen` returns a function that accepts a value and calls the validate function on the expression, making `Val()` a valid way of accessing the argument for `validate`.
 
+# Expression language for sheet wide operations
+
+There are many operations and validations that need to be run across an entire sheet.  These leverage expression language to allow declarative statements describing what you want done.  GroupByField is the only way to accomplish this now.
+
+When thinking about using GroupByField, keep in mind the order of operations
+
+1. field cast
+2. field compute
+3. recordCompute
+4. batchRecordsCompute
+5. field validate
+6. field egressFormat
+----- Back to the server ----
+7. uniqueness checks
+8. sheetCompute (groupByField)
+
+
+Given that order of operations.  Use the other hooks to prepare data for the groupByField.  The other hooks are better suited to most tasks, but sheetwide operations require GroupByField.
+
+GroupByField is best suited for simple calculations (sum, count) and validating properties about a group.
+
+When developing with GroupByField, we recommend using local testing.  Look at [GroupByField.spec.ts]( https://flatfile.com/docs/get-started/quickstart/)
+
 # GroupByField
+
+
 ```
 const ItemSummary = new Sheet(
   'ItemSummary',

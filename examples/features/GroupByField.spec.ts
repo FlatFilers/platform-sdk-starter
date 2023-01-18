@@ -143,7 +143,7 @@ const PeopleSheet = new Sheet('People',
 	      0),
 	    Error('No Blue eyes')),
 	  'name',
-	  Group()), "22222"  )
+	  Group()), "22222"  ))
 	
 })
 const PeopleBook = new Workbook({name: 't', namespace: 't', sheets: {PeopleSheet}})
