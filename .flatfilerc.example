@@ -1,0 +1,8 @@
+{
+    "endpoint": "https://api.x.flatfile.com/v1",
+    "env": "us_env_6fXBNCpi",
+    "version": "10",
+    "team": "1",
+    "clientId": "",
+    "secret": ""
+}

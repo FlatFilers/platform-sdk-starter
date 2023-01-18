@@ -83,14 +83,14 @@ const getChronoDateCast = (locale: Locales) => {
  * system timezone.
  */
 
-export const GMTFormatDate = (val: Date, fString: string): string => {
+export const GMTFormatDate = (val: Date, formatString: string): string => {
   const prevailingTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const d = new Date()
   const tzHours = d.getTimezoneOffset() / 60
   const val2 = new Date(val)
   val2.setHours(val2.getHours() + tzHours)
   const utcDate = utcToZonedTime(val2, prevailingTimezone)
-  return format(utcDate, fString)
+  return format(utcDate, formatString)
 }
 
 export const ChronoDateCast = StringChainCast(getChronoDateCast("en"))
@@ -115,17 +115,17 @@ const egressDebug = (field: Field<any>, castVal: any) => {
 
 export const SmartDateField = makeField<
   Date,
-  { fString?: string; extraParseString?: string, locale?: Locales }
+  { formatString?: string; extraParseString?: string, locale?: Locales }
 >(
   DateField({}),
   {},
   (mergedOpts, passedOptions) => {
     const defaultedPassedOptions = {
-      ...{ fString: "yyyy-MM-dd'T'HH:mm'Z'", extraParseString: undefined, locale: 'en' },
+      ...{ formatString: "yyyy-MM-dd'T'HH:mm'Z'", extraParseString: undefined, locale: 'en' },
       ...passedOptions
     }
 
-    const { fString, extraParseString, locale } = defaultedPassedOptions
+    const { formatString, extraParseString, locale } = defaultedPassedOptions
 
     if (_.keys(passedOptions).includes('cast')) {
       throw new Error(
@@ -170,10 +170,10 @@ export const SmartDateField = makeField<
         return val
       }
       try {
-        const output = GMTFormatDate(val, fString)
+        const output = GMTFormatDate(val, formatString)
         return output
       } catch (e: any) {
-        console.log(`error calling GMTFormatDate on ${val} of type ${typeof val} with fString of ${fString}. Err of ${e}`)
+        console.log(`error calling GMTFormatDate on ${val} of type ${typeof val} with formatString of ${formatString}. Err of ${e}`)
         //trying to return something that is obviously an error
         //@ts-ignore
         return NaN
@@ -189,16 +189,16 @@ export const SmartDateField = makeField<
         //@ts-ignore
         if (!verifyEgressCycle(f, d)) {
           egressDebug(f, d)
-          throw new Error(`Error: instantiating a SmartDateField with an fString of ${fString}, and locale of '${locale}'.  will result in data loss or unexpected behavior`)
+          throw new Error(`Error: instantiating a SmartDateField with a formatString of ${formatString}, and locale of '${locale}'.  will result in data loss or unexpected behavior`)
         }
       } catch (e: any) {
         egressDebug(f, d)
-        throw new Error(`Error: instantiating a SmartDateField with an fString of ${fString}, and locale of '${locale}'.  will result in data loss or unexpected behavior`)
+        throw new Error(`Error: instantiating a SmartDateField with a formatString of ${formatString}, and locale of '${locale}'.  will result in data loss or unexpected behavior`)
       }
     }
     //pretty much any date, nothing notable.  ChronoDateCast is fine here,  we just want a date
     testEgressCycle(ChronoDateCast('2009-02-24T00:00:00.000Z') as Date)
-    //this will pick up month/date ambiguity... and its interaction between locale and fString
+    //this will pick up month/date ambiguity... and its interaction between locale and formatString
     testEgressCycle(ChronoDateCast('2009-02-05T00:00:00.000Z') as Date)
 
     return f

@@ -19,8 +19,8 @@ const CompSets = [
 const DateSheet = new Sheet(
   'DateSheet',
   {
-    before: SmartDateField({ required: true, fString: 'yyyy-MM-dd' }),
-    after: SmartDateField({ required: true, fString: 'yyyy-MM-dd' }),
+    before: SmartDateField({ required: true, formatString: 'yyyy-MM-dd' }),
+    after: SmartDateField({ required: true, formatString: 'yyyy-MM-dd' }),
     expResult: TextField({ required: true }),
   },
   {
@@ -121,7 +121,7 @@ describe('Extra test ->', () => {
   const SmartDateSheet = new Sheet(
     'SmartDateSheet',
     {
-      d: SmartDateField({ required: false, fString: 'yyyy-MM-dd' }),
+      d: SmartDateField({ required: false, formatString: 'yyyy-MM-dd' }),
     },
     {}
   )
@@ -164,16 +164,16 @@ describe('Extra test ->', () => {
 describe('SmartDateField tests ->', () => {
   test('prevent egressCycle errors at instantiation time', () => {
     expect(() => {
-      SmartDateField({ fString: "yyyy-MM-dd'paddy'" })
+      SmartDateField({ formatString: "yyyy-MM-dd'paddy'" })
     })
-      .toThrow("Error: instantiating a SmartDateField with an fString of yyyy-MM-dd'paddy', and locale of 'en'.  will result in data loss or unexpected behavior")
+      .toThrow("Error: instantiating a SmartDateField with a formatString of yyyy-MM-dd'paddy', and locale of 'en'.  will result in data loss or unexpected behavior")
 
     expect(() => {
-      SmartDateField({ locale: 'fr', fString: "MM-dd-yy'" })
+      SmartDateField({ locale: 'fr', formatString: "MM-dd-yy'" })
     })
-      .toThrow("Error: instantiating a SmartDateField with an fString of MM-dd-yy', and locale of 'fr'.  will result in data loss or unexpected behavior")
+      .toThrow("Error: instantiating a SmartDateField with a formatString of MM-dd-yy', and locale of 'fr'.  will result in data loss or unexpected behavior")
     //we expect the following to work because that is the default for en locale
-    SmartDateField({ fString: "MM-dd-yy'" })
+    SmartDateField({ formatString: "MM-dd-yy'" })
   })
 })
 

@@ -3,11 +3,11 @@
 ## Why
 
 The `SmartDateField` lets you work with operations on `Date`s as objects, without worrying about parsing dates, or formatting dates.  Currently the `SmartDateField` can parse [12
-date types](./SmartDateField.spec.ts#L221-L235) without any format strings.  This lets you concentrate on business logic, without worrying about incoming date formats.  This lets you confidently perform arithmetic and comparisons in `compute`, `recordCompute`, `batchRecordsCompute`, and `validate` on `Date`s.  `SmartDateField` has an `fString` argument that controls how the date is serialized after `validate` is finished.  Flatfile users no longer have to convert in and out of dates to maintain formatting.
+date types](./SmartDateField.spec.ts#L221-L235) without any format strings.  This lets you concentrate on business logic, without worrying about incoming date formats.  This lets you confidently perform arithmetic and comparisons in `compute`, `recordCompute`, `batchRecordsCompute`, and `validate` on `Date`s.  `SmartDateField` has an `formatString` argument that controls how the date is serialized after `validate` is finished.  Flatfile users no longer have to convert in and out of dates to maintain formatting.
 
 ## What
 
-There are comprehensive tests for `SmartDateField`, the most demonstrative being [DateSheet.spec.ts](./DateSheet.spec.ts).  This shows how dates can be compared as first class objects in a `recordCompute` function, and then formatted to a different persistence format with `fString`.
+There are comprehensive tests for `SmartDateField`, the most demonstrative being [DateSheet.spec.ts](./DateSheet.spec.ts).  This shows how dates can be compared as first class objects in a `recordCompute` function, and then formatted to a different persistence format with `formatString`.
 
 
 ### Assumptions made
@@ -65,33 +65,33 @@ You can instantiate a field with a locale argument of `"en"` `"fr"` `"nl"` `"ru"
 For the string `'06/02/09'`, `en` expects day first, then month yielding February 6th
                              `fr` expects month first, yielding June 2nd.
 
-## Using `fString`
+## Using `formatString`
 
-You can control how dates are converted back to strings with the fString option. fString represents the date format you want to egress, and specifies how dates should be displayed to the user in the data table.
+You can control how dates are converted back to strings with the formatString option. formatString represents the date format you want to egress, and specifies how dates should be displayed to the user in the data table.
 
 
 ```
-    before: SmartDateField({ required: true, fString: 'yyyy-MM-dd' }),
+    before: SmartDateField({ required: true, formatString: 'yyyy-MM-dd' }),
 ```
 
-`fString` is a format string adhering to [Unicode Technical Standard #35](https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table).  You can read more in the [Date-fns docs](https://date-fns.org/v2.29.3/docs/format).
+`formatString` is a format string adhering to [Unicode Technical Standard #35](https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table).  You can read more in the [Date-fns docs](https://date-fns.org/v2.29.3/docs/format).
 
 
-### Errors when using `fString`
+### Errors when using `formatString`
 
-You need to be careful when selecting an `fString` to make sure it agrees with the locale parsing format.  If it doesn't, you will seen an error on publish like this: 
-the field of `SmartDateField({locale:'fr', fString:"MM-dd-yy'"})` will yield an error like
+You need to be careful when selecting an `formatString` to make sure it agrees with the locale parsing format.  If it doesn't, you will seen an error on publish like this: 
+the field of `SmartDateField({locale:'fr', formatString:"MM-dd-yy'"})` will yield an error like
 
 ```
 castVal Wed Feb 04 2009 19:00:00 GMT-0500 (Eastern Standard Time) becomes 02-05-09 after egressFormat, which when cast gives Fri May 01 2009 20:00:00 GMT-0400 (Eastern Daylight Time)
 /Users/paddy/platform-sdk-starter/.flatfile/build.js:57356
-        throw new Error(`Error: instantiating a SmartDateField with an fString of ${fString}, and locale of '${locale2}'.  will result in data loss or unexpected behavior`);
+        throw new Error(`Error: instantiating a SmartDateField with an formatString of ${formatString}, and locale of '${locale2}'.  will result in data loss or unexpected behavior`);
               ^
 
-Error: Error: instantiating a SmartDateField with an fString of MM-dd-yy', and locale of 'fr'.  will result in data loss or unexpected behavior
+Error: Error: instantiating a SmartDateField with an formatString of MM-dd-yy', and locale of 'fr'.  will result in data loss or unexpected behavior
 ```
 
-In this case we have a field with locale of `fr`.  with an fString of MM-dd-yy.  This format string doesn't agree with the locale.  This can lead to unexpected behavior.
+In this case we have a field with locale of `fr`.  with an formatString of MM-dd-yy.  This format string doesn't agree with the locale.  This can lead to unexpected behavior.
 
 If we didn't have this check, the following unwanted behavior could occur...
 You start with a file containing "Feb 5th 2009" which is parsed as a date, then presented and saved as 02-05-09.  if this same value is pasted into the table, it is parsed next as May 2nd 2009.  This is unexpected behavior so we throw an error.
