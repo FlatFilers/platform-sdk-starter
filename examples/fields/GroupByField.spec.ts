@@ -10,16 +10,27 @@ import {
   Unless,
   GroupConstraintItem,
   Do,
-  NonUnique
+  NonUnique,
+  RecordPick,
+  Pick,
+  JSONLoad,
+  Debug,
+  JSONStringify,
+  SortedBy,
+  First,
+  Get,
+  Without,
+  StrConcat,
+  ArrayEquals
 } from '../../src/expression-lang/EXPR'
 
 const tgrps = [
-  { name: 'Odin_', age: 3., job: 'kid', weight: 30., eye_color: 'blue_', fav_group: 'Raffi', age_sum: '0' }, 
-  { name: 'Sarah', age: 8., job: 'kid', weight: 60., eye_color: 'green', fav_group: 'Wiggles', age_sum: '0' },
-  { name: 'Paddy', age: 40, job: 'eng', weight: 190, eye_color: 'green', fav_group: 'Wiggles', age_sum: '0' },
-  { name: 'Kay__', age: 77, job: 'ret', weight: 160, eye_color: 'green', fav_group: 'Beach Boys', age_sum: '0' },
-  { name: 'Cliff', age: 86, job: 'ret', weight: 160, eye_color: 'gray_', fav_group: 'The Stones', age_sum: '0' }, 
-  { name: 'Franz', age: 72, job: 'ret', weight: 170, eye_color: 'blue_', fav_group: 'Beach Boys', age_sum: '0' }, 
+  { name: 'Odin_', age: 3., job: 'kid', weight: 30., eye_color: 'blue_', fav_group: 'Raffi', age_sum: '0', 'encoded_field': '' }, 
+  { name: 'Sarah', age: 8., job: 'kid', weight: 60., eye_color: 'green', fav_group: 'Wiggles', age_sum: '0', 'encoded_field': '' }, 
+  { name: 'Paddy', age: 40, job: 'eng', weight: 190, eye_color: 'green', fav_group: 'Wiggles', age_sum: '0', 'encoded_field': '' }, 
+  { name: 'Kay__', age: 77, job: 'ret', weight: 160, eye_color: 'green', fav_group: 'Beach Boys', age_sum: '0', 'encoded_field': '' }, 
+  { name: 'Cliff', age: 86, job: 'ret', weight: 160, eye_color: 'gray_', fav_group: 'The Stones', age_sum: '0', 'encoded_field': '' }, 
+  { name: 'Franz', age: 72, job: 'ret', weight: 170, eye_color: 'blue_', fav_group: 'Beach Boys', age_sum: '0', 'encoded_field': '' }
 ]
 
 
@@ -204,3 +215,75 @@ describe('SampleGroupBy groupConstraint and Comp ->', () => {
       expect(res).toStrictEqual(SumResults)
  })
 })
+
+
+
+const UnpackSheet = new Sheet(
+  'UnpackSheet', 
+  {
+    job: TextField(), 
+    name: TextField(), 
+    encoded_field: TextField({}),
+    age_sum: GroupByField(
+      ['job'],
+      GroupConstraintItem(
+	Group(),
+	Unless(
+	  ArrayEquals(
+	    SortedBy(Pick(First(
+	      SortedBy(JSONLoad(
+		RecordPick(Group(), 'encoded_field',  JSON.stringify({timestamp:'2000'}))),
+		       'timestamp', 'desc')), 'names')),
+	    SortedBy(RecordPick(Group(), 'name'))
+	  ),
+	  Error(
+	    //@ts-ignore
+	    StrConcat(
+	      Without(
+		SortedBy(Pick(First(
+		  SortedBy(JSONLoad(
+		    RecordPick(Group(), 'encoded_field',  JSON.stringify({timestamp:'2000'}))),
+			   'timestamp', 'desc')), 'names')),
+		RecordPick(Group(), 'name')),
+	      " is missing from the group")
+	  )),
+	'name',
+	Group())
+)},
+  {
+	  batchRecordsCompute: async (records) => {
+	    // this batchRecordsCompute is supposed to mock making an HTTP request and setting it on fields
+	    const rec1 = records.records[0];
+	    rec1.set('encoded_field',
+		     JSON.stringify({timestamp: new Date(), names:["Odin_", "Sarah"]}))
+	    const rec2 = records.records[2];
+	    //note Maire is an engineer that isn't present in the dataset
+	    rec2.set('encoded_field',
+		     JSON.stringify({timestamp: new Date(), names:["Paddy", "Maire"]}))
+
+	  }
+	}
+)
+
+const UnpackBook = new Workbook({name: 't', namespace: 't', sheets: {UnpackSheet}})
+
+describe('Unpack example  ->', () => {
+const tgrps = [
+  { name: 'Odin_', job: 'kid',  age_sum: '0', 'encoded_field': '' }, 
+  { name: 'Sarah', job: 'kid',  age_sum: '0', 'encoded_field': '' }, 
+  { name: 'Paddy', job: 'eng',  age_sum: '0', 'encoded_field': '' }, 
+]
+
+      
+  const testSheet = new SheetTester(UnpackBook, 'UnpackSheet')
+  test('GroupByField works properly with sum - multiple rows', async () => {
+    const res = await testSheet.testMessages(tgrps)
+
+    expect(res[0]).toStrictEqual([])
+    expect(res[2][0]).toMatchObject({
+        field: 'name',
+        message: "Maire is missing from the group",
+    })
+  })
+})
+

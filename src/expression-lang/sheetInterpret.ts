@@ -108,6 +108,66 @@ const groupConstraintRow = (
 }
 
 
+/*
+RecordPick - takes a recordGroup and field name, returns a list of values for that field
+Pick - takes a list of objects and a field name, returns a list of values for that field
+JSONLoad - calls JSON.parse on a string returns the object
+SortedBy - takes an array of objects, sorts them by field name
+First - returns the first element of an array
+Get - returns a field from an object
+Without - performs set diff on two lists of primitives
+strConcat - concatates objects/strings into a  string
+ArrayEquals - verifies that two arrays are equal (edited)
+*/
+
+const recordPick = (records:FlatfileRecord<any>[], fieldName:string, defaultVal:any=undefined ) => {
+  return records.map((rec) => {
+    const v = rec.get(fieldName)
+    if( v === null) {
+      return defaultVal
+    }
+    return v
+  })
+}
+
+const pick = (objs:Record<string, any>[], fieldName:string ) => {
+  if(!_.isArray(objs)) {
+    //once again a hack
+    return objs[fieldName]
+  }
+  return objs.map((o) => o[fieldName])
+}
+
+const JSONLoad = (str:string) => {
+  try {
+    if (_.isArray(str)) {
+      //this is a hack
+      //@ts-ignore
+      return str.map(JSON.parse)
+    }
+    return JSON.parse(str)
+  }
+  catch (e:any) {return {}}
+}
+
+const JSONStringify = (obj:any) => JSON.stringify(obj)
+
+//@ts-ignore
+const sortedBy = (objs:Record<string, any>[], field:string, direction:string) =>  _.orderBy(objs, [field], [direction])
+
+const first = (objs:any[]) => objs[0]
+
+const get = (rec:FlatfileRecord<any>, field:string, defaultVal:any=undefined) => {
+  try {
+    rec.get(field)
+  } catch (e:any) {
+    return defaultVal
+  }
+}
+const without = (full:any[], subtrahend:any[]) => _.without(full, ...subtrahend)
+const strConcat = (a:any, b:any) => a.toString() + b.toString()
+const arrayEquals = _.isEqual
+
 export const debug = (expr: NestedIns) => {
   console.log('debug', expr)
   return expr
@@ -116,7 +176,13 @@ export const debug = (expr: NestedIns) => {
 const do_ = (...exprs: any) => exprs[exprs.length -1]
 
 //@ts-ignore
-const simpleInterpret = makeInterpreter({sumField, groupConstraintRow, nonUnique, error, match, 'do': do_})
+const simpleInterpret = makeInterpreter({
+  sumField, groupConstraintRow, nonUnique, error, match, 'do': do_,
+  recordPick, pick, JSONLoad, JSONStringify, sortedBy, first,
+  //@ts-ignore 
+  get, 
+  debug,
+  without, strConcat, arrayEquals   })
 
 export const sheetInterpret = makeInterpreter({
   error,
@@ -125,5 +191,9 @@ export const sheetInterpret = makeInterpreter({
   groupConstraintRow,
   nonUnique,
   debug,
+    recordPick, pick, JSONLoad, JSONStringify, sortedBy, first,
+  //@ts-ignore 
+  get, 
+  without, strConcat, arrayEquals  
 })
 

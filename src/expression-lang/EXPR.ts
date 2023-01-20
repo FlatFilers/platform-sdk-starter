@@ -86,6 +86,19 @@ export const Do = (...exprs:any[]) => ['do', ...exprs]
 
 export const Debug = (expr: NestedIns) => ['debug', expr]
 
+export const RecordPick = (recordGroup:any, fieldName:any, defaultVal:any = undefined ) =>
+  ['recordPick', recordGroup, fieldName, defaultVal]
+export const Pick = (objs:any, fieldName:any) => ['pick', objs, fieldName]
+export const JSONLoad = (str:any) => ['JSONLoad', str]
+export const JSONStringify = (obj:any) => ['JSONStringify', obj]
+export const SortedBy = (objs:any, field:any=undefined, direction:string='asc') => ['sortedBy', objs, field, direction]
+export const First = (objs:any) => ['first', objs]
+export const Get = (rec:any, field:any, defaultVal:any=undefined) => ['get', rec, field, defaultVal]
+export const Without = (minuend:any, subtrahend:any) => ['without', minuend, subtrahend]
+export const StrConcat = (a:any, b:any) => ['strConcat', a, b]
+export const ArrayEquals = (a:any, b:any) => ['arrayEquals', a, b]
+
+
 const simpleInterpret = makeInterpreter({error, warn, info, debug})
 
 export const ErrorWhen = (predicate: any, errString: string) => {
