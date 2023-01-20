@@ -97,6 +97,7 @@ export const Get = (rec:any, field:any, defaultVal:any=undefined) => ['get', rec
 export const Without = (minuend:any, subtrahend:any) => ['without', minuend, subtrahend]
 export const StrConcat = (a:any, b:any) => ['strConcat', a, b]
 export const ArrayEquals = (a:any, b:any) => ['arrayEquals', a, b]
+export const Uniq = (objs:any) => ['uniq', objs]
 
 
 const simpleInterpret = makeInterpreter({error, warn, info, debug})

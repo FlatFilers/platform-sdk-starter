@@ -165,6 +165,7 @@ const get = (rec:FlatfileRecord<any>, field:string, defaultVal:any=undefined) =>
   }
 }
 const without = (full:any[], subtrahend:any[]) => _.without(full, ...subtrahend)
+const uniq = (full:any[]) => _.uniq(full)
 const strConcat = (a:any, b:any) => a.toString() + b.toString()
 const arrayEquals = _.isEqual
 
@@ -181,7 +182,7 @@ const simpleInterpret = makeInterpreter({
   recordPick, pick, JSONLoad, JSONStringify, sortedBy, first,
   //@ts-ignore 
   get, 
-  debug,
+  debug, uniq,
   without, strConcat, arrayEquals   })
 
 export const sheetInterpret = makeInterpreter({
@@ -193,7 +194,7 @@ export const sheetInterpret = makeInterpreter({
   debug,
     recordPick, pick, JSONLoad, JSONStringify, sortedBy, first,
   //@ts-ignore 
-  get, 
+  get, uniq,
   without, strConcat, arrayEquals  
 })
 
