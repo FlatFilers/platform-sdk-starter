@@ -1,16 +1,37 @@
 import _ from 'lodash'
 import { IRecordInfo, TRecordData, TPrimitive,  FlatfileRecords, FlatfileSession, IPayload } from '@flatfile/hooks'
-import { Workbook } from '@flatfile/configure'
+import { NumberField, Sheet, TextField, Workbook } from '@flatfile/configure'
+import { sheetInterpret } from '../../expression-lang/sheetInterpret'
+const localSheetCompute = (
+  sheet: Sheet<any>,
+  records: FlatfileRecords<any>
+) => {
+  
+  const possibleSheetCompute = sheet.getSheetCompute()
+  if (possibleSheetCompute === undefined) {
+    return records
+  } else {
+    //@ts-ignore
+    const afterSheetCompute = sheetInterpret(possibleSheetCompute.sheetCompute, {
+      sheet,
+      modifiedRecords: records,
+    })
+    return afterSheetCompute
+  }
+}
+
 
 export class SheetTester {
   public workbook
   public sheetName
+  private rawSheetName
   private testSession: IPayload
   constructor(
     public readonly passedWorkbook: Workbook,
     public readonly passedSheetName: string
   ) {
     this.sheetName = `${passedWorkbook.options.namespace}/${passedSheetName}`
+    this.rawSheetName = passedSheetName
     this.workbook = passedWorkbook
     this.testSession = {
       schemaSlug: '',
@@ -50,7 +71,10 @@ export class SheetTester {
     const inputRecords = new FlatfileRecords(iRaw)
 
     await this.workbook.processRecords(inputRecords, session)
-    return inputRecords
+
+    const sheet = this.workbook.options.sheets[this.rawSheetName]
+    return localSheetCompute(sheet, inputRecords)
+    //return inputRecords
   }
 
   public async transformField(
@@ -98,20 +122,23 @@ export class SheetTester {
 
   public async testRecord(record: {}) {
     const transformedRecords = await this.transformRecords([record])
+    //@ts-ignore
     return transformedRecords.records[0].value
   }
 
   public async testRecords(recordBatch: Record<string, any>[]) {
     const transformedRecords = await this.transformRecords(recordBatch)
-
+    //@ts-ignore
     return transformedRecords.records.map((r) => r.value)
   }
   public async testMessage(record: {}) {
     const transformedRecords = await this.transformRecords([record])
+    //@ts-ignore
     return transformedRecords.records.map((r) => r.toJSON().info)[0]
   }
   public async testMessages(recordBatch: Record<string, any>[]) {
     const transformedRecords = await this.transformRecords(recordBatch)
+    //@ts-ignore
     return transformedRecords.records.map((r) => r.toJSON().info)
   }
 
