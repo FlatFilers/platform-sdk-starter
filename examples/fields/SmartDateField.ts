@@ -2,14 +2,24 @@ import * as chrono from 'chrono-node'
 import _ from 'lodash'
 import { utcToZonedTime, format } from 'date-fns-tz'
 import parse from 'date-fns/parse'
-import { stdlib, Field, DateField, Nullable, verifyEgressCycle, makeField, mergeFieldOptions } from '@flatfile/configure'
+import {
+  stdlib,
+  Field,
+  DateField,
+  Nullable,
+  verifyEgressCycle,
+  makeField,
+  mergeFieldOptions,
+} from '@flatfile/configure'
 const { StringChainCast, FallbackCast } = stdlib.cast
 
-type Locales = "en" | "fr" | "nl" | "ru" | "de"
+type Locales = 'en' | 'fr' | 'nl' | 'ru' | 'de'
 
 const getChronoDateCast = (locale: Locales) => {
   const ChronoStringDateCast = (raw: string | Date | null) => {
-    if (typeof raw === 'string') {
+    if (raw === null || raw === undefined || raw === '') {
+      return null
+    } else if (typeof raw === 'string') {
       // use chrono.strict so that we dont get dates from strings like 'tomorrow', 'two weeks later'
       const parsedResult = chrono[locale].strict.parse(raw, undefined)
 
@@ -76,7 +86,6 @@ const getChronoDateCast = (locale: Locales) => {
   return ChronoStringDateCast
 }
 
-
 /**
  * GMTFormatDate formats all dates relative to Greenwich Mean Time.
  * This means that the same format string will be regardless of the
@@ -93,114 +102,121 @@ export const GMTFormatDate = (val: Date, formatString: string): string => {
   return format(utcDate, formatString)
 }
 
-export const ChronoDateCast = StringChainCast(getChronoDateCast("en"))
+export const ChronoDateCast = StringChainCast(getChronoDateCast('en'))
 
 const egressDebug = (field: Field<any>, castVal: any) => {
   //cast / egressFormat cycle must converge to the same value,
   //otherwise throw an error because the user will lose dta
   const ef = field.options.egressFormat
   if (ef === false) {
-    console.log("egressDebug called on a field without egressFormat set")
+    console.log('egressDebug called on a field without egressFormat set')
     return
   }
 
   const egressResult = ef(castVal)
   try {
     const recast = field.options.cast(egressResult)
-    console.log(`castVal ${castVal} becomes ${egressResult} after egressFormat, which when cast gives ${recast}`)
+    console.log(
+      `castVal ${castVal} becomes ${egressResult} after egressFormat, which when cast gives ${recast}`
+    )
   } catch (e: any) {
-    console.log(`castVal ${castVal} becomes ${egressResult} after egressFormat, casting again throws an error of ${e}`)
+    console.log(
+      `castVal ${castVal} becomes ${egressResult} after egressFormat, casting again throws an error of ${e}`
+    )
   }
 }
 
 export const SmartDateField = makeField<
   Date,
-  { formatString?: string; extraParseString?: string, locale?: Locales }
->(
-  DateField({}),
-  {},
-  (mergedOpts, passedOptions) => {
-    const defaultedPassedOptions = {
-      ...{ formatString: "yyyy-MM-dd'T'HH:mm'Z'", extraParseString: undefined, locale: 'en' },
-      ...passedOptions
-    }
-
-    const { formatString, extraParseString, locale } = defaultedPassedOptions
-
-    if (_.keys(passedOptions).includes('cast')) {
-      throw new Error(
-        `Cannot instantiate this field with an overridden cast function`
-      )
-    }
-    if (_.keys(passedOptions).includes('egressFormat')) {
-      throw new Error(
-        `Cannot instantiate this field with an overridden egressFormat function`
-      )
-    }
-
-    //@ts-ignore
-    const localeCast = getChronoDateCast(locale)
-
-    let cast
-    if (extraParseString) {
-      cast = FallbackCast(
-        localeCast,
-        StringChainCast((val: string | Date): Nullable<Date> => {
-          if (typeof val === 'string') {
-            const parsed = parse(val, extraParseString, new Date())
-            const reformatted = format(parsed, 'yyyy-MM-dd')
-            const final = ChronoDateCast(reformatted)
-            return final
-          } else if (_.isDate(val)) {
-            return val
-          } else {
-            throw new Error(
-              `unexpected type for val ${val} typeof ${typeof val}`
-            )
-          }
-        })
-      )
-    } else {
-      cast = localeCast
-    }
-
-    const egressFormat = (val: Date | string): string => {
-
-      if (typeof val === 'string') {
-        return val
-      }
-      try {
-        const output = GMTFormatDate(val, formatString)
-        return output
-      } catch (e: any) {
-        console.log(`error calling GMTFormatDate on ${val} of type ${typeof val} with formatString of ${formatString}. Err of ${e}`)
-        //trying to return something that is obviously an error
-        //@ts-ignore
-        return NaN
-      }
-    }
-    const newOpts = {
-      cast,
-      egressFormat,
-    }
-    const f = new Field(mergeFieldOptions(mergedOpts, newOpts))
-    const testEgressCycle = (d: Date) => {
-      try {
-        //@ts-ignore
-        if (!verifyEgressCycle(f, d)) {
-          egressDebug(f, d)
-          throw new Error(`Error: instantiating a SmartDateField with a formatString of ${formatString}, and locale of '${locale}'.  will result in data loss or unexpected behavior`)
-        }
-      } catch (e: any) {
-        egressDebug(f, d)
-        throw new Error(`Error: instantiating a SmartDateField with a formatString of ${formatString}, and locale of '${locale}'.  will result in data loss or unexpected behavior`)
-      }
-    }
-    //pretty much any date, nothing notable.  ChronoDateCast is fine here,  we just want a date
-    testEgressCycle(ChronoDateCast('2009-02-24T00:00:00.000Z') as Date)
-    //this will pick up month/date ambiguity... and its interaction between locale and formatString
-    testEgressCycle(ChronoDateCast('2009-02-05T00:00:00.000Z') as Date)
-
-    return f
+  { formatString?: string; extraParseString?: string; locale?: Locales }
+>(DateField({}), {}, (mergedOpts, passedOptions) => {
+  const defaultedPassedOptions = {
+    ...{
+      formatString: "yyyy-MM-dd'T'HH:mm'Z'",
+      extraParseString: undefined,
+      locale: 'en',
+    },
+    ...passedOptions,
   }
-)
+
+  const { formatString, extraParseString, locale } = defaultedPassedOptions
+
+  if (_.keys(passedOptions).includes('cast')) {
+    throw new Error(
+      `Cannot instantiate this field with an overridden cast function`
+    )
+  }
+  if (_.keys(passedOptions).includes('egressFormat')) {
+    throw new Error(
+      `Cannot instantiate this field with an overridden egressFormat function`
+    )
+  }
+
+  //@ts-ignore
+  const localeCast = getChronoDateCast(locale)
+
+  let cast
+  if (extraParseString) {
+    cast = FallbackCast(
+      localeCast,
+      StringChainCast((val: string | Date): Nullable<Date> => {
+        if (typeof val === 'string') {
+          const parsed = parse(val, extraParseString, new Date())
+          const reformatted = format(parsed, 'yyyy-MM-dd')
+          const final = ChronoDateCast(reformatted)
+          return final
+        } else if (_.isDate(val)) {
+          return val
+        } else {
+          throw new Error(`unexpected type for val ${val} typeof ${typeof val}`)
+        }
+      })
+    )
+  } else {
+    cast = localeCast
+  }
+
+  const egressFormat = (val: Date | string): string => {
+    if (typeof val === 'string') {
+      return val
+    }
+    try {
+      const output = GMTFormatDate(val, formatString)
+      return output
+    } catch (e: any) {
+      console.log(
+        `error calling GMTFormatDate on ${val} of type ${typeof val} with formatString of ${formatString}. Err of ${e}`
+      )
+      //trying to return something that is obviously an error
+      //@ts-ignore
+      return NaN
+    }
+  }
+  const newOpts = {
+    cast,
+    egressFormat,
+  }
+  const f = new Field(mergeFieldOptions(mergedOpts, newOpts))
+  const testEgressCycle = (d: Date) => {
+    try {
+      //@ts-ignore
+      if (!verifyEgressCycle(f, d)) {
+        egressDebug(f, d)
+        throw new Error(
+          `Error: instantiating a SmartDateField with a formatString of ${formatString}, and locale of '${locale}'.  will result in data loss or unexpected behavior`
+        )
+      }
+    } catch (e: any) {
+      egressDebug(f, d)
+      throw new Error(
+        `Error: instantiating a SmartDateField with a formatString of ${formatString}, and locale of '${locale}'.  will result in data loss or unexpected behavior`
+      )
+    }
+  }
+  //pretty much any date, nothing notable.  ChronoDateCast is fine here,  we just want a date
+  testEgressCycle(ChronoDateCast('2009-02-24T00:00:00.000Z') as Date)
+  //this will pick up month/date ambiguity... and its interaction between locale and formatString
+  testEgressCycle(ChronoDateCast('2009-02-05T00:00:00.000Z') as Date)
+
+  return f
+})
