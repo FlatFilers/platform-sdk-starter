@@ -7,6 +7,8 @@ import {
   matchSingleMessage,
 } from '../../src/utils/testing/SheetTester'
 
+import { WorkbookTester } from '@flatfile/configure'
+
 const CompSets = [
   {
     expResult: 'error___',
@@ -14,6 +16,7 @@ const CompSets = [
     /*--*/ after: '02/17/2009',
     bF: '2009-02-18',
     aF: '2009-02-17',
+    nonexistent: 'asdf',
   },
   {
     expResult: 'No Error',
@@ -73,6 +76,30 @@ const CompSets = [
   },
 ]
 
+const TestWorkbook = new WorkbookTester(
+  {
+    before: SmartDateField({ required: true, formatString: 'yyyy-MM-dd' }),
+    after: SmartDateField({ required: true, formatString: 'yyyy-MM-dd' }),
+    expResult: TextField({ required: true }),
+    aF: TextField(),
+    bF: TextField(),
+  },
+  {
+    recordCompute: (record: FlatfileRecord) => {
+      const [before, after] = [record.get('before'), record.get('after')]
+      const bothPresent = before && after
+      //@ts-ignore
+      const notBefore = before > after
+      if (bothPresent && notBefore) {
+        record.addError(
+          ['before', 'after'],
+          "field 'before' must be a date before 'after'"
+        )
+      }
+    },
+  }
+)
+
 const DateSheet = new Sheet(
   'DateSheet',
   {
@@ -118,6 +145,11 @@ describe('Date Comp Sheet tests demonstrating comparison of date object ->', () 
             "field 'before' must be a date before 'after'"
           )
         ).toBeFalsy()
+        await TestWorkbook.checkRowResult({
+          rawData: row,
+          expectedOutput: { ...row, before: row.bF, after: row.aF },
+          message: false,
+        })
       } else {
         expect(
           matchSingleMessage(
@@ -126,6 +158,11 @@ describe('Date Comp Sheet tests demonstrating comparison of date object ->', () 
             "field 'before' must be a date before 'after'"
           )
         ).toBeTruthy()
+        await TestWorkbook.checkRowResult({
+          rawData: row,
+          expectedOutput: { ...row, before: row.bF, after: row.aF },
+          message: "field 'before' must be a date before 'after'",
+        })
       }
     }
   )
