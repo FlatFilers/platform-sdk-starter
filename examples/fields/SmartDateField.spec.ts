@@ -5,7 +5,6 @@ import {
   Workbook,
   Sheet,
   TextField,
-  NumberField,
   SheetTester,
   matchSingleMessage,
 } from '@flatfile/configure'
