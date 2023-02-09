@@ -1,11 +1,13 @@
 import * as _ from 'lodash'
 import { SmartDateField, ChronoDateCast } from './SmartDateField'
 import { FlatfileRecord } from '@flatfile/hooks'
-import { Workbook, Sheet, TextField, NumberField } from '@flatfile/configure'
 import {
+  Workbook,
+  Sheet,
+  TextField,
   SheetTester,
   matchSingleMessage,
-} from '../../src/utils/testing/SheetTester'
+} from '@flatfile/configure'
 
 const CompSets = [
   {
@@ -79,6 +81,8 @@ const DateSheet = new Sheet(
     before: SmartDateField({ required: true, formatString: 'yyyy-MM-dd' }),
     after: SmartDateField({ required: true, formatString: 'yyyy-MM-dd' }),
     expResult: TextField({ required: true }),
+    bF: TextField(),
+    aF: TextField(),
   },
   {
     recordCompute: (record: FlatfileRecord) => {
@@ -187,6 +191,8 @@ const DumbDateSheet = new Sheet(
     before: TextField({ required: true }),
     after: TextField({ required: true }),
     expResult: TextField({ required: true }),
+    bF: TextField({}),
+    aF: TextField({}),
   },
   {
     recordCompute: (record: FlatfileRecord) => {
