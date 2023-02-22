@@ -12,6 +12,9 @@ import {
   TextField,
   Workbook,
 } from '@flatfile/configure'
+import * as hooks from './datahooks/hooks'
+import * as emailValidator from 'email-validator'
+import * as dfns from 'date-fns'
 
 /**
  * Sheets
@@ -19,9 +22,613 @@ import {
  * import { YourSheet } from './path-to-your-sheet/your-sheet.ts'
  */
 const MySheet = new Sheet('MySheet', {
-  firstName: TextField(),
-  lastName: TextField(),
-  age: NumberField(),
+  'Borrower First/Middle Name': TextField({
+    label: 'First Name',
+    required: true,
+    validate: (name: string) => {
+      const regex = /^[\D\s]+$/g
+      if (!regex.test(name)) {
+        return [
+          new Message(
+            'Names cannot contain numbers',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (name: string) => {
+      let names = name.split(' ')
+      names = names.filter(n => n)
+
+      for (let i = 0; i < names.length; i++) {
+        const regex = /\sand\s/gi
+        if (regex.test(names[i])) {
+          names[i] = names[i].replace(regex, '&')
+        } else {
+          names[i] = names[i][0].toUpperCase() + names[i].substring(1).toLowerCase()
+        }
+      }
+      
+      return names.join(' ')
+    }
+  }),
+
+  'Borrower Last Name/Suffix': TextField({
+    label: 'Last Name',
+    validate: (name: string) => {
+      const regex = /^[\D\s]+$/g
+      if (!regex.test(name)) {
+        return [
+          new Message(
+            'Names cannot contain numbers',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (name: string) => {
+      const names = name.split(' ')
+
+      for (let i = 0; i < names.length; i++) {
+        names[i] = names[i][0].toUpperCase() + names[i].substring(1).toLowerCase();
+      }
+
+      return names.join(' ')
+    }
+  }),
+
+  'Borr Cell Phone': TextField({
+    label: 'Phone',
+    description: 'XXX-XXX-XXXX',
+    validate: (phone: string) => {
+      const regex = /^(\+?\d{1,2})?\s?([-.\s\(])?\d{3}\)?([-.\s\)])?\d{3}[-.\s]?\d{4}$/g
+      if (!regex.test(phone)) {
+        return [
+          new Message(
+            'Invalid phone number',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (phone: string) => {
+      const regex = /^[\)\(\*\s-(N/?A)]+$/g
+      if (regex.test(phone)) {
+        return ''
+      } else {
+        return phone
+      }
+    }
+  }),
+
+  'Borr Email': TextField({
+    label: 'Email',
+    required: true,
+    description: 'Tip! Double check the emails are complete, valid, and match the associated client on that row.',
+    validate: (email: string) => {
+      const regex = /[\w-]+@([\w-]+\.)+[\w-]+/g
+      const noneRegex = /^(none|noemail|fakeemail|na|N\/A)@/gi
+      if (!regex.test(email) || noneRegex.test(email) || !emailValidator.validate(email)) {
+        return [
+          new Message(
+            'Invalid email',
+            'error',
+            'validate'
+          )
+        ]
+      } 
+    }
+  }),
+
+  'Borr DOB': TextField({
+    label: 'Date of Birth',
+    description: 'MM/DD/YYYY (This field is used to display reverse mortgage for eligible homeowners).',
+    validate: (date: string) => {
+      if (!Date.parse(date)) {
+        return [
+          new Message(
+            'Invalid date',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (date: string) => {
+      const thisDate = dfns.format(new Date(date), 'M/d/yyyy');
+      const realDate = dfns.parseISO(thisDate);
+
+      if (dfns.isDate(realDate)) {
+        return thisDate
+      } else {
+        return date
+      }
+    }
+  }),
+
+  'Borr Language Preference': OptionField({
+    label: 'Language Preference',
+    description: 'English or Spanish',
+    options: {
+      english: 'en',
+      spanish: 'es'
+    }
+  }),
+
+  'Co-Borrower First/Middle Name': TextField({
+    label: 'Co-Borrower First Name',
+    validate: (name: string) => {
+      const regex = /^[\D\s]+$/g
+      if (!regex.test(name)) {
+        return [
+          new Message(
+            'Names cannot contain numbers',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (name: string) => {
+      const names = name.split(' ')
+
+      for (let i = 0; i < names.length; i++) {
+        names[i] = names[i][0].toUpperCase() + names[i].substring(1).toLowerCase();
+      }
+
+      return names.join(' ')
+    }
+  }),
+
+  'Co-Borrower Last Name/Suffix': TextField({
+    label: 'Co-Borrower Last Name',
+    validate: (name: string) => {
+      const regex = /^[\D\s]+$/g
+      if (!regex.test(name)) {
+        return [
+          new Message(
+            'Names cannot contain numbers',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (name: string) => {
+      const names = name.split(' ')
+
+      for (let i = 0; i < names.length; i++) {
+        names[i] = names[i][0].toUpperCase() + names[i].substring(1).toLowerCase();
+      }
+
+      return names.join(' ')
+    }
+  }),
+
+  'Co-Borr Cell Phone': TextField({
+    label: 'Co-Borr Phone',
+    description: 'XXX-XXX-XXXX',
+    validate: (phone: string) => {
+      const regex = /^(\+?\d{1,2})?\s?([-.\s\(])?\d{3}\)?([-.\s\)])?\d{3}[-.\s]?\d{4}$/g
+      if (!regex.test(phone)) {
+        return [
+          new Message(
+            'Invalid phone number',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (phone: string) => {
+      const regex = /^[\)\(\*\s-(N/?A)]+$/g
+      if (regex.test(phone)) {
+        return ''
+      } else {
+        return phone
+      }
+    }
+  }),
+
+  'Co-Borr Email': TextField({
+    label: 'Co-Borr Email',
+    description: 'Tip! Double check the emails are valid and complete and match the associated client on that row.',
+    validate: (email: string) => {
+      const regex = /[\w-]+@([\w-]+\.)+[\w-]+/g
+      const noneRegex = /^(none|noemail|fakeemail|na|N\/A)@/gi
+      if (!regex.test(email) || noneRegex.test(email) || !emailValidator.validate(email)) {
+        return [
+          new Message(
+            'Invalid email',
+            'error',
+            'validate'
+          )
+        ]
+      } 
+    }
+  }),
+
+  'Co-Borr DOB': TextField({
+    label: 'Co-Borr Date of Birth',
+    description: 'MM/DD/YYYY (This field is used to display reverse mortgage for eligible homeowners).',
+    validate: (date: string) => {
+      if (!Date.parse(date)) {
+        return [
+          new Message(
+            'Invalid date',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (date: string) => {
+      const thisDate = dfns.format(new Date(date), 'M/d/yyyy');
+      const realDate = dfns.parseISO(thisDate);
+
+      if (dfns.isDate(realDate)) {
+        return thisDate
+      } else {
+        return date
+      }
+    }
+  }),
+
+  'Co-Borr Language Preference': OptionField({
+    label: 'Co-Borr Language Preference',
+    description: 'English or Spanish',
+    options: {
+      english: 'en',
+      spanish: 'es'
+    }
+  }),
+
+  'Subject Property Address': TextField({
+    label: 'Subject Property Address',
+    description: '123 Main Street #1 (Please include the full street address and unit number. Ensure that the address is a residential property, not serviced by a PO Box or commercial. Do not include city and state in this field)',
+    validate: (addy: string) => {
+      const regex = /(\d)+(-?)[a-zA-Z]?\s+([a-zA-Z0-9])+/g
+      if (!regex.test(addy)) {
+        return [
+          new Message(
+            'Invalid propery address',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    }
+  }),
+
+  'Subject Property Zip': TextField({
+    label: 'Subject Property Zip',
+    description: 'XXXXX (5 digit zip code)',
+    validate: (zip: string) => {
+      const regex = /^[0-9]{5}$/
+      if (!regex.test(zip)) {
+        return [
+          new Message(
+            'Invalid zip code',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (zip: string) => {
+      if (zip.length > 5) {
+        return zip.slice(0, 5)
+      } else if (zip.length === 4) {
+        return '0' + zip
+      } else {
+        return zip
+      }
+    }
+  }),
+
+  'Subject Property Appraised Value': TextField({
+    label: 'Subject Property Appraised Value',
+    validate: (amount: string) => {
+      const numRegex = /(^\d+$)|(^\d*,?\d*,?\d*.?(\d{1,2})?$)/g
+      if (!numRegex.test(amount)) {
+        return [
+          new Message(
+            'Invalid numeric amount',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (value: string) => {
+      return value.replace('$', '').trim()
+    }
+  }),
+
+  'Subject Property Appraised Date': TextField({
+    label: 'Subject Property Appraised Date',
+    validate: (date: string) => {
+      if (!Date.parse(date)) {
+        return [
+          new Message(
+            'Invalid date',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (date: string) => {
+      const thisDate = dfns.format(new Date(date), 'M/d/yyyy');
+      const realDate = dfns.parseISO(thisDate);
+
+      if (dfns.isDate(realDate)) {
+        return thisDate
+      } else {
+        return date
+      }
+    }
+  }),
+
+  'Subject Property Purchase Price': TextField({
+    label: 'Subject Property Purchase Price',
+    compute: (value: string) => {
+      return value.replace('$', '').trim()
+    }
+  }),
+
+  'Subject Property Purchase Date': TextField({
+    label: 'Subject Property Purchase Date',
+    validate: (date: string) => {
+      if (!Date.parse(date)) {
+        return [
+          new Message(
+            'Invalid date',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (date: string) => {
+      const thisDate = dfns.format(new Date(date), 'M/d/yyyy');
+      const realDate = dfns.parseISO(thisDate);
+
+      if (dfns.isDate(realDate)) {
+        return thisDate
+      } else {
+        return date
+      }
+    }
+  }),
+
+  'Total Loan Amount': TextField({
+    label: 'Total Loan Amount',
+    validate: (amount: string) => {
+      const numRegex = /(^\d+$)|(^\d*,?\d*,?\d*.?(\d{1,2})?$)/g
+      if (!numRegex.test(amount)) {
+        return [
+          new Message(
+            'Invalid numeric amount',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (value: string) => {
+      return value.replace('$', '').trim()
+    }
+  }),
+
+  'Interest Rate': TextField({
+    label: 'Interest Rate',
+    compute: (value: string) => {
+      const rate = value.replace('%', '').trim()
+      if (rate.match(/^0+.?0{0,2}$/g)) {
+        return '0.01'
+      } else {
+        return value
+      }
+    }
+  }),
+
+  // '30 Year Fixed' -> 360
+  // '360 Months' -> 360
+  // '30' -> 360 
+  'Loan Term': OptionField({
+    label: 'Loan Term',
+    matchStrategy: 'exact',
+    options: {
+      '120': '120',
+      '180': '180',
+      '240': '240',
+      '264': '264',
+      '300': '300',
+      '360': '360'
+    },
+    compute: (value: any) => {
+      const labels = ['120', '180', '240', '264', '300', '360']
+      let term = value.toString()
+      if (!labels.includes(term)) {
+        term = term.replace(/\D/g, '').trim()
+        if (labels.includes(String(term))) {
+          return term
+        }
+        if (term <= 30) {
+          const product : number = Number(term) * 12
+          return String(product)
+        } else {
+          return term
+        }
+      } else {
+        return term
+      }
+    }
+  }),
+
+  'Loan Purpose': TextField({
+    label: 'Loan Purpose'
+  }),
+
+  'Closing Date': TextField({
+    label: 'Closing Date',
+    validate: (date: string) => {
+      if (!Date.parse(date)) {
+        return [
+          new Message(
+            'Invalid date',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (date: string) => {
+      const thisDate = dfns.format(new Date(date), 'M/d/yyyy');
+      const realDate = dfns.parseISO(thisDate);
+
+      if (dfns.isDate(realDate)) {
+        return thisDate
+      } else {
+        return date
+      }
+    }
+  }),
+
+  'NMLS Loan Originator ID': TextField({
+    label: 'Loan Officer NMLS ID',
+    compute: (nmls: string) => {
+      return nmls.replace(/\D/g, '').trim()
+    }
+  }),
+
+  'Lender NMLS ID': NumberField({
+    label: 'Company NMLS ID'
+  }),
+
+  'NMLS Loan Type': OptionField({
+    label: 'NMLS Loan Type',
+    matchStrategy: 'exact',
+    options: {
+      'ResidentialFirst': 'ResidentialFirst',
+			'ClosedEndSecond': 'Second',
+			'HELOC': 'HELOC',
+			'ReverseMortgage': 'Reverse Mortgage',
+			'Construction': 'Construction',
+			'MultiFamily': 'Multifamily',
+			'Commercial': 'Commercial',
+			'Other': 'Other'
+    }
+  }),
+
+  'Total Monthly Payment': TextField({
+    label: 'Total Monthly Payment',
+    validate: (amount: string) => {
+      const numRegex = /(^\d+$)|(^\d*,?\d*,?\d*.?(\d{1,2})?$)/g
+      if (!numRegex.test(amount)) {
+        return [
+          new Message(
+            'Invalid numeric amount',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (value: string) => {
+      return value.replace('$', '').trim()
+    }
+  }),
+
+  'Mortgage Insurance Premium': TextField({
+    label: 'Mortgage Insurance Premium',
+    validate: (amount: string) => {
+      const numRegex = /(^\d+$)|(^\d*,?\d*,?\d*.?(\d{1,2})?$)/g
+      if (!numRegex.test(amount)) {
+        return [
+          new Message(
+            'Invalid numeric amount',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (value: string) => {
+      const regex = /[A-Za-z\s]+/g
+      if (value.includes('$')) {
+        return value.replace('$', '').trim()
+      } else if (regex.test(value)) {
+        return ''
+      } else {
+        return value
+      }
+    }
+  }),
+
+  'First Payment Due Date': TextField({
+    label: 'First Payment Due Date',
+    validate: (date: string) => {
+      if (!Date.parse(date)) {
+        return [
+          new Message(
+            'Invalid date',
+            'error',
+            'validate'
+          )
+        ]
+      }
+    },
+    compute: (date: string) => {
+      const thisDate = dfns.format(new Date(date), 'M/d/yyyy');
+      const realDate = dfns.parseISO(thisDate);
+
+      if (dfns.isDate(realDate)) {
+        return thisDate
+      } else {
+        return date
+      }
+    }
+  }),
+
+  'Loan Number': TextField({
+    label: 'Loan Number'
+  }),
+
+  'Lien Position': TextField({
+    label: 'Lien Position'
+  }),
+
+  'Amort Type': TextField({
+    label: 'Amort Type'
+  }),
+
+  'Loan Type': TextField({
+    label: 'Loan Type'
+  }),
+
+  'Occupancy (PSI)': OptionField({
+    label: 'Occupancy (Primary, Secondary, Investment)',
+    options: {
+      primary: 'Primary',
+      secondary: 'Secondary',
+      investment: 'Investment'
+    }
+  })
+}, 
+{
+  allowCustomFields: true,
+  recordCompute: (record) => {
+    hooks.conditionalFormatting(record)
+    hooks.highlyEncouraged(record)
+    hooks.miscellaneousPhoneRemover(record)
+    hooks.coborrowerEmailCheck(record)
+    return record
+  }
 })
 
 /**
