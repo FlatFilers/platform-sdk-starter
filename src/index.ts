@@ -11,6 +11,7 @@ import {
   Sheet,
   TextField,
   Workbook,
+  OptionField
 } from '@flatfile/configure'
 import * as hooks from './datahooks/hooks'
 import * as emailValidator from 'email-validator'
@@ -21,7 +22,7 @@ import * as dfns from 'date-fns'
  * Define your Sheet configuration and Fields here, or import them:
  * import { YourSheet } from './path-to-your-sheet/your-sheet.ts'
  */
-const MySheet = new Sheet('MySheet', {
+const MySheet = new Sheet('encompass', {
   'Borrower First/Middle Name': TextField({
     label: 'First Name',
     required: true,
@@ -637,8 +638,8 @@ const MySheet = new Sheet('MySheet', {
  * import { YourPortal } from './path-to-your-portal/your-portal.ts'
  */
 const MyPortal = new Portal({
-  name: 'MyPortal',
-  sheet: 'MySheet',
+  name: 'hb_main',
+  sheet: 'encompass',
 })
 
 // Workbook  - Update to reference your Workbook with Sheet(s) and Portal(s)
