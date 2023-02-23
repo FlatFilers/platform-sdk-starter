@@ -12,6 +12,7 @@ import {
   TextField,
   Workbook,
   OptionField,
+  Message
 } from '@flatfile/configure'
 import * as hooks from './datahooks/hooks'
 import * as emailValidator from 'email-validator'
