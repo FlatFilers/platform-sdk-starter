@@ -11,11 +11,11 @@ import {
   Sheet,
   TextField,
   Workbook,
-  OptionField
+  OptionField,
 } from '@flatfile/configure'
 import * as hooks from './datahooks/hooks'
 import * as emailValidator from 'email-validator'
-import * as dfns from 'date-fns'
+import { SmartDateField } from '../examples/fields/SmartDateField'
 
 /**
  * Sheets
@@ -124,30 +124,11 @@ const MySheet = new Sheet('encompass', {
     }
   }),
 
-  'Borr DOB': TextField({
+  'Borr DOB': SmartDateField({
     label: 'Date of Birth',
     description: 'MM/DD/YYYY (This field is used to display reverse mortgage for eligible homeowners).',
-    validate: (date: string) => {
-      if (!Date.parse(date)) {
-        return [
-          new Message(
-            'Invalid date',
-            'error',
-            'validate'
-          )
-        ]
-      }
-    },
-    compute: (date: string) => {
-      const thisDate = dfns.format(new Date(date), 'M/d/yyyy');
-      const realDate = dfns.parseISO(thisDate);
-
-      if (dfns.isDate(realDate)) {
-        return thisDate
-      } else {
-        return date
-      }
-    }
+    locale: 'en',
+    formatString: 'M/d/yyyy'
   }),
 
   'Borr Language Preference': OptionField({
@@ -252,30 +233,11 @@ const MySheet = new Sheet('encompass', {
     }
   }),
 
-  'Co-Borr DOB': TextField({
+  'Co-Borr DOB': SmartDateField({
     label: 'Co-Borr Date of Birth',
     description: 'MM/DD/YYYY (This field is used to display reverse mortgage for eligible homeowners).',
-    validate: (date: string) => {
-      if (!Date.parse(date)) {
-        return [
-          new Message(
-            'Invalid date',
-            'error',
-            'validate'
-          )
-        ]
-      }
-    },
-    compute: (date: string) => {
-      const thisDate = dfns.format(new Date(date), 'M/d/yyyy');
-      const realDate = dfns.parseISO(thisDate);
-
-      if (dfns.isDate(realDate)) {
-        return thisDate
-      } else {
-        return date
-      }
-    }
+    locale: 'en',
+    fString: 'M/d/yyyy'
   }),
 
   'Co-Borr Language Preference': OptionField({
@@ -349,29 +311,11 @@ const MySheet = new Sheet('encompass', {
     }
   }),
 
-  'Subject Property Appraised Date': TextField({
+  'Subject Property Appraised Date': SmartDateField({
     label: 'Subject Property Appraised Date',
-    validate: (date: string) => {
-      if (!Date.parse(date)) {
-        return [
-          new Message(
-            'Invalid date',
-            'error',
-            'validate'
-          )
-        ]
-      }
-    },
-    compute: (date: string) => {
-      const thisDate = dfns.format(new Date(date), 'M/d/yyyy');
-      const realDate = dfns.parseISO(thisDate);
-
-      if (dfns.isDate(realDate)) {
-        return thisDate
-      } else {
-        return date
-      }
-    }
+    locale: 'en',
+    description: 'Smart dates',
+    fString: 'M/d/yyyy'
   }),
 
   'Subject Property Purchase Price': TextField({
@@ -381,29 +325,11 @@ const MySheet = new Sheet('encompass', {
     }
   }),
 
-  'Subject Property Purchase Date': TextField({
+  'Subject Property Purchase Date': SmartDateField({
     label: 'Subject Property Purchase Date',
-    validate: (date: string) => {
-      if (!Date.parse(date)) {
-        return [
-          new Message(
-            'Invalid date',
-            'error',
-            'validate'
-          )
-        ]
-      }
-    },
-    compute: (date: string) => {
-      const thisDate = dfns.format(new Date(date), 'M/d/yyyy');
-      const realDate = dfns.parseISO(thisDate);
-
-      if (dfns.isDate(realDate)) {
-        return thisDate
-      } else {
-        return date
-      }
-    }
+    locale: 'en',
+    description: 'Smart dates',
+    fString: 'M/d/yyyy'
   }),
 
   'Total Loan Amount': TextField({
@@ -475,29 +401,11 @@ const MySheet = new Sheet('encompass', {
     label: 'Loan Purpose'
   }),
 
-  'Closing Date': TextField({
+  'Closing Date': SmartDateField({
     label: 'Closing Date',
-    validate: (date: string) => {
-      if (!Date.parse(date)) {
-        return [
-          new Message(
-            'Invalid date',
-            'error',
-            'validate'
-          )
-        ]
-      }
-    },
-    compute: (date: string) => {
-      const thisDate = dfns.format(new Date(date), 'M/d/yyyy');
-      const realDate = dfns.parseISO(thisDate);
-
-      if (dfns.isDate(realDate)) {
-        return thisDate
-      } else {
-        return date
-      }
-    }
+    locale: 'en',
+    description: 'Smart dates',
+    fString: 'M/d/yyyy'
   }),
 
   'NMLS Loan Originator ID': TextField({
@@ -571,29 +479,11 @@ const MySheet = new Sheet('encompass', {
     }
   }),
 
-  'First Payment Due Date': TextField({
+  'First Payment Due Date': SmartDateField({
     label: 'First Payment Due Date',
-    validate: (date: string) => {
-      if (!Date.parse(date)) {
-        return [
-          new Message(
-            'Invalid date',
-            'error',
-            'validate'
-          )
-        ]
-      }
-    },
-    compute: (date: string) => {
-      const thisDate = dfns.format(new Date(date), 'M/d/yyyy');
-      const realDate = dfns.parseISO(thisDate);
-
-      if (dfns.isDate(realDate)) {
-        return thisDate
-      } else {
-        return date
-      }
-    }
+    locale: 'en',
+    description: 'Smart dates',
+    fString: 'M/d/yyyy'
   }),
 
   'Loan Number': TextField({
