@@ -237,7 +237,7 @@ const MySheet = new Sheet('encompass', {
     label: 'Co-Borr Date of Birth',
     description: 'MM/DD/YYYY (This field is used to display reverse mortgage for eligible homeowners).',
     locale: 'en',
-    fString: 'M/d/yyyy'
+    formatString: 'M/d/yyyy'
   }),
 
   'Co-Borr Language Preference': OptionField({
@@ -315,7 +315,7 @@ const MySheet = new Sheet('encompass', {
     label: 'Subject Property Appraised Date',
     locale: 'en',
     description: 'Smart dates',
-    fString: 'M/d/yyyy'
+    formatString: 'M/d/yyyy'
   }),
 
   'Subject Property Purchase Price': TextField({
@@ -329,7 +329,7 @@ const MySheet = new Sheet('encompass', {
     label: 'Subject Property Purchase Date',
     locale: 'en',
     description: 'Smart dates',
-    fString: 'M/d/yyyy'
+    formatString: 'M/d/yyyy'
   }),
 
   'Total Loan Amount': TextField({
@@ -405,7 +405,7 @@ const MySheet = new Sheet('encompass', {
     label: 'Closing Date',
     locale: 'en',
     description: 'Smart dates',
-    fString: 'M/d/yyyy'
+    formatString: 'M/d/yyyy'
   }),
 
   'NMLS Loan Originator ID': TextField({
@@ -483,7 +483,7 @@ const MySheet = new Sheet('encompass', {
     label: 'First Payment Due Date',
     locale: 'en',
     description: 'Smart dates',
-    fString: 'M/d/yyyy'
+    formatString: 'M/d/yyyy'
   }),
 
   'Loan Number': TextField({
