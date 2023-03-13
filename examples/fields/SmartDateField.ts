@@ -94,10 +94,10 @@ const getChronoDateCast = (locale: Locales) => {
 
 export const GMTFormatDate = (val: Date, formatString: string): string => {
   const prevailingTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  const d = new Date()
+  const d = new Date(val.toDateString())
   const tzHours = d.getTimezoneOffset() / 60
   const val2 = new Date(val)
-  val2.setHours(val2.getHours() + tzHours + 1)
+  val2.setHours(val2.getHours() + tzHours)
   const utcDate = utcToZonedTime(val2, prevailingTimezone)
   return format(utcDate, formatString)
 }
