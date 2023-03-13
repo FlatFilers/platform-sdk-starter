@@ -97,7 +97,7 @@ export const GMTFormatDate = (val: Date, formatString: string): string => {
   const d = new Date()
   const tzHours = d.getTimezoneOffset() / 60
   const val2 = new Date(val)
-  val2.setHours(val2.getHours() + tzHours)
+  val2.setHours(val2.getHours() + tzHours + 1)
   const utcDate = utcToZonedTime(val2, prevailingTimezone)
   return format(utcDate, formatString)
 }
