@@ -598,7 +598,17 @@ The message to use when a `compute` changes a value. if none specified, defaults
 
 ##### stageVisibility
 
-controls what parts of mapping/review/export a field occurs in
+controls what parts of mapping/review/export a field occurs in.
+
+```
+    fullName: TextField({
+      stageVisibility: {
+        mapping: false,
+        review: true,
+        export: false,
+      }
+    }),
+```
 
 ###### mapping
 
