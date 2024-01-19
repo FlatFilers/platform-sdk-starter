@@ -400,6 +400,8 @@ When releasing pieces to the SDK our thought process is guided by the following 
 Links to more in-depth documentation we have written about features.
 
 * [SmartDateField](./examples/fields/SmartDateField.README.md)
+* [RegionFields CountryField and StateField](./examples/fields/RegionFields.README.md)
+* [BooleanSynonymField](./examples/fields/BooleanSynonymField.README.md)
 
 ---
 
