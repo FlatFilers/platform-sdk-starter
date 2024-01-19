@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import * as FF from "@flatfile/configure";
 import { FlatfileRecord } from "@flatfile/hooks";
 import { v4 as uuidv4 } from "uuid";
@@ -183,7 +184,6 @@ const validateRegex =
                 "validate",
             );
         }
-
         return;
     };
 
@@ -292,48 +292,50 @@ export const runRecordHooks =
  * Main
  */
 
+const ChainValidateField = FF.makeField<string, {validateFuncs:any[]}>(
+  FF.TextField({}),
+  {},
+  (mergedOptions, passedOptions) => {
+    const validate = (val:string) => {
+
+      const allMessages = _.map(passedOptions.validateFuncs, (x) => x(val))
+      const presentMessages = allMessages.filter(isNotNil)
+      return presentMessages
+    }
+    const consolidatedOptions = FF.mergeFieldOptions(mergedOptions, {validate  })
+    return new FF.Field(consolidatedOptions)
+  })
+
+
 const ReviewsSheet = new FF.Sheet(
     "Reviews",
     {
-        review_id: FF.TextField({
+      review_id: ChainValidateField({
             label: "Review Id",
             description: "The unique ID of the review.",
             unique: true,
-            validate: (value) => {
-                const ensureMaxLength = validateMaxLength(50)(value);
-                const ensureValidChars = validateRegex(/[\w-_]+/g)(value);
-
-                return runValidations(ensureMaxLength, ensureValidChars);
-            },
+            validateFuncs: [validateMaxLength(50), validateRegex(/[\w-_]+/g)]
         }),
-        handle: FF.TextField({
+        handle: ChainValidateField({
             label: "Display Name",
             description: "The user's nickname on the review.",
             default: "Anonymous",
             compute: (value) => pipe(value, trim),
-            validate: (value) => {
-                const ensureMaxLength = validateMaxLength(40)(value);
-
-                return runValidations(ensureMaxLength);
-            },
+            validateFuncs: [validateMaxLength(40)]
         }),
-        title: FF.TextField({
+        title: ChainValidateField({
             label: "Title",
             description: "The user-entered review title.",
             required: true,
             compute: (value) => pipe(value, trim),
-            validate: (value) => {
-                const ensureMaxLength = validateMaxLength(60)(value);
-
-                return runValidations(ensureMaxLength);
-            },
+            validateFuncs: [validateMaxLength(60)]
         }),
         date: FF.DateField({
             label: "Date",
             description: "The date the user wrote the review.",
             required: true,
         }),
-        location: FF.TextField({
+        location: ChainValidateField({
             label: "Location",
             description: "The physical location of the reviewer.",
             default: "Undisclosed",
@@ -341,11 +343,7 @@ const ReviewsSheet = new FF.Sheet(
                 default: true,
             },
             compute: (value) => pipe(value, trim),
-            validate: (value) => {
-                const ensureMaxLength = validateMaxLength(40)(value);
-
-                return runValidations(ensureMaxLength);
-            },
+            validateFuncs: [validateMaxLength(60)]
         }),
         body: FF.TextField({
             label: "Body",
