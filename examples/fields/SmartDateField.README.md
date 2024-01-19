@@ -62,8 +62,8 @@ Reference the [package.json](../../package.json).
 ## Locale
 You can instantiate a field with a locale argument of `"en"` `"fr"` `"nl"` `"ru"` or `"de"` this controls some default parsing behavor, `en` is the default.  Behavior that changes includes words used for months and days.  It also controls the default order of ambiguous month/day in Dates.
 
-For the string `'06/02/09'`, `en` expects day first, then month yielding February 6th
-                             `fr` expects month first, yielding June 2nd.
+For the string `'06/02/09'`, `fr` expects day first, then month yielding February 6th
+                             `en` expects month first, yielding June 2nd.
 
 ## Using `formatString`
 
